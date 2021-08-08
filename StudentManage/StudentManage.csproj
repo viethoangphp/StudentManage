@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,6 +46,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -120,12 +127,114 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BUS\UserBUS.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="Assets\css\bootstrap.min.css" />
+    <Content Include="Assets\css\dataTables.bootstrap4.min.css" />
+    <Content Include="Assets\css\font-awesome.min.css" />
+    <Content Include="Assets\css\fullcalendar.min.css" />
+    <Content Include="Assets\css\line-awesome.min.css" />
+    <Content Include="Assets\css\select2.min.css" />
+    <Content Include="Assets\css\style.css" />
+    <Content Include="Assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="Assets\fonts\la-brands-400.svg" />
+    <Content Include="Assets\fonts\la-regular-400.svg" />
+    <Content Include="Assets\fonts\la-solid-900.svg" />
+    <Content Include="Assets\img\attachment.png" />
+    <Content Include="Assets\img\flags\de.png" />
+    <Content Include="Assets\img\flags\en.svg" />
+    <Content Include="Assets\img\flags\es.png" />
+    <Content Include="Assets\img\flags\fr.png" />
+    <Content Include="Assets\img\flags\jp.png" />
+    <Content Include="Assets\img\flags\us.png" />
+    <Content Include="Assets\img\flags\vietrnam.png" />
+    <Content Include="Assets\img\flags\vn.svg" />
+    <Content Include="Assets\img\img-01.jpg" />
+    <Content Include="Assets\img\log.svg" />
+    <Content Include="Assets\img\logo-hutech-full.png" />
+    <Content Include="Assets\img\logo-hutech.png" />
+    <Content Include="Assets\img\logo-sv-hutech.png" />
+    <Content Include="Assets\img\logo.png" />
+    <Content Include="Assets\img\logo2.png" />
+    <Content Include="Assets\img\logo3.png" />
+    <Content Include="Assets\img\placeholder.jpg" />
+    <Content Include="Assets\img\profiles\avatar-01.jpg" />
+    <Content Include="Assets\img\profiles\avatar-02.jpg" />
+    <Content Include="Assets\img\profiles\avatar-03.jpg" />
+    <Content Include="Assets\img\profiles\avatar-04.jpg" />
+    <Content Include="Assets\img\profiles\avatar-05.jpg" />
+    <Content Include="Assets\img\profiles\avatar-06.jpg" />
+    <Content Include="Assets\img\profiles\avatar-07.jpg" />
+    <Content Include="Assets\img\profiles\avatar-08.jpg" />
+    <Content Include="Assets\img\profiles\avatar-09.jpg" />
+    <Content Include="Assets\img\profiles\avatar-10.jpg" />
+    <Content Include="Assets\img\profiles\avatar-11.jpg" />
+    <Content Include="Assets\img\profiles\avatar-12.jpg" />
+    <Content Include="Assets\img\profiles\avatar-13.jpg" />
+    <Content Include="Assets\img\profiles\avatar-14.jpg" />
+    <Content Include="Assets\img\profiles\avatar-15.jpg" />
+    <Content Include="Assets\img\profiles\avatar-16.jpg" />
+    <Content Include="Assets\img\profiles\avatar-17.jpg" />
+    <Content Include="Assets\img\profiles\avatar-18.jpg" />
+    <Content Include="Assets\img\profiles\avatar-19.jpg" />
+    <Content Include="Assets\img\profiles\avatar-20.jpg" />
+    <Content Include="Assets\img\profiles\avatar-21.jpg" />
+    <Content Include="Assets\img\profiles\avatar-22.jpg" />
+    <Content Include="Assets\img\profiles\avatar-24.jpg" />
+    <Content Include="Assets\img\profiles\avatar-25.jpg" />
+    <Content Include="Assets\img\profiles\avatar-26.jpg" />
+    <Content Include="Assets\img\profiles\avatar-28.jpg" />
+    <Content Include="Assets\img\profiles\avatar-29.jpg" />
+    <Content Include="Assets\img\profiles\user.jpg" />
+    <Content Include="Assets\img\register.svg" />
+    <Content Include="Assets\img\thumnail.png" />
+    <Content Include="Assets\img\user.jpg" />
+    <Content Include="Assets\img\video-call.jpg" />
+    <Content Include="Assets\js\app.js" />
+    <Content Include="Assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Assets\js\bootstrap.min.js" />
+    <Content Include="Assets\js\chart.js" />
+    <Content Include="Assets\js\Chart.min.js" />
+    <Content Include="Assets\js\dataTables.bootstrap4.min.js" />
+    <Content Include="Assets\js\dropfiles.js" />
+    <Content Include="Assets\js\fullcalendar.min.js" />
+    <Content Include="Assets\js\jquery-3.5.1.min.js" />
+    <Content Include="Assets\js\jquery.dataTables.min.js" />
+    <Content Include="Assets\js\jquery.fullcalendar.js" />
+    <Content Include="Assets\js\jquery.maskedinput.min.js" />
+    <Content Include="Assets\js\jquery.slimscroll.min.js" />
+    <Content Include="Assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="Assets\js\line-chart.js" />
+    <Content Include="Assets\js\login.js" />
+    <Content Include="Assets\js\mask.js" />
+    <Content Include="Assets\js\moment.min.js" />
+    <Content Include="Assets\js\multiselect.min.js" />
+    <Content Include="Assets\js\popper.min.js" />
+    <Content Include="Assets\js\select2.min.js" />
+    <Content Include="Assets\js\task.js" />
+    <Content Include="Assets\plugins\bootstrap-tagsinput\bootstrap-tagsinput.css" />
+    <Content Include="Assets\plugins\bootstrap-tagsinput\bootstrap-tagsinput.min.js" />
+    <Content Include="Assets\plugins\morris\morris.css" />
+    <Content Include="Assets\plugins\morris\morris.min.js" />
+    <Content Include="Assets\plugins\raphael\raphael.min.js" />
+    <Content Include="Assets\plugins\sticky-kit-master\dist\sticky-kit.min.js" />
+    <Content Include="Assets\plugins\summernote\dist\summernote-bs4.css" />
+    <Content Include="Assets\plugins\summernote\dist\summernote-bs4.min.js" />
+    <Content Include="Assets\plugins\toastr\toastr.css" />
+    <Content Include="Assets\plugins\toastr\toastr.min.css" />
+    <Content Include="Assets\plugins\toastr\toastr.min.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -136,6 +245,43 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Assets\fonts\fontawesome-webfont-1.eot" />
+    <Content Include="Assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="Assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="Assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Assets\fonts\la-brands-400-1.eot" />
+    <Content Include="Assets\fonts\la-brands-400.eot" />
+    <Content Include="Assets\fonts\la-brands-400.ttf" />
+    <Content Include="Assets\fonts\la-brands-400.woff" />
+    <Content Include="Assets\fonts\la-brands-400.woff2" />
+    <Content Include="Assets\fonts\la-regular-400-1.eot" />
+    <Content Include="Assets\fonts\la-regular-400.eot" />
+    <Content Include="Assets\fonts\la-regular-400.ttf" />
+    <Content Include="Assets\fonts\la-regular-400.woff" />
+    <Content Include="Assets\fonts\la-regular-400.woff2" />
+    <Content Include="Assets\fonts\la-solid-900.eot" />
+    <Content Include="Assets\fonts\la-solid-900.woff" />
+    <Content Include="Assets\fonts\la-solid-900.woff2" />
+    <Content Include="Assets\fonts\MaterialIcons-Regular.eot" />
+    <Content Include="Assets\fonts\MaterialIcons-Regular.ttf" />
+    <Content Include="Assets\fonts\MaterialIcons-Regular.woff" />
+    <Content Include="Assets\fonts\MaterialIcons-Regular.woff2" />
+    <Content Include="Assets\fonts\OpenSans-Bold.ttf" />
+    <Content Include="Assets\fonts\OpenSans-BoldItalic.ttf" />
+    <Content Include="Assets\fonts\OpenSans-ExtraBold.ttf" />
+    <Content Include="Assets\fonts\OpenSans-ExtraBoldItalic.ttf" />
+    <Content Include="Assets\fonts\OpenSans-Italic.ttf" />
+    <Content Include="Assets\fonts\OpenSans-Light.ttf" />
+    <Content Include="Assets\fonts\OpenSans-LightItalic.ttf" />
+    <Content Include="Assets\fonts\OpenSans-Regular.ttf" />
+    <Content Include="Assets\fonts\OpenSans-SemiBold.ttf" />
+    <Content Include="Assets\fonts\OpenSans-SemiBoldItalic.ttf" />
+    <Content Include="Assets\img\debug.log" />
+    <Content Include="Assets\plugins\summernote\dist\font\summernote.eot" />
+    <Content Include="Assets\plugins\summernote\dist\font\summernote.ttf" />
+    <Content Include="Assets\plugins\summernote\dist\font\summernote.woff" />
+    <Content Include="Assets\plugins\toastr\toastr.js.map" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -155,15 +301,16 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\_MasterLayout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Home\Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Asset\" />
-    <Folder Include="BUS\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Library\" />
-    <Folder Include="Models\" />
-    <Folder Include="Views\Shared\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -177,6 +324,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{477223a2-9e18-4d29-8fba-3a81fb77372d}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -211,7 +364,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

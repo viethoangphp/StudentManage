@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@model StudentManage.Models.UserModel
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Thông tin sinh viên</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Thông tin sinh viên</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <div class="card mb-0">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="profile-view">
+                        <div class="profile-img-wrap">
+                            <div class="profile-img">
+                                <a href="#"><img alt="" src="~/Assets/img/profiles/user.jpg"></a>
+                            </div>
+                        </div>
+                        <div class="profile-basic">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="profile-info-left">
+                                        <h3 class="user-name m-t-0 mb-0">@Model.fullname</h3>
+                                        <div class="staff-id">Mã số sinh viên : 1811062895</div>
+                                        <div class="small text-muted">Khoa: Công nghệ thông tin</div>
+                                        <div class="small text-muted">Lớp: 18DTHD1</div>
+                                        <div class="small text-muted">Khóa : 2018 - 2022</div>
+                                        <div class="staff-msg">
+                                            <a data-target="#profile_change_password"
+                                               data-toggle="modal" class="btn btn-primary">Đổi mật khẩu</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <ul class="personal-info">
+                                        <li>
+                                            <div class="title">Số điện thoại:</div>
+                                            <div class="text"><a href="">@Model.phone</a></div>
+                                        </li>
+                                        <li>
+                                            <div class="title">Email:</div>
+                                            <div class="text">
+                                                <a href="">@Model.email</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="title">Ngày sinh:</div>
+                                            <div class="text">@String.Format("{0:dd/MM/yyyy}", Model.birthDay)</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">Địa chỉ:</div>
+                                            <div class="text">
+                                                @Model.address
+                                            </div>
+                                        </li>
+                                        @if (Model.gender == 1)
+                                        {
+                                            <li>
+                                                <div class="title">Giới tính:</div>
+                                                <div class="text">Nam</div>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <div class="title">Giới tính:</div>
+                                                <div class="text">Nữ</div>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pro-edit">
+                            <a data-target="#profile_info" data-toggle="modal"
+                               class="edit-icon" href="#"><i class="fa fa-pencil"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->
+<!-- Change Password Modal -->
+<div id="profile_change_password" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thay đổi mật khẩu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Mật khẩu cũ</label>
+                                        <input type="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Mật khẩu mới</label>
+                                        <input type="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Nhập lại mật khẩu mới</label>
+                                        <input type="password" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Change Password Modal   -->
+<!-- Profile Modal -->
+<div id="profile_info" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông tin sinh viên</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="profile-img-wrap edit-img">
+                                <img class="inline-block" src="assets/img/profiles/user.jpg" alt="user">
+                                <div class="fileupload btn">
+                                    <span class="btn-text">Chọn ảnh</span>
+                                    <input class="upload" type="file">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Họ và tên</label>
+                                        <input type="text" class="form-control" value="Diệp Thế Duy"
+                                               disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Ngày sinh</label>
+                                        <div class="cal-icon">
+                                            <input class="form-control datetimepicker" type="text"
+                                                   value="16/12/2000">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Giới tính</label>
+                                        <select class="select form-control">
+                                            <option value="male selected">Nam</option>
+                                            <option value="female">Nữ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Số điện thoại <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" value="0931889431">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                               value="dieptheduy2000@gmail.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Địa chỉ <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" value="909 Lê Văn Lương">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Thành phố <span class="text-danger">*</span></label>
+                                <select class="select">
+                                    <option>Hồ Chí Minh</option>
+                                    <option>Hà Nội</option>
+                                    <option>Đà Nẵng</option>
+                                    <option>Nha Trang</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Quận<span class="text-danger">*</span></label>
+                                <select class="select">
+                                    <option>Quận 1</option>
+                                    <option>Quận 2</option>
+                                    <option>Quận 3</option>
+                                    <option>Quận 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Phường <span class="text-danger">*</span></label>
+                                <select class="select">
+                                    <option>Thới An</option>
+                                    <option>Hiệp thành</option>
+                                    <option>Gò vấp</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Lưu thông tin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Profile Modal -->

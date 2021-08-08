@@ -1,0 +1,133 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script> -->
+    <title>HUTECH | SINH VIÊN</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/Assets/img/logo-hutech.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/Assets/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="~/Assets/css/font-awesome.min.css">
+
+    <!-- Lineawesome CSS -->
+    <link rel="stylesheet" href="~/Assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="~/Assets/plugins/toastr/toastr.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="~/Assets/css/style.css">
+
+</head>
+
+<body>
+    <!-- Loader -->
+    <div id="loader-wrapper">
+        <div id="loader">
+            <div class="loader-tripple-circle">
+                <div class="inner one"></div>
+                <div class="inner two"></div>
+                <div class="inner three"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /Loader -->
+    <div class="container-loginpage">
+        <div class="forms-container-loginpage">
+            <div class="signin-signup">
+                <form action="" class="sign-in-form" id="form-login">
+                    <img src="~/Assets/img/logo-hutech-full.png" class="m-b-30" height="120" alt="">
+                    <h2 class="title-loginpage">Đăng nhập</h2>
+                    <div class="input-field-loginpage">
+                        <i class="lar la-user"></i>
+                        <input type="text" placeholder="MSSV hoặc Email" id="username"/>
+                    </div>
+                    <div class="input-field-loginpage">
+                        <i class="las la-lock"></i>
+                        <input type="password" placeholder="Mật khẩu" id="password"/>
+                    </div>
+                    <div class="option-loginpage-wp">
+                        <input type="submit" value="Đăng nhập" class="btn-loginpage solid" />
+                        <!-- <a class="btn-loginpage solid" href="index.html">Đăng nhập</a> -->
+
+                    </div>
+                    <p class="social-text m-0">
+                        Bạn quên mật khẩu?
+                        <a class="m-l-4" id="sign-up-btn" style="cursor: pointer;">
+                            Lấy lại mật khẩu
+                        </a>
+                    </p>
+                    <p class="social-text">
+                        Bạn đăng nhập không được?
+                        <a class="m-l-4" href="http://qlcntt.hutech.edu.vn/ho-tro?tieu_de=tai%20khoan" target="blank">
+                            Vui lòng xem
+                            hướng dẫn tại
+                            đây
+                        </a>
+                    </p>
+                </form>
+                <form action="" class="sign-up-form">
+                    <img src="assets/img/logo-hutech-full.png" class="m-b-30" height="120" alt="">
+                    <h2 class="title-loginpage">Bạn quên mật khẩu ?</h2>
+                    <div class="input-field-loginpage">
+                        <i class="las la-envelope"></i>
+                        <input type="email" placeholder="Nhập Email" />
+                    </div>
+                    <div class="option-loginpage-wp">
+                        <input type="submit" class="btn-loginpage" value="Gửi" />
+                        <!-- <a class="btn-loginpage solid" href="https://mail.google.com/" target="blank">Gửi</a> -->
+                    </div>
+                    <p class="social-text">
+                        Vui lòng kiểm tra lại email sau vài phút.
+                        <a class="m-l-4" id="sign-in-btn" style="cursor: pointer;">
+                            Trở về
+                        </a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div class="panels-container-loginpage">
+            <div class="panel-loginpage left-panel-loginpage">
+                <div class="content-loginpage">
+                    <h3>Cổng thông tin sinh viên</h3>
+                    <p>
+                        Kênh thông tin nơi dành cho tất cả sinh viên HUTECH.
+                    </p>
+                </div>
+                <img src="~/Assets/img/log.svg" class="image-loginpage" alt="" />
+            </div>
+            <div class="panel-loginpage right-panel-loginpage">
+                <div class="content-loginpage">
+                    <h3>Cổng thông tin sinh viên</h3>
+                    <p>
+                        Kênh thông tin nơi dành cho tất cả sinh viên HUTECH.
+                    </p>
+                </div>
+                <img src="~/Assets/img/register.svg" class="image-loginpage" alt="" />
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/Assets/js/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap Core JS -->
+    <script src="~/Assets/js/popper.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+    <!-- Slimscroll JS -->
+    <script src="~/Assets/js/jquery.slimscroll.min.js"></script>
+    <script src="~/Assets/plugins/toastr/toastr.min.js"></script>
+    <!-- Custom JS -->
+    <script src="~/Assets/js/app.js"></script>
+    <!-- Login JS -->
+    <script src="~/Assets/js/login.js"></script>
+</body>
+
+</html>
