@@ -18,7 +18,7 @@ namespace Models.EntityModel
             UnionBooks = new HashSet<UnionBook>();
             UnionBooks1 = new HashSet<UnionBook>();
         }
-
+        
         public int UserID { get; set; }
 
         public int GroupId { get; set; }
@@ -41,6 +41,8 @@ namespace Models.EntityModel
 
         [StringLength(255)]
         public string Address { get; set; }
+        [StringLength(50)]
+        public string Avatar { set; get; }
 
         public DateTime? Birthday { get; set; }
 

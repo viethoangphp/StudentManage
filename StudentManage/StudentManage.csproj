@@ -127,15 +127,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BUS\UnionBUS.cs" />
     <Compile Include="BUS\UserBUS.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\UnionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\UnionModel.cs" />
+    <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -202,6 +207,8 @@
     <Content Include="Assets\img\thumnail.png" />
     <Content Include="Assets\img\user.jpg" />
     <Content Include="Assets\img\video-call.jpg" />
+    <Content Include="Assets\js\ajax\Union.js" />
+    <Content Include="Assets\js\ajax\User.js" />
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="Assets\js\bootstrap.min.js" />
@@ -216,6 +223,7 @@
     <Content Include="Assets\js\jquery.maskedinput.min.js" />
     <Content Include="Assets\js\jquery.slimscroll.min.js" />
     <Content Include="Assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="Assets\js\lib\sound.js" />
     <Content Include="Assets\js\line-chart.js" />
     <Content Include="Assets\js\login.js" />
     <Content Include="Assets\js\mask.js" />
@@ -224,6 +232,8 @@
     <Content Include="Assets\js\popper.min.js" />
     <Content Include="Assets\js\select2.min.js" />
     <Content Include="Assets\js\task.js" />
+    <Content Include="Assets\mp3\error.mp3" />
+    <Content Include="Assets\mp3\smallbox.mp3" />
     <Content Include="Assets\plugins\bootstrap-tagsinput\bootstrap-tagsinput.css" />
     <Content Include="Assets\plugins\bootstrap-tagsinput\bootstrap-tagsinput.min.js" />
     <Content Include="Assets\plugins\morris\morris.css" />
@@ -306,6 +316,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Home\Footer.cshtml" />
+    <Content Include="Views\Union\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
