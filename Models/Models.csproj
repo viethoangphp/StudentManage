@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\UnionDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="EntityModel\Class.cs" />
     <Compile Include="EntityModel\DBContext.cs" />

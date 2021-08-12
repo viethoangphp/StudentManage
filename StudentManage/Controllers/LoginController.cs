@@ -27,7 +27,7 @@ namespace StudentManage.Controllers
         public ActionResult Logout()
         {
             Session.RemoveAll();
-            return RedirectToAction("Login", "Index");
+            return RedirectToAction("Index", "Login");
         }
     }
 }

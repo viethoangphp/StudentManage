@@ -9,15 +9,16 @@ namespace Models.EntityModel
     [Table("UnionBook")]
     public partial class UnionBook
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [StringLength(6)]
         public string CharID { get; set; }
 
         public DateTime? Create_At { get; set; }
+        public DateTime? ReturnDate { set; get; }
 
         public int? Create_By { get; set; }
 

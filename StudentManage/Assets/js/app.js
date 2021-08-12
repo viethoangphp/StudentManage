@@ -70,7 +70,6 @@ $(document).ready(function() {
 	
 	if($('.select').length > 0) {
 		$('.select').select2({
-			minimumResultsForSearch: -1,
 			width: '100%'
 		});
 	}
@@ -147,11 +146,12 @@ $(document).ready(function() {
 	
 	// Datatable
 
-	if($('.datatable').length > 0) {
-		$('.datatable').DataTable({
-			"bFilter": false,
-		});
-	}
+	//if($('.datatable').length > 0) {
+	//	$('.datatable').DataTable({
+	//		"bFilter": true,
+	//		"ordering":false
+	//	});
+	//}
 	
 	// Tooltip
 
