@@ -92,6 +92,7 @@ namespace Models.EntityModel
 
             modelBuilder.Entity<UnionBook>()
                 .Property(e => e.CharID)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
                 .IsUnicode(false);
 
             modelBuilder.Entity<User>()
