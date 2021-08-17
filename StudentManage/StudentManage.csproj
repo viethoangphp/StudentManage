@@ -131,6 +131,7 @@
     <Compile Include="BUS\UnionBUS.cs" />
     <Compile Include="BUS\UserBUS.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\FacultyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
@@ -329,6 +330,7 @@
     <Content Include="Views\Union\Collaborator.cshtml" />
     <Content Include="Views\Union\ListFacuty.cshtml" />
     <Content Include="Views\Union\Faculty.cshtml" />
+    <Content Include="Views\Faculty\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
