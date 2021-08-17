@@ -16,7 +16,7 @@ namespace Models.EntityModel
         public virtual DbSet<DetailEvalution> DetailEvalutions { get; set; }
         public virtual DbSet<EvaluativeCriteria> EvaluativeCriterias { get; set; }
         public virtual DbSet<EvaluativeMain> EvaluativeMains { get; set; }
-        public virtual DbSet<EvalutionForm_> EvalutionForm_ { get; set; }
+        public virtual DbSet<EvalutionForm> EvalutionForms { get; set; }
         public virtual DbSet<Faculty> Faculties { get; set; }
         public virtual DbSet<GroupUser> GroupUsers { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
@@ -45,9 +45,9 @@ namespace Models.EntityModel
                 .WithRequired(e => e.EvaluativeMain)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<EvalutionForm_>()
+            modelBuilder.Entity<EvalutionForm>()
                 .HasMany(e => e.DetailEvalutions)
-                .WithRequired(e => e.EvalutionForm_)
+                .WithRequired(e => e.EvalutionForm)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Faculty>()
@@ -71,7 +71,7 @@ namespace Models.EntityModel
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Semester>()
-                .HasMany(e => e.EvalutionForm_)
+                .HasMany(e => e.EvalutionForms)
                 .WithRequired(e => e.Semester)
                 .WillCascadeOnDelete(false);
 
@@ -90,11 +90,6 @@ namespace Models.EntityModel
                 .WithRequired(e => e.TimeEvalution)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<UnionBook>()
-                .Property(e => e.CharID)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
-                .IsUnicode(false);
-
             modelBuilder.Entity<User>()
                 .Property(e => e.StudentCode)
                 .IsFixedLength()
@@ -102,7 +97,6 @@ namespace Models.EntityModel
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Email)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<User>()
@@ -116,6 +110,11 @@ namespace Models.EntityModel
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Type)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.Avatar)
                 .IsFixedLength()
                 .IsUnicode(false);
 

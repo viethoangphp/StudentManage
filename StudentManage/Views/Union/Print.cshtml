@@ -1,0 +1,91 @@
+﻿
+@{
+    Layout = null;
+}
+@model StudentManage.Models.UnionModel
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Phiếu</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Assets/img/logo-hutech.png">
+</head>
+<body>
+    <div style="width: 750px; padding: 10px ;margin: 0 auto; font-size: 1.2rem;">
+        <div style="border: 3px solid #222; padding: 1px; background-color: #fb0000cf;">
+            <div style="border: 3px solid #222; padding: 20px;background: #fdf6ec;">
+                <div style="text-align: center;">
+                    <h1 style="font-size: 1.5rem;
+                    margin-top: 0;
+                    margin-bottom: 5px;
+                    text-transform: uppercase;">Đoàn trường đại học công nghệ tp.hcm</h1>
+                    <span>-----o0o-----</span>
+                    <h3 style="font-size: 1.6rem;
+                    margin-top: 9px;
+                    text-transform: uppercase;">biên nhận hồ sơ đoàn viên</h3>
+                </div>
+                <div style="text-align: end;">
+                    <p style="margin: 0;">Số @Model.unionID/@DateTime.Now.Year</p>
+                </div>
+                <div style="display:flex;">
+                    <p style="margin: 9px 0;">Họ và tên:</p>
+                    <p style="margin: 9px 0;">&emsp; @Model.fullname</p>
+                </div>
+                <div style="display:flex;">
+                    <div style="display:flex; width:50%">
+                        <p style="margin: 9px 0;">Ngày sinh:</p>
+                        <p style="margin: 9px 0;">&emsp;@Model.birthDay</p>
+                    </div>
+                    <div style="display:flex; width:50%">
+                        <p style="margin: 9px 0;">MSSV:</p>
+                        <p style="margin: 9px 0;">&emsp;@Model.studentCode</p>
+                    </div>
+                </div>
+                <div style="display:flex;">
+                    <div style="display:flex; width:50%">
+                        <p style="margin: 9px 0;">Lớp:</p>
+                        <p style="margin: 9px 0;">&emsp;@Model.className</p>
+                    </div>
+                    <div style="display:flex; width:50%">
+                        <p style="margin: 9px 0;">Khoa:</p>
+                        <p style="margin: 9px 0;">&emsp;@Model.facultyName</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p style="margin: 7px 0;"><b style="text-decoration:underline;">Lưu ý:</b> Giữ gìn biên nhận cẩn
+                        thận, mang theo biên nhận
+                        khi rút sổ.</p>
+                    <p style="margin: 7px 0;">Vui lòng rút sổ trước ngày: @String.Format("{0:dd/MM/yyyy}", Model.returnDate)</p>
+                    <p style="margin: 7px 0;">Thắc mắc xin liên hệ <b>(028)-3512 0293</b> hoặc
+                        <b>doanthanhnien@hutech.edu.vn</b>
+                    </p>
+                </div>
+                <div style="text-align: end;">
+                    <p>TP.Hồ Chí Minh, ngày ... tháng ... năm 20..</p>
+                    <div style="width: 20%;
+                    margin-left: auto;
+                    margin-right: 80px;
+                    text-align: center;">
+                        <p style="margin: 5px 0;
+                        font-weight: 600;">Người nhận</p>
+                        <p style="margin: 14px 0;"></p>
+                        <p style="margin: 14px 0;">@Model.fullname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        window.print();
+        window.addEventListener("afterprint", function (event) {
+            window.location = "/Union";
+        });
+    })   
+ </script>

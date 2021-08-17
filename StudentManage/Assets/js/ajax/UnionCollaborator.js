@@ -48,26 +48,14 @@ var addUnionAjax = function (formData) {
                 resolve(data);
             }
         })
-        
-       
+
+
     })
 }
 $("#modal-add-union-close").on("click", function () {
     ClearData();
 })
-$(".btn-update").on("click", function () {
-    var id = $(this).data("id");
-    $.ajax({
-        url: "/Union/View/",
-        method: "POST",
-        data: { id: id },
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
-        }
-    })
 
-})
 function ClearData() {
     $("#union_add input").val("")
     $("#union_add select").val("0").change()
@@ -90,13 +78,13 @@ var table = $("#myTable").DataTable({
         { "visible": false, "targets": 0 }
     ],
     columns: [
-        { "data": "id" ,"class":"text-center"},
+        { "data": "id", "class": "text-center" },
         { "data": "unionID", "class": "text-center" },
-        { "data": "fullname" ,"class": "text-center"},
+        { "data": "fullname", "class": "text-center" },
         { "data": "studentCode", "class": "text-center" },
-        { "data": "className", "class": "text-center"},
-        { "data": "facultyName", "class": "text-center"},
-        { "data": "create_at", "class": "text-center"},
+        { "data": "className", "class": "text-center" },
+        { "data": "facultyName", "class": "text-center" },
+        { "data": "create_at", "class": "text-center" },
         {
             "data": "status",
             "class": "text-center",
@@ -107,11 +95,6 @@ var table = $("#myTable").DataTable({
                         "data-toggle='dropdown' aria-expanded='false'>" +
                         "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã nộp" +
                         "</a>" +
-                        "<div class='dropdown-menu dropdown-menu-right'>" +
-                        "<a class='dropdown-item selectItem' href='#' data-id=" + row.id + ">" +
-                        "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã rút" +
-                        "</a>" +
-                        "</div>" +
                         "</div>";
                 }
                 return "<div class='dropdown action-label'>" +
@@ -119,11 +102,6 @@ var table = $("#myTable").DataTable({
                     "data-toggle='dropdown' aria-expanded='false'>" +
                     "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã rút" +
                     "</a>" +
-                    "<div class='dropdown-menu dropdown-menu-right'>" +
-                    "<a class='dropdown-item selectItem' href='#' data-id=" + row.id + ">" +
-                    "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã nộp" +
-                    "</a>" +
-                    "</div>" +
                     "</div>";
             }
         },
@@ -131,7 +109,7 @@ var table = $("#myTable").DataTable({
             "data": "id",
             "class": "text-right",
             "render": function (data) {
-                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/"+data+"'><i class='fa fa-pencil m-r-5'></i> In Biểu Mẫu </a></div></div>";
+                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/" + data + "'><i class='fa fa-pencil m-r-5'></i> In Biểu Mẫu </a></div></div>";
             }
         }
     ],
@@ -157,7 +135,6 @@ $(document).on("click", ".selectItem", function () {
             if (data) {
                 sound("/Assets/mp3/smallbox.mp3");
                 toastr.success("Cập Nhật Thành Công", "Success!");
-                $("#myTable").DataTable().ajax.reload();
             } else {
                 sound("/Assets/mp3/error.mp3");
                 toastr.error("Lỗi Hệ Thống", "Error!");
@@ -202,10 +179,10 @@ $(document).ready(function () {
                         }
                         if (data.success > 0) {
                             toastr.success("Import " + data.success + " rows !", "Success!");
-                        }    
+                        }
                         $("#myTable").DataTable().ajax.reload();
                     })
-                   
+
             })
         }
     });
@@ -229,8 +206,8 @@ $(document).ready(function () {
         var unionid = $("#unionid").val();
         var facultyId = $("#faculty").val()
         var semester = $("#semester").val();
-        table.ajax.url("/Union/Search?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId +"&semester="+semester).load();
-       
+        table.ajax.url("/Union/Search?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId + "&semester=" + semester).load();
+
 
     })
     const listClass = document.getElementById("class");

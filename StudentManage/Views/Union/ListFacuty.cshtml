@@ -1,0 +1,17 @@
+﻿@model IEnumerable<StudentManage.Models.FacultyModel>
+<div class="col-md-6">
+    <div class="form-group">
+        <label>
+            Khoa
+            <span class="text-danger">*</span>
+        </label>
+        <select class="select" name="facultyID">
+            <option value="">---------Chọn Khoa---------</option>
+            @foreach (var item in Model)
+            {
+                <option value="@item.facultyID">@item.facultyName</option>
+            }
+
+        </select>
+    </div>
+</div>

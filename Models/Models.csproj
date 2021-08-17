@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\FacultyDAO.cs" />
     <Compile Include="DAO\UnionDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="EntityModel\Class.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="EntityModel\DetailEvalution.cs" />
     <Compile Include="EntityModel\EvaluativeCriteria.cs" />
     <Compile Include="EntityModel\EvaluativeMain.cs" />
-    <Compile Include="EntityModel\EvalutionForm_.cs" />
+    <Compile Include="EntityModel\EvalutionForm.cs" />
     <Compile Include="EntityModel\Faculty.cs" />
     <Compile Include="EntityModel\GroupUser.cs" />
     <Compile Include="EntityModel\Position.cs" />
