@@ -5,6 +5,7 @@ using System.Web;
 using StudentManage.Models;
 using Models.DAO;
 using Models.EntityModel;
+using System.Globalization;
 
 namespace StudentManage.BUS
 {
@@ -19,17 +20,18 @@ namespace StudentManage.BUS
                 var user = new UserModel();
                 user.userID = model.UserID;
                 user.fullname = model.FullName;
+                user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;
-                user.gender = (int)model.Gender;
+                user.gender = (model.Gender != null) ? (int)model.Gender: 1;
                 user.studentCode = model.StudentCode;
                 user.facultyName = model.Class.Faculty.Name;
                 user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
-                user.cityID =(int)model.CityID;
-                user.districtID = (int)model.DistrictID;
-                user.wardID = (int)model.WardID;
+                user.cityID =(model.CityID != null)? (int)model.CityID:0;
+                user.districtID = (model.DistrictID != null) ? (int)model.DistrictID:0;
+                user.wardID = (model.WardID != null) ? (int)model.WardID:0;
 
                 return user;
             }
@@ -47,6 +49,7 @@ namespace StudentManage.BUS
             user.Phone = model.phone;
             user.Address = model.address;
             user.Birthday = model.birthDay;
+            user.JoinDate = DateTime.ParseExact(model.joinDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             user.Date_End = model.date_end;
             user.Date_Start = model.date_start;
             user.Password = model.password;
@@ -99,8 +102,20 @@ namespace StudentManage.BUS
             }
             return -1;
             
-          
-           
         }
+        public List<ClassModel> GetListClassByCondition(int facultyId,int year)
+        {
+            var result = dao.GetListClassByCondition(facultyId, year);
+            var listClass = new List<ClassModel>();
+            foreach(var item in result)
+            {
+                ClassModel model = new ClassModel();
+                model.classID = item.ClassID;
+                model.className = item.Name;
+                listClass.Add(model);
+            }
+            return listClass;
+        }
+
     }
 }

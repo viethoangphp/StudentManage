@@ -6,10 +6,11 @@ namespace Models.EntityModel
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class EvalutionForm_
+    [Table("EvalutionForm")]
+    public partial class EvalutionForm
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public EvalutionForm_()
+        public EvalutionForm()
         {
             DetailEvalutions = new HashSet<DetailEvalution>();
         }

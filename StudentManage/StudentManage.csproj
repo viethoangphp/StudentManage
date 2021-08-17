@@ -127,6 +127,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BUS\FacultyBUS.cs" />
     <Compile Include="BUS\UnionBUS.cs" />
     <Compile Include="BUS\UserBUS.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -137,8 +138,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Library\EmailService.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
+    <Compile Include="Models\ClassModel.cs" />
+    <Compile Include="Models\DataTableModel.cs" />
+    <Compile Include="Models\FacultyModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\SearchUnionModel.cs" />
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -158,6 +164,7 @@
     <Content Include="Assets\fonts\la-regular-400.svg" />
     <Content Include="Assets\fonts\la-solid-900.svg" />
     <Content Include="Assets\img\attachment.png" />
+    <Content Include="Assets\img\chibidoan3.png" />
     <Content Include="Assets\img\flags\de.png" />
     <Content Include="Assets\img\flags\en.svg" />
     <Content Include="Assets\img\flags\es.png" />
@@ -208,6 +215,7 @@
     <Content Include="Assets\img\user.jpg" />
     <Content Include="Assets\img\video-call.jpg" />
     <Content Include="Assets\js\ajax\Union.js" />
+    <Content Include="Assets\js\ajax\UnionCollaborator.js" />
     <Content Include="Assets\js\ajax\User.js" />
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\bootstrap-datetimepicker.min.js" />
@@ -317,10 +325,13 @@
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Home\Footer.cshtml" />
     <Content Include="Views\Union\Index.cshtml" />
+    <Content Include="Views\Union\Print.cshtml" />
+    <Content Include="Views\Union\Collaborator.cshtml" />
+    <Content Include="Views\Union\ListFacuty.cshtml" />
+    <Content Include="Views\Union\Faculty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Library\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

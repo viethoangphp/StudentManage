@@ -36,7 +36,7 @@ namespace Models.EntityModel
 
         public virtual EvaluativeCriteria EvaluativeCriteria { get; set; }
 
-        public virtual EvalutionForm_ EvalutionForm_ { get; set; }
+        public virtual EvalutionForm EvalutionForm { get; set; }
 
         public virtual User User { get; set; }
     }
