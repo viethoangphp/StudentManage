@@ -49,9 +49,12 @@ $("#UpdateProfile").on("submit", function () {
                 setTimeout(function () {
                     window.location = "/Profile";
                 }, 2000)
-            } else {
+            } else if (data == "false") {
                 sound("/Assets/mp3/error.mp3");
                 toastr.warning("Bạn Không Được Để Trống Các Trường Có Dấu (*)", "Cảnh Báo !");
+            } else {
+                sound("/Assets/mp3/error.mp3");
+                toastr.warning("Email Không Đúng Định Dạng", "Cảnh Báo !");
             }
         }
 

@@ -12,9 +12,26 @@ namespace Models.DAO
         private DBContext db = new DBContext();
         public int Insert(User user)
         {
-            db.Users.Add(user);
-            db.SaveChanges();
-            return user.UserID;
+            if(user.StudentCode != null)
+            {
+                if(db.Users.Where(m=>m.StudentCode == user.StudentCode).FirstOrDefault() ==null)
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    return user.UserID;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                db.Users.Add(user);
+                db.SaveChanges();
+                return user.UserID;
+            }    
+           
         }
         public User GetUserByUsername(string username)
         {
@@ -65,6 +82,22 @@ namespace Models.DAO
                 return result.ClassID;
             }
             return -1;
+        }
+        public List<Class> GetListClassByCondition(int facultyId, int year)
+        {
+            string year1 = year.ToString();
+            if(year != 0 && facultyId !=0)
+            {
+                return db.Classes.Where(m => m.FacutyID == facultyId && m.Name.Substring(0,2).Equals(year1)).ToList();
+            }
+            else if(facultyId != 0)
+            {
+                return db.Classes.Where(m => m.FacutyID == facultyId).ToList();
+            }
+            else
+            {
+                return db.Classes.ToList();
+            }
         }
     }
 }
