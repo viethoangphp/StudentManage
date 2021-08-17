@@ -15,19 +15,32 @@ document.addEventListener("DOMContentLoaded", function () {
     $("#form-login").on("submit", function () {
         var username = $("#username").val();
         var password = $("#password").val();
+        login(username, password).then((data) => {
+            loaderFade();
+                if (data == "true") {
+                    window.location = "/";
+                } else {
+                    setTimeout(() => {
+                        toastr.error("Tên Đăng Nhập Hoặc Mật Khẩu Không Chính Xác !", "Error");
+                    }, 1000)
+                }
+            
+        })
+        return false;
+    })
+})
+const login = function (username, password) {
+    $('#loader').fadeIn('slow');
+    $('#loader-wrapper').fadeIn('slow');
+    return new Promise(resolve => {
         $.ajax({
             url: "/Login",
             method: "POST",
             data: { username: username, password: password },
             dataType: "json",
             success: function (data) {
-                if (data == "true") {
-                    window.location = "/";
-                } else {
-                    toastr.error("Tên Đăng Nhập Hoặc Mật Khẩu Không Chính Xác !", "Error");
-                }
+                resolve(data);
             }
         })
-        return false;
     })
-})
+}

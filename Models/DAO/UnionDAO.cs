@@ -15,9 +15,13 @@ namespace Models.DAO
             db.SaveChanges();
             return book.ID;
         }
-        public List<UnionBook> GetListAll()
+        public int getTotalRecord()
         {
-            return db.UnionBooks.OrderByDescending(m=>m.ID).ToList();
+            return db.UnionBooks.Count();
+        }
+        public List<UnionBook> GetListAll(int start,int length)
+        {
+            return db.UnionBooks.Where(m=>m.User1.PositionID == 2).OrderByDescending(m=>m.ID).Skip(start).Take(length).ToList();
         }
         public UnionBook getUnionBookById(int id)
         {
@@ -31,17 +35,61 @@ namespace Models.DAO
                 if(book.Status == 1)
                 {
                     book.Status = 2;
+                    book.Update_At = DateTime.Now;
                     db.SaveChanges();
                     return true;
                 }
                 else
                 {
                     book.Status = 1;
+                    book.Update_At = DateTime.Now;
+                    book.Create_At = DateTime.Now;
                     db.SaveChanges();
                     return true;
                 }
             }
             return false;
         }
+        public List<UnionBook> GetUnionBookByCondition(int statr, int length,int classId,string unionId,int status, int facutyId , int semester)
+        {
+
+            if(unionId !="")
+            {
+                //19-00003
+                string year = unionId.Substring(0, 2);
+                int numID = Convert.ToInt32(unionId.Substring(3));
+                return db.UnionBooks.Where(m =>m.User1.StudentCode.Substring(0,2).Equals(year) && m.NumID == numID).OrderByDescending(m=>m.NumID).Skip(statr).Take(length).ToList();
+            }
+            else
+            {
+                if(classId !=0 && status !=0)
+                {
+                    return db.UnionBooks.Where(m => m.User1.ClassID == classId && m.Status == status).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }    
+                else if(classId != 0)
+                {
+                    return db.UnionBooks.Where(m => m.User1.ClassID == classId).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }
+                else if(facutyId != 0 && status != 0)
+                {
+                    return db.UnionBooks.Where(m => m.Status == status && m.User1.Class.FacutyID == facutyId).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }
+                else if(facutyId !=0)
+                {
+                    return db.UnionBooks.Where(m=>m.User1.Class.FacutyID == facutyId).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }else if(semester != 0 && status != 0)
+                {
+                    return db.UnionBooks.Where(m => m.User1.Class.Name.ToString().Substring(0,2).Equals(semester.ToString()) && m.Status == status).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }else if(semester != 0)
+                {
+                    return db.UnionBooks.Where(m => m.User1.Class.Name.ToString().Substring(0, 2).Equals(semester.ToString())).OrderByDescending(m => m.NumID).Skip(statr).Take(length).ToList();
+                }
+                else
+                {
+                    return db.UnionBooks.OrderByDescending(m=>m.NumID).Skip(statr).Take(length).ToList();
+                }
+            }
+        }
+      
     }
 }

@@ -20,19 +20,23 @@ namespace StudentManage.BUS
             book.Status = model.status;
             return dao.Insert(book);
         }
-        public List<UnionModel> GetListAll()
+        public int getTotalRecord()
         {
-            var list = dao.GetListAll();
+            return dao.getTotalRecord();
+        }
+        public List<UnionModel> GetListAll(int start , int length)
+        {
+            var list = dao.GetListAll(start,length);
             var listUnion = new List<UnionModel>();
             foreach(var item in list)
             {
                 UnionModel union = new UnionModel();
                 union.id = item.ID;
-                union.unionID = item.User.StudentCode.Substring(0,2)+"-"+item.CharID;
+                union.unionID = item.User1.StudentCode.Substring(0,2)+"-"+ item.NumID.ToString().PadLeft(5,'0');
                 union.fullname = item.User1.FullName;
                 union.studentCode = item.User1.StudentCode;
-                union.className = item.User.Class.Name;
-                union.facultyName = item.User.Class.Faculty.Name;
+                union.className = item.User1.Class.Name;
+                union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
                 union.create_at = String.Format("{0:dd/MM/yyyy h:mm tt}", item.Create_At);
                 union.status = (int)item.Status;
@@ -47,13 +51,15 @@ namespace StudentManage.BUS
             {
                 var union = new UnionModel();
                 union.id = item.ID;
-                union.unionID = item.User.StudentCode.Substring(0, 2) + "-" + item.CharID;
+                union.unionID = item.User1.StudentCode.Substring(0, 2) + "-" + item.NumID.ToString().PadLeft(5, '0');
                 union.fullname = item.User1.FullName;
                 union.studentCode = item.User1.StudentCode;
-                union.className = item.User.Class.Name;
-                union.facultyName = item.User.Class.Faculty.Name;
+                union.className = item.User1.Class.Name;
+                union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
                 union.status = (int)item.Status;
+                union.birthDay = String.Format("{0:dd/MM/yyyy}", item.User.Birthday);
+                union.returnDate = item.ReturnDate;
                 return union;
             }
             return null;
@@ -63,5 +69,26 @@ namespace StudentManage.BUS
         {
             return dao.ChangeStatus(id);
         }
+        public List<UnionModel> GetUnionBookByCondition(int start, int lenght,int classId,string unionId,int status,int faculty,int semester)
+        {
+            var list = dao.GetUnionBookByCondition(start,lenght,classId,unionId,status,faculty,semester);
+            var listUnion = new List<UnionModel>();
+            foreach (var item in list)
+            {
+                UnionModel union = new UnionModel();
+                union.id = item.ID;
+                union.unionID = item.User1.StudentCode.Substring(0, 2) + "-" + item.NumID.ToString().PadLeft(5, '0');
+                union.fullname = item.User1.FullName;
+                union.studentCode = item.User1.StudentCode;
+                union.className = item.User1.Class.Name;
+                union.facultyName = item.User1.Class.Faculty.Name;
+                union.create_At = item.Create_At;
+                union.create_at = String.Format("{0:dd/MM/yyyy h:mm tt}", item.Create_At);
+                union.status = (int)item.Status;
+                listUnion.Add(union);
+            }
+            return listUnion;
+        }
+        
     }
 }

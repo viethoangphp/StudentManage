@@ -17,9 +17,6 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
-                    <a href="#" id="ImportExcel" class="btn content-btn excel-btn"><i class="fa fa-folder-open"></i>Import Excel</a>
-                    <input type="file" id="fileName" style="display:none" />
-                    <a href="#" class="btn content-btn excel-btn"><i class="fa fa-download"></i>Export Excel</a>
                     <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_union-notebook"><i class="fa fa-plus"></i>Sổ đoàn</a>
                 </div>
             </div>
@@ -34,18 +31,16 @@
                     <option value="0"> -- Tất cả -- </option>
                     <option value="17">2017 - 2021</option>
                     <option value="18">2018 - 2022</option>
-                    <option value="19">2019 - 2023</option>
-                    <option value="20">2020 - 2024</option>
-                    <option value="21">2021 - 2025</option>
                 </select>
                 <label class="focus-label">Niên Khóa</label>
             </div>
         </div>
-       @Html.Action("Faculty","Union")
+        @Html.Action("Faculty", "Union")
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus select-focus">
                 <select class="select floating" id="class">
                     <option value="0"> -- Tất cả -- </option>
+
                 </select>
                 <label class="focus-label">Lớp</label>
             </div>
@@ -90,7 +85,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
                     </tbody>
                 </table>
             </div>
@@ -317,7 +311,10 @@
                             <div class="form-group">
                                 <label>Lớp</label>
                                 <select class="select">
-                                    <option value="3"> 18DTHD1 </option>
+                                    <option> 18DTHD1 </option>
+                                    <option> 18DTHD2 </option>
+                                    <option> 14ATHD1 </option>
+                                    <option> 16DTHD5 </option>
                                 </select>
                             </div>
                         </div>
@@ -401,6 +398,6 @@
             .catch(err => console.log("Lỗi"))
 
     </script>
-    <script src="~/Assets/js/ajax/Union.js"></script>
+    <script src="~/Assets/js/ajax/UnionCollaborator.js"></script>
 
 }
