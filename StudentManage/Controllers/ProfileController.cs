@@ -25,10 +25,15 @@ namespace StudentManage.Controllers
         {
             if(ModelState.IsValid)
             {
-                var userID = (int)Session["USER_ID"];
-                var isChange = modelBUS.ChangePassword(userID, model.passwordOld,model.passwordNew);
-                if(isChange)
-                     return Json("true", JsonRequestBehavior.AllowGet);
+                if(model.passwordNew.Equals(model.confirmPassword))
+                {
+                    var userID = (int)Session["USER_ID"];
+                    var isChange = modelBUS.ChangePassword(userID, model.passwordOld, model.passwordNew);
+                    if (isChange)
+                        return Json("true", JsonRequestBehavior.AllowGet);
+                    return Json("passwordError", JsonRequestBehavior.AllowGet);
+                }
+                return Json("confirmError", JsonRequestBehavior.AllowGet);
             }
             return Json("false", JsonRequestBehavior.AllowGet);
         }
