@@ -15,13 +15,13 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
                     <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
-                    <li class="breadcrumb-item active">Danh sách khoa</li>
+                    <li class="breadcrumb-item active">Danh sách lớp</li>
                 </ul>
             </div>
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
                     <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_major">
-                        <i class="fa fa-plus"></i> Khoa
+                        <i class="fa fa-plus"></i> Lớp
                     </a>
                 </div>
             </div>
@@ -30,48 +30,48 @@
     <!-- /Page Header -->
     <!-- Search Filter -->
     @*<div class="row filter-row justify-content-end">
-            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
-                <div class="form-group form-focus select-focus">
-                    <select class="select floating">
-                        <option> -- Tất cả -- </option>
-                        <option>Công nghệ thông tin</option>
-                        <option>Quản trị kinh doanh</option>
-                        <option>Ngôn ngữ anh</option>
-                    </select>
-                    <label class="focus-label">Khoa</label>
-                </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option>Công nghệ thông tin</option>
+                    <option>Quản trị kinh doanh</option>
+                    <option>Ngôn ngữ anh</option>
+                </select>
+                <label class="focus-label">Khoa</label>
             </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
-                <div class="form-group form-focus">
-                    <input type="text" class="form-control floating">
-                    <label class="focus-label">Mã khoa</label>
-                </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+            <div class="form-group form-focus">
+                <input type="text" class="form-control floating">
+                <label class="focus-label">Tên khoa</label>
             </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-12">
-                <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
-            </div>
-        </div>*@
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-12">
+            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>*@
     <!-- /Search Filter -->
 
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-striped custom-table mb-0 datatable" id="myTable">
+                <table class="table table-striped custom-table mb-0 datatable">
                     <thead>
                         <tr>
                             <th class="text-center">STT</th>
-                            <th class="text-center">Tên khoa</th>
-                            <th class="text-center">Số điện thoại</th>
-                            <th class="text-center">Tổng số lớp</th>
+                            <th class="text-center">Tên lớp</th>
+                            <th class="text-center">Khoa</th>
+                            <th class="text-center">Số lượng SV</th>
                             <th class="text-right">Tác vụ</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td class="text-center">1</td>
-                            <td class="text-center">Công nghệ thông tin</td>
-                            <td class="text-center">0285556666</td>
-                            <td class="text-center">45</td>
+                            <td class="text-center">18DTHD1</td>
+                            <td class="text-center">CNTT</td>
+                            <td class="text-center">40</td>
                             <td class="text-right">
                                 <div class="dropdown dropdown-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -104,12 +104,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Thêm khoa</h5>
-                <button type="button" id="close-btn" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="form_add" method="post" action="">
+                <form>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -153,7 +153,7 @@
                             <div class="form-group">
                                 <label>
                                     Tên khoa
-                                    <span class="text-danger">*</span>
+
                                 </label>
                                 <input class="form-control" type="text" value="Công nghệ thông tin">
                             </div>
@@ -161,8 +161,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Số điện thoại </label>
-                                <span class="text-danger">*</span>
-                                <input type="number" class="form-control" value="0285556666">
+                                <input type="number" class="form-control" value="0931889431">
                             </div>
                         </div>
                     </div>
@@ -201,10 +200,4 @@
         </div>
     </div>
 </div>
-<!-- Delete Major Modal -->
-
-@section js{
-    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
-    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/Assets/js/ajax/Faculty.js"></script>
-}
+<!-- /Delete Major Modal -->

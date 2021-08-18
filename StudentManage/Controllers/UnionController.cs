@@ -7,6 +7,12 @@ using System.Web.Mvc;
 using StudentManage.BUS;
 using StudentManage.Library;
 using StudentManage.Models;
+using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Reflection;
+using System.Drawing;
+
 namespace StudentManage.Controllers
 {
     public class UnionController : BaseController
@@ -126,6 +132,7 @@ namespace StudentManage.Controllers
         {
             int error = 0;
             int success = 0;
+            List<UserExcelModel> listError = new List<UserExcelModel>();
              foreach(var item in list)
              {
                 if (ModelState.IsValid)
@@ -146,15 +153,18 @@ namespace StudentManage.Controllers
                     else
                     {
                         error++;
+                        listError.Add(item);
                     }
                 }
                 else
                 {
                     error++;
+                    listError.Add(item);
                     continue;
                 }
               
             }
+            Session["ERROR_LIST"] = listError;
             return Json(new { 
                 error = error,
                 success = success
@@ -190,6 +200,140 @@ namespace StudentManage.Controllers
         {
             var result = new FacultyBUS().GetListFaculty();
             return PartialView(result);
+        }
+
+        //Export Excel
+        public ActionResult ExportExcel()
+        {
+            //---=== Init ===---
+            ExcelPackage pkg = new ExcelPackage();
+            ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
+            string[] listColName = new string[] { "Mã sổ đoàn", "Họ và tên", "MSSV", "Lớp", "Khoa", "Ngày nộp", "Ngày rút", "Trạng thái" };
+#warning returnDate is not right. The right one is Update_At (Waiting for code update)
+            string[] selectProperties = new string[] { "unionID", "fullname", "studentCode", "className", "facultyName", "create_At", "returnDate", "status", };
+            //---=== Configure ===---
+            //Header
+            ExcelRange header = sheet.Cells[1, 1, 1, listColName.Length];
+            header.Merge = true;
+            header.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            header.Value = "Danh sách đoàn viên";
+            header.Style.Font.Size = 24;
+            //Column name
+            int posRow = 2; //Start position of row
+            int posCol = 1; //Start position of column
+            foreach (string name in listColName)
+            {
+                ExcelRange colTitle = sheet.Cells[posRow, posCol];
+                colTitle.Value = name;
+                colTitle.Style.Font.Bold = true;
+                colTitle.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                posCol++;
+            }
+            //Add sorting to column name
+            ExcelRange colTitleRow = sheet.Cells[2, 1, 2, listColName.Length];
+            colTitleRow.AutoFilter = true;
+            
+            //Column data
+            List<UnionModel> listUnion = new UnionBUS().GetListAll(0, 10);
+            #warning NEED UPDATE LINE 225
+            posRow++; // Set to 3 (next row)
+            foreach (UnionModel item in listUnion)
+            {
+                posCol = 1;
+                foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
+                {
+                    ExcelRange cellData = sheet.Cells[posRow, posCol];
+                    cellData.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    if (selectProperties.Contains(propertyInfo.Name))
+                    {
+                        //Check if value is null
+                        string value = null;
+                        if (propertyInfo.GetValue(item) != null)
+                        {
+                            value = propertyInfo.GetValue(item).ToString();
+                        }
+                        //Specific data for returnDate and status
+                        if (propertyInfo.Name.Contains("returnDate"))
+                        {
+                            if (string.IsNullOrEmpty(value)) { value = "Chưa rút sổ"; }
+                        }
+                        if (propertyInfo.Name.Contains("status"))
+                        {
+                            if(value == "1") { value = "Đã nộp"; } else { value = "Đã rút"; }
+                        }
+                        //Bind it to excel cell
+                        cellData.Value = value;
+                        posCol++;
+                    }
+                }
+                posRow++;
+            }
+            //Auto fit all row
+            ExcelRange fitRow = sheet.Cells[2, 1, posRow, listColName.Length];
+            fitRow.AutoFitColumns();
+            //Send back to client for download
+            MemoryStream stream = new MemoryStream();
+            pkg.SaveAs(stream);
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", DateTime.Now.ToString() + ".xlsx");
+        }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= HIGHLIGHT ERROR EXCEL =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        public ActionResult DownloadErrorHighlight()
+        {
+            if (Session["ERROR_LIST"] == null) return RedirectToAction("Index","Union");
+            List<UserExcelModel> listError = (List<UserExcelModel>)Session["ERROR_LIST"];
+            //---=== Init ===---
+            ExcelPackage pkg = new ExcelPackage();
+            ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
+            string[] listColName = new string[] { "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp" };
+            //---=== Configure ===---
+            //Column name
+            int posRow = 1; //Start position of row
+            int posCol = 1; //Start position of column
+            foreach (string name in listColName)
+            {
+                ExcelRange colTitle = sheet.Cells[posRow, posCol];
+                colTitle.Value = name;
+                colTitle.Style.Font.Bold = true;
+                colTitle.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                posCol++;
+            }
+            //Column data
+            posRow++; // Set to 2 (next row)
+            Color highlight = ColorTranslator.FromHtml("#FFFF00"); //Highlight color
+            foreach (UserExcelModel item in listError)
+            {
+                posCol = 1;
+                foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
+                {
+                    ExcelRange cellData = sheet.Cells[posRow, posCol];
+                    cellData.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    if (propertyInfo.GetValue(item) == null) 
+                    {
+                        cellData.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        cellData.Style.Fill.BackgroundColor.SetColor(highlight);
+                    }
+                    else //Add invaild condition here
+                    {
+                        cellData.Value = propertyInfo.GetValue(item);
+                    }
+                    posCol++;
+                }
+                posRow++;
+            }
+            //Auto fit all row
+            ExcelRange fitRow = sheet.Cells[1, 1, posRow, listColName.Length];
+            fitRow.AutoFitColumns();
+            //Add sorting to column name
+            ExcelRange colTitleRow = sheet.Cells[1, 1, 1, listColName.Length];
+            colTitleRow.AutoFilter = true;
+            //Send back to client for download
+            MemoryStream stream = new MemoryStream();
+            pkg.SaveAs(stream);
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", "Error " + DateTime.Now.ToString() + ".xlsx");
         }
     }
 }
