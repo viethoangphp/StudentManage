@@ -72,5 +72,15 @@ namespace StudentManage.BUS
 
             }
         }
+        public int InsertFaculty(FacultyModel model)
+        {
+            Faculty faculty = new Faculty()
+            {
+                Name = model.facultyName,
+                Phone = model.phone,
+                Status = 1
+            };
+            return new FacultyDAO().InsertFaculty(faculty);
+        }
     }
 }

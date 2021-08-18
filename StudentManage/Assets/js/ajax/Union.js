@@ -207,7 +207,6 @@ $(document).ready(function () {
                 //        }    
                 //        $("#myTable").DataTable().ajax.reload();
                 //    })
-                   
             })
         }
     });
