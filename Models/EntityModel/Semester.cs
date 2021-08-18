@@ -12,7 +12,7 @@ namespace Models.EntityModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Semester()
         {
-            EvalutionForm_ = new HashSet<EvalutionForm_>();
+            EvalutionForms = new HashSet<EvalutionForm>();
         }
 
         public int SemesterID { get; set; }
@@ -30,6 +30,6 @@ namespace Models.EntityModel
         public DateTime? Day_End { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EvalutionForm_> EvalutionForm_ { get; set; }
+        public virtual ICollection<EvalutionForm> EvalutionForms { get; set; }
     }
 }
