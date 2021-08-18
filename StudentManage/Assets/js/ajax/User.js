@@ -15,13 +15,25 @@
         success: function (data) {
             if (data == "true") {
                 toastr.success("Đổi Mật Khẩu Thành Công", "Succses!");
-               $("#passwordOld").val("");
+                $("#passwordOld").val("");
                 $("#passwordNew").val("");
                 $("#confirmPassword").val("");
                 sound("/Assets/mp3/smallbox.mp3");
                 $("#ChangePasswordClose").click();
+            } else if (data == "confirmError") {
+                toastr.error("Mật Khẩu Mới Không Trùng Khớp", "Error!");
+                $("#passwordOld").val("");
+                $("#passwordNew").val("");
+                $("#confirmPassword").val("");
+                sound("/Assets/mp3/error.mp3");
+            } else if (data == "passwordError") {
+                toastr.error("Mật Khẩu Cũ Không Đúng", "Error!");
+                $("#passwordOld").val("");
+                $("#passwordNew").val("");
+                $("#confirmPassword").val("");
+                sound("/Assets/mp3/error.mp3");
             } else {
-                toastr.error("Lỗi Dữ Liệu , Vui Lòng Kiểm Tra Lại","Error!");
+                toastr.error("Bạn Không Được Để Trống Các Trường Có Dấu (*)", "Error!");
                 $("#passwordOld").val("");
                 $("#passwordNew").val("");
                 $("#confirmPassword").val("");

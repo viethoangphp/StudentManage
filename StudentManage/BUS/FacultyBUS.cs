@@ -14,7 +14,7 @@ namespace StudentManage.BUS
         {
             var result = new FacultyDAO().GetListFaculty();
             List<FacultyModel> list = new List<FacultyModel>();
-            foreach(var item in result)
+            foreach (var item in result)
             {
                 FacultyModel model = new FacultyModel();
                 model.facultyID = item.FacutyID;
@@ -27,7 +27,7 @@ namespace StudentManage.BUS
         public FacultyModel GetFacultyByName(string name)
         {
             var result = new FacultyDAO().GetFacultyByName(name);
-            if(result != null)
+            if (result != null)
             {
                 FacultyModel model = new FacultyModel() { facultyID = result.FacutyID, facultyName = result.Name };
                 return model;
@@ -47,7 +47,7 @@ namespace StudentManage.BUS
         public ClassModel GetClassModelByName(string name)
         {
             var result = new FacultyDAO().GetClassByClassName(name);
-            if(result != null)
+            if (result != null)
             {
                 return new ClassModel()
                 {
@@ -58,7 +58,19 @@ namespace StudentManage.BUS
                 };
             }
             return null;
-            
+
+        }
+        public string ConvertFacultyName(string facultyName)
+        {
+            switch (facultyName)
+            {
+                case "CNTT":
+                    return "Công Nghệ Thông Tin";
+                case "QTKD":
+                    return "Quản Trị Kinh Doanh";
+                default: return "";
+
+            }
         }
         public int InsertFaculty(FacultyModel model)
         {
