@@ -59,13 +59,30 @@
                                         </li>
                                         <li>
                                             <div class="title">Ngày sinh:</div>
-                                            <div class="text">@String.Format("{0:dd/MM/yyyy}",Model.birthDay)</div>
+                                            @if (Model.birthDay != null)
+                                            {
+                                                <div class="text">@String.Format("{0:dd/MM/yyyy}", Model.birthDay)</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text">Chưa Cập Nhật</div>
+                                            }
                                         </li>
                                         <li>
                                             <div class="title">Địa chỉ:</div>
-                                            <div class="text" id="address">
-                                                @Model.address
-                                            </div>
+                                            @if (Model.address != null)
+                                            {
+                                                <div class="text" id="address">
+                                                    @Model.address
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text" id="address">
+                                                   Chưa Cập Nhật
+                                                </div>
+                                            }
+
                                         </li>
                                         @if (Model.gender == 1)
                                         {
@@ -114,19 +131,19 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Mật khẩu cũ</label>
+                                        <label>Mật khẩu cũ (*)</label>
                                         <input type="password" class="form-control" id="passwordOld">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Mật khẩu mới</label>
+                                        <label>Mật khẩu mới (*)</label>
                                         <input type="password" class="form-control" id="passwordNew">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Nhập lại mật khẩu mới</label>
+                                        <label>Nhập lại mật khẩu mới (*)</label>
                                         <input type="password" class="form-control" id="confirmPassword">
                                     </div>
                                 </div>
@@ -219,7 +236,7 @@
                             <div class="form-group">
                                 <label>Tỉnh/Thành phố <span class="text-danger">*</span></label>
                                 <select class="select" id="city" name="cityID">
-                                    <option value="">Chọn Tỉnh/Thành Phố</option>
+                                    <option value="0">Chọn Tỉnh/Thành Phố</option>
                                 </select>
                             </div>
                         </div>
@@ -227,7 +244,7 @@
                             <div class="form-group">
                                 <label>Quận/Huyện<span class="text-danger">*</span></label>
                                 <select class="select" id="district" name="districtID">
-                                    <option value="">Chọn Quận/Huyện</option>
+                                    <option value="0">Chọn Quận/Huyện</option>
                                 </select>
                             </div>
                         </div>
@@ -235,7 +252,7 @@
                             <div class="form-group">
                                 <label>Phường/Xã<span class="text-danger">*</span></label>
                                 <select class="select" id="ward" name="wardID">
-                                    <option value="">Chọn Phường/Xã</option>
+                                    <option value="0">Chọn Phường/Xã</option>
                                 </select>
                             </div>
                         </div>
@@ -274,66 +291,77 @@
         var wardID = @Model.wardID;
         let count = 0;
         data.forEach(item => {
-            city.options[city.options.length] = new Option(item.name,item.code)
-            if(cityID == city.options[count].value){
-                city.options[count].selected = true
+            city.options[city.options.length] = new Option(item.name, item.code)
+            if (cityID != 0) {
+                if (cityID == city.options[count].value) {
+                    city.options[count].selected = true
+                }
+                count++;
             }
-            count++;
+           
         });
-        count = 0;
-        var listDistrict = data.filter(m=>m.code == cityID)
-        listDistrict[0].districts.forEach(item=>{
-            district.options[district.options.length] = new Option(item.name,item.code)
-            if(districtID == district.options[count].value)
-            {
-                district.options[count].selected = true
-            }
-            count++;
-        })
-        count = 0;
-        var listWard = listDistrict[0].districts.filter(m=>m.code == districtID)
-        listWard[0].wards.forEach(item=>{
-            ward.options[ward.options.length] = new Option(item.name,item.code)
-            if(wardID == ward.options[count].value)
-            {
-                ward.options[count].selected = true
-            }
-            count++;
-        })
+        if (cityID != 0) {
+            count = 0;
+            var listDistrict = data.filter(m => m.code == cityID)
+            listDistrict[0].districts.forEach(item => {
+                district.options[district.options.length] = new Option(item.name, item.code)
+                if (districtID != 0) {
+                    if (districtID == district.options[count].value) {
+                        district.options[count].selected = true
+                    }
+                    count++;
+                }
+            })
+        }
+
+        if (districtID != 0) {
+            count = 0;
+            var listWard = listDistrict[0].districts.filter(m => m.code == districtID)
+            listWard[0].wards.forEach(item => {
+                ward.options[ward.options.length] = new Option(item.name, item.code)
+                if (wardID != 0) {
+                    if (wardID == ward.options[count].value) {
+                        ward.options[count].selected = true
+                    }
+                    count++;
+                }
+            })
+        }
+           
+        
         const cityName = city.options[city.selectedIndex].innerText;
         const districtName = district.options[district.selectedIndex].innerText;
         const wardName = ward.options[ward.selectedIndex].innerText;
         console.log(cityName + " " + districtName + " " + wardName + " " + address.innerText);
         address.innerText = address.innerText + ", " + wardName + ", " + districtName + ", " + cityName;
+        var listDistrict;
+        var listWard;
         city.onchange = function()
         {
             district.length = 1
             ward.length = 1
             if(this.value != 0)
             {
-                var listDistrict = data.filter(m=>m.code == this.value)
+                listDistrict = data.filter(m=>m.code == this.value)
                 listDistrict[0].districts.forEach(item=>{
                     district.options[district.options.length] = new Option(item.name,item.code)
                 })
-                district.onchange = function(){
-                    ward.length =1
-                    if(this.value != 0)
-                    {
-                        var listWard = listDistrict[0].districts.filter(m=>m.code == this.value)
-                        listWard[0].wards.forEach(item=>{
-                            ward.options[ward.options.length] = new Option(item.name,item.code)
-                        })
-                    }
-                }
+              
+            }
+        }
+        district.onchange = function () {
+            ward.length = 1
+            if (this.value != 0) {
+                var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
+                listWard[0].wards.forEach(item => {
+                    ward.options[ward.options.length] = new Option(item.name, item.code)
+                })
             }
         }
     })
     .catch(err => console.log("Lỗi"))
     const birthDay = document.getElementById("birthDay")
     birthDay.value = "@String.Format("{0:dd/MM/yyyy}", Model.birthDay)";
-   
-        
-
     console.log("@String.Format("{0:dd/MM/yyyy}", Model.birthDay)");
     </script>
     <script src="~/Assets/js/ajax/User.js"></script>
