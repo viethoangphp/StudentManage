@@ -11,11 +11,8 @@ namespace StudentManage.Models
         [Required]
         public string passwordOld { set; get;}
         [Required]
-        [MinLength(6)]
         public string passwordNew { set; get; }
         [Required]
-        [MinLength(6)]
-        [Compare("passwordNew")]
         public string confirmPassword { set; get;}
     }
 }

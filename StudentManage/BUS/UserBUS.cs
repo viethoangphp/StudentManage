@@ -89,6 +89,7 @@ namespace StudentManage.BUS
             user.GroupId = 2;
             user.PositionID = 2;
             var classID = dao.GetClassIDByClassName(model.className);
+            // nếu không có thì thêm
             if (classID != -1)
             {
                 user.ClassID = classID;
@@ -99,6 +100,32 @@ namespace StudentManage.BUS
                 user.Password = model.studentCode;
                 user.Status = 1;
                 return dao.Insert(user);
+            }
+            else
+            {
+                // tạo class mới
+                ClassModel classModel = new ClassModel();
+                classModel.className = model.className.ToUpper();
+                var facultyBUS = new FacultyBUS();
+                var facultyName = facultyBUS.ConvertFacultyName(model.facultyName);
+                if(facultyName != "")
+                {
+                    var faculty = facultyBUS.GetFacultyByName(facultyName);
+                    if (faculty != null)
+                    {
+                        classModel.facultyID = faculty.facultyID;
+                        var classId = facultyBUS.InsertClass(classModel);
+                        user.ClassID = classID;
+                        user.FullName = model.fullname;
+                        user.StudentCode = model.studentCode;
+                        user.Email = model.email;
+                        user.Phone = model.phone;
+                        user.Password = model.studentCode;
+                        user.Status = 1;
+                        return dao.Insert(user);
+                    }
+                }    
+               
             }
             return -1;
             

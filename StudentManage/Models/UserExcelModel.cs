@@ -18,6 +18,9 @@ namespace StudentManage.Models
         public string email { set; get; }
         [Required]
         public string className { set; get;}
-       
+        [Required]
+        public int unionID { set; get; }
+        [Required]
+        public string facultyName { set; get; }
     }
 }

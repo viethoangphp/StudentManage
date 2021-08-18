@@ -131,7 +131,7 @@ var table = $("#myTable").DataTable({
             "data": "id",
             "class": "text-right",
             "render": function (data) {
-                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/"+data+"'><i class='fa fa-pencil m-r-5'></i> In Biểu Mẫu </a></div></div>";
+                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/" + data + "'><i class='fa fa-print m-r-5'></i> In Biểu Mẫu </a><a class='dropdown-item sendReturnEmail' href='#'  data-id='" + data +"'><i class='fa fa-envelope m-r-5'></i> Gửi Lại Email Nộp Sổ Đoàn</a></div></div>";
             }
         }
     ],
@@ -185,26 +185,28 @@ $(document).ready(function () {
                 var listObj = [];
                 for (let i = 0; i < rows.length; i++) {
                     var obj = new Object();
-                    obj.fullname = rows[i][0];
-                    obj.studentCode = rows[i][1];
-                    obj.phone = rows[i][2];
-                    obj.email = rows[i][3];
-                    obj.className = rows[i][4];
+                    obj.unionID = rows[i][0]
+                    obj.fullname = rows[i][1];
+                    obj.studentCode = rows[i][2];
+                    obj.phone = rows[i][3];
+                    obj.email = rows[i][4];
+                    obj.className = rows[i][5];
+                    obj.facultyName = rows[i][6];
                     listObj.push(obj);
                 }
 
                 listObj = JSON.stringify({ 'list': listObj });
                 console.log(listObj);
-                InsertRows(listObj)
-                    .then(function (data) {
-                        if (data.error > 0) {
-                            toastr.error("Import Error " + data.error + " rows !", "Error!");
-                        }
-                        if (data.success > 0) {
-                            toastr.success("Import " + data.success + " rows !", "Success!");
-                        }    
-                        $("#myTable").DataTable().ajax.reload();
-                    })
+                //InsertRows(listObj)
+                //    .then(function (data) {
+                //        if (data.error > 0) {
+                //            toastr.error("Import Error " + data.error + " rows !", "Error!");
+                //        }
+                //        if (data.success > 0) {
+                //            toastr.success("Import " + data.success + " rows !", "Success!");
+                //        }    
+                //        $("#myTable").DataTable().ajax.reload();
+                //    })
                    
             })
         }
@@ -261,7 +263,29 @@ $(document).ready(function () {
         $("#unionid").val("");
 
     })
+    $(document).on("click",".sendReturnEmail", function () {
+        console.log("click");
 
+        sendReturnEmail($(this).data("id")).then(function (data) {
+            loaderFade();
+            toastr.success("Gửi Email Thành Công", "Success!");
+        })
+    })
+    const sendReturnEmail = function (id) {
+        return new Promise(function (resolve) {
+            $('#loader').fadeIn('slow');
+            $('#loader-wrapper').fadeIn('slow');
+            $.ajax({
+                url: "/Union/SendEmail",
+                method: "POST",
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    resolve(data)
+                }
+            })
+        })
+    }
 })
 function loadIndex() {
     $("#myTable_filter").css("display", "none");

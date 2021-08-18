@@ -11,7 +11,7 @@ namespace StudentManage.Library
     {
         public void Send(string toEmail, string content)
         {
-            MailAddress fromAddress = new MailAddress("tranviethoang.nb@gmail.com", "HUTECH UNIVERCITY");
+            MailAddress fromAddress = new MailAddress("tranviethoang.nb@gmail.com", "HUTECH UNIVERSITY");
             MailAddress toAddress = new MailAddress(toEmail);
             const string fromPassword = "nffegjqoaiucskcb";
             string subject = "HUTECH Thông Báo Xác Nhận Thông Tin Nộp Sổ Đoàn Thành Công !";
@@ -38,16 +38,12 @@ namespace StudentManage.Library
         }
         public bool IsValid(string emailaddress)
         {
-            try
-            {
-                MailAddress m = new MailAddress(emailaddress);
 
+            if (System.Text.RegularExpressions.Regex.IsMatch(emailaddress, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+            {
                 return true;
             }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return false;
         }
 
     }
