@@ -168,6 +168,7 @@ namespace StudentManage.Controllers
                         else
                         {
                             error++;
+                            listError.Add(item);
                         }
                     }
                     else
@@ -243,8 +244,7 @@ namespace StudentManage.Controllers
             ExcelPackage pkg = new ExcelPackage();
             ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
             string[] listColName = new string[] { "Mã sổ đoàn", "Họ và tên", "MSSV", "Lớp", "Khoa", "Ngày nộp", "Ngày rút", "Trạng thái" };
-#warning returnDate is not right. The right one is Update_At (Waiting for code update)
-            string[] selectProperties = new string[] { "unionID", "fullname", "studentCode", "className", "facultyName", "create_At", "returnDate", "status", };
+            string[] selectProperties = new string[] { "unionID", "fullname", "studentCode", "className", "facultyName", "create_At", "update_At", "status", };
             //---=== Configure ===---
             //Header
             ExcelRange header = sheet.Cells[1, 1, 1, listColName.Length];
@@ -287,7 +287,7 @@ namespace StudentManage.Controllers
                             value = propertyInfo.GetValue(item).ToString();
                         }
                         //Specific data for returnDate and status
-                        if (propertyInfo.Name.Contains("returnDate"))
+                        if (propertyInfo.Name.Contains("update_At"))
                         {
                             if (string.IsNullOrEmpty(value)) { value = "Chưa rút sổ"; }
                         }
@@ -320,7 +320,7 @@ namespace StudentManage.Controllers
             //---=== Init ===---
             ExcelPackage pkg = new ExcelPackage();
             ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
-            string[] listColName = new string[] { "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp" };
+            string[] listColName = new string[] {"Mã sổ đoàn", "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp", "Khoa"};
             //---=== Configure ===---
             //Column name
             int posRow = 1; //Start position of row
@@ -345,8 +345,7 @@ namespace StudentManage.Controllers
                     cellData.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     if (propertyInfo.GetValue(item) == null) 
                     {
-                        cellData.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        cellData.Style.Fill.BackgroundColor.SetColor(highlight);
+                        cellData.Value = null;
                     }
                     else //Add invaild condition here
                     {

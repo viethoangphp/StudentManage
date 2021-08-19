@@ -125,6 +125,7 @@ namespace StudentManage.BUS
                 }
             }
             return result;
+        }
         public int InsertFaculty(FacultyModel model)
         {
             Faculty faculty = new Faculty()

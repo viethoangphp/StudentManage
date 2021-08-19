@@ -198,11 +198,6 @@ $(document).ready(function () {
                 listObj = JSON.stringify({ 'list': listObj });
                 InsertRows(listObj)
                     .then(function (data) {
-                        loaderFade();
-                        if (data.error > 0) {
-                            toastr.error("Import Error " + data.error + " rows !", "Error!");
-                InsertRows(listObj)
-                    .then(function (data) {
                         if (data.error > 0) {
                             toastr.error("Import Error " + data.error + " rows !", "Error!");
                             window.location = "/Union/DownloadErrorHighlight"

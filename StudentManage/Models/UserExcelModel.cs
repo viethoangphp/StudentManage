@@ -8,7 +8,8 @@ namespace StudentManage.Models
 {
     public class UserExcelModel
     {
-        
+
+        public string unionID { set; get; }
         public string fullname { set; get;}
        
         public string studentCode { set; get; }
@@ -18,9 +19,6 @@ namespace StudentManage.Models
         public string email { set; get; }
        
         public string className { set; get;}
-        
-        public string unionID { set; get; }
-     
         public string facultyName { set; get; }
         
     }
