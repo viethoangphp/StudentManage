@@ -90,11 +90,33 @@ namespace StudentManage.BUS
                 union.className = item.User1.Class.Name;
                 union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
+                union.update_At = item.Update_At;
                 union.create_at = String.Format("{0:dd/MM/yyyy h:mm tt}", item.Create_At);
                 union.status = (int)item.Status;
                 listUnion.Add(union);
             }
             return new Tuple<int, List<UnionModel>>(result.TotalRecords, listUnion);
+        }
+        public List<UnionModel> GetUnionBookByCondition(int classId, string unionId, int status, int faculty, int semester)
+        {
+            var result = dao.GetUnionBookByCondition(classId, unionId, status, faculty, semester);
+            var listUnion = new List<UnionModel>();
+            foreach (var item in result)
+            {
+                UnionModel union = new UnionModel();
+                union.id = item.ID;
+                union.unionID = item.User1.StudentCode.Substring(0, 2) + "-" + item.NumID.ToString().PadLeft(5, '0');
+                union.fullname = item.User1.FullName;
+                union.studentCode = item.User1.StudentCode;
+                union.className = item.User1.Class.Name;
+                union.facultyName = item.User1.Class.Faculty.Name;
+                union.create_At = item.Create_At;
+                union.update_At = item.Update_At;
+                union.create_at = String.Format("{0:dd/MM/yyyy h:mm tt}", item.Create_At);
+                union.status = (int)item.Status;
+                listUnion.Add(union);
+            }
+            return listUnion;
         }
         public void SendReturnEmail(int unionID)
         {
