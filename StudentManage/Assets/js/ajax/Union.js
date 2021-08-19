@@ -236,6 +236,16 @@ $(document).ready(function () {
        
 
     })
+    $("#ExportExcel").on("click", function () {
+        var classid = $("#class").val();
+        var status = $("#status").val();
+        var unionid = $("#unionid").val();
+        var facultyId = $("#faculty").val()
+        var semester = $("#semester").val();
+        window.location = "/Union/ExportExcel?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId + "&semester=" + semester;
+
+
+    })
     const listClass = document.getElementById("class");
     $("#faculty").on("change", function () {
         console.log("Change");

@@ -24,6 +24,10 @@ namespace Models.DAO
         {
             return db.UnionBooks.Where(m => m.User1.PositionID == 2).OrderByDescending(m => m.ID).Skip(start).Take(length).ToList();
         }
+        public List<UnionBook> GetListAll()
+        {
+            return db.UnionBooks.Where(m => m.User1.PositionID == 2).OrderByDescending(m => m.ID).ToList();
+        }
         public UnionBook getUnionBookById(int id)
         {
             return db.UnionBooks.Find(id);
@@ -110,6 +114,19 @@ namespace Models.DAO
             //    }
             //}
         }
+      
+        public List<UnionBook> GetUnionBookByCondition(int classId, string unionId, int status, int facutyId, int semester)
+        {
+            int numID = -1;
+            int.TryParse(string.IsNullOrEmpty(unionId) ? "" : unionId.Substring(3), out numID);
+            var listResult = db.UnionBooks.Where(m => string.IsNullOrEmpty(unionId) ||
+            (m.User1.StudentCode.StartsWith(unionId.Substring(0, 2)) && m.NumID == numID));
+            listResult = listResult.Where(m => semester == 0 || m.User1.Class.Name.StartsWith(semester.ToString()));
+            listResult = listResult.Where(m => facutyId == 0 || m.User1.Class.FacutyID == facutyId);
+            listResult = listResult.Where(m => classId == 0 || m.User1.ClassID == classId);
+            listResult = listResult.Where(m => status == 0 || m.Status == status);
+            listResult = listResult.OrderByDescending(m => m.NumID);
+            return listResult.ToList();
 
         /// <summary>
         /// Insert a list union to database

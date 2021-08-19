@@ -262,7 +262,7 @@ namespace StudentManage.Controllers
         }
 
         //Export Excel
-        public ActionResult ExportExcel()
+        public ActionResult ExportExcel(int classId, string unionId, int status, int facultyId, int semester)
         {
             //---=== Init ===---
             ExcelPackage pkg = new ExcelPackage();
@@ -292,8 +292,7 @@ namespace StudentManage.Controllers
             colTitleRow.AutoFilter = true;
             
             //Column data
-            List<UnionModel> listUnion = new UnionBUS().GetListAll(0, 10);
-            #warning NEED UPDATE LINE 225
+            List<UnionModel> listUnion = new UnionBUS().GetUnionBookByCondition(classId, unionId, status, facultyId, semester);
             posRow++; // Set to 3 (next row)
             foreach (UnionModel item in listUnion)
             {
