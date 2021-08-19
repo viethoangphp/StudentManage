@@ -114,14 +114,12 @@ namespace StudentManage.BUS
         }
         public string Convert(string fac)
         {
-            var arr = fac.ToCharArray();
             string result = "";
-            for (int i = 0; i < arr.Length; i++)
+            foreach (var ch in fac)
             {
-                bool isAlphaBet = Regex.IsMatch(arr[i].ToString(), "[a-z]", RegexOptions.IgnoreCase);
-                if (isAlphaBet)
+                if (char.IsLetter(ch))
                 {
-                    result += arr[i];
+                    result += ch;
                 }
             }
             return result;
