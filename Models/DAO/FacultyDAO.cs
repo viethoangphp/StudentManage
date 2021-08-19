@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Models.EntityModel;
 namespace Models.DAO
@@ -21,7 +22,7 @@ namespace Models.DAO
         }
         public Faculty GetFacultyByName(string facultyName)
         {
-            var result = db.Faculties.Where(m => m.Name.Equals(facultyName.Trim())).FirstOrDefault();
+            var result = db.Faculties.Where(m => m.Name.Trim().Equals(facultyName.Trim())).FirstOrDefault();
             if (result != null)
                 return result;
             return null;
@@ -41,6 +42,7 @@ namespace Models.DAO
         }
         public Class GetClassByClassName(string className)
         {
+            //Regex.Replace(name.Trim(), @"\s+", " ")
             var result = db.Classes.Where(m => m.Name.Equals(className.Trim())).FirstOrDefault();
             if (result != null)
                 return result;

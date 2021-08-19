@@ -143,20 +143,32 @@ namespace StudentManage.Controllers
             List<UserExcelModel> listError = new List<UserExcelModel>();
              foreach(var item in list)
              {
-                if (ModelState.IsValid)
+                if (!String.IsNullOrEmpty(item.fullname) && !String.IsNullOrEmpty(item.email) && !String.IsNullOrEmpty(item.studentCode) &&
+                    !String.IsNullOrEmpty(item.phone) && !String.IsNullOrEmpty(item.facultyName) && !String.IsNullOrEmpty(item.className) &&
+                    !String.IsNullOrEmpty(item.unionID))
                 {
-                    var isInsert = new UserBUS().InsertFromExcel(item);
-                    if (isInsert > 0)
+                    int num = -1;
+                    Int32.TryParse(item.unionID, out num);
+                    if (num > 0)
                     {
-                        var book = new UnionModel();
-                        book.create_At = DateTime.Now;
-                        book.create_by = (int)Session["USER_ID"];
-                        book.userID = isInsert;
-                        book.status = 1;
-                        book.returnDate = DateTime.Now;
-                        var result = new UnionBUS().Insert(book);
-                        if (result < 0) error++;
-                        success++;
+                        var isInsert = new UserBUS().InsertFromExcel(item);
+                        if (isInsert > 0)
+                        {
+                            var book = new UnionModel();
+                            book.create_At = DateTime.Now;
+                            book.create_by = (int)Session["USER_ID"];
+                            book.userID = isInsert;
+                            book.unionID = item.unionID;
+                            book.status = 1;
+                            book.returnDate = DateTime.Now;
+                            var result = new UnionBUS().Insert(book);
+                            if (result < 0) error++;
+                            success++;
+                        }
+                        else
+                        {
+                            error++;
+                        }
                     }
                     else
                     {

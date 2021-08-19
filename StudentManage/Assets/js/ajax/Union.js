@@ -183,20 +183,24 @@ $(document).ready(function () {
         } else {
             readXlsxFile(fileName.files[0]).then(function (rows) {
                 var listObj = [];
-                for (let i = 0; i < rows.length; i++) {
+                for (let i = 1; i < rows.length; i++) {
                     var obj = new Object();
-                    obj.unionID = rows[i][0]
-                    obj.fullname = rows[i][1];
-                    obj.studentCode = rows[i][2];
-                    obj.phone = rows[i][3];
+                    obj.unionID = "" + rows[i][0] + "";
+                    obj.fullname = ""+rows[i][1]+"";
+                    obj.studentCode = ""+rows[i][2]+"";
+                    obj.phone = ""+rows[i][3]+"";
                     obj.email = rows[i][4];
                     obj.className = rows[i][5];
                     obj.facultyName = rows[i][6];
                     listObj.push(obj);
                 }
-
-                listObj = JSON.stringify({ 'list': listObj });
                 console.log(listObj);
+                listObj = JSON.stringify({ 'list': listObj });
+                InsertRows(listObj)
+                    .then(function (data) {
+                        loaderFade();
+                        if (data.error > 0) {
+                            toastr.error("Import Error " + data.error + " rows !", "Error!");
                 InsertRows(listObj)
                     .then(function (data) {
                         if (data.error > 0) {
@@ -213,6 +217,8 @@ $(document).ready(function () {
     });
     const InsertRows = function (listObj) {
         return new Promise(function (resolve) {
+            $('#loader').fadeIn('slow');
+            $('#loader-wrapper').fadeIn('slow');
             $.ajax({
                 url: "/Union/InsertExcel",
                 method: "POST",
