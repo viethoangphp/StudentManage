@@ -114,8 +114,9 @@ namespace StudentManage.BUS
                     if (faculty != null)
                     {
                         classModel.facultyID = faculty.facultyID;
+                        classModel.status = 1;
                         var classId = facultyBUS.InsertClass(classModel);
-                        user.ClassID = classID;
+                        user.ClassID = classId;
                         user.FullName = model.fullname;
                         user.StudentCode = model.studentCode;
                         user.Email = model.email;

@@ -17,6 +17,10 @@ namespace StudentManage.BUS
             book.Create_At = DateTime.Now;
             book.Create_By = model.create_by;
             book.ReturnDate = model.returnDate;
+            if(model.unionID != null)
+            {
+                book.NumID = Int32.Parse(model.unionID)-1;
+            }    
             book.UserID = model.userID;
             book.Status = model.status;
             return dao.Insert(book);
@@ -39,6 +43,7 @@ namespace StudentManage.BUS
                 union.className = item.User1.Class.Name;
                 union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
+                union.update_At = item.Update_At;
                 union.create_at = String.Format("{0:dd/MM/yyyy h:mm tt}", item.Create_At);
                 union.status = (int)item.Status;
                 listUnion.Add(union);
@@ -60,6 +65,7 @@ namespace StudentManage.BUS
                 union.create_At = item.Create_At;
                 union.status = (int)item.Status;
                 union.birthDay = String.Format("{0:dd/MM/yyyy}", item.User.Birthday);
+                union.update_At = item.Update_At;
                 union.returnDate = item.ReturnDate;
                 return union;
             }
