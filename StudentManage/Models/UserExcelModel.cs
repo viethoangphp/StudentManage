@@ -20,6 +20,7 @@ namespace StudentManage.Models
        
         public string className { set; get;}
         public string facultyName { set; get; }
+        public string ErrorMsg { get; set; }
         
     }
 }

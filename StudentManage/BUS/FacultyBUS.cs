@@ -63,15 +63,15 @@ namespace StudentManage.BUS
         }
         public string ConvertFacultyName(string facultyName)
         {
-            if(facultyName.Equals("Dược"))
+            if(facultyName.Equals("Dược", StringComparison.OrdinalIgnoreCase))
             {
                 return "Dược";
             }    
-            if(facultyName.Equals("Luật"))
+            if(facultyName.Equals("Luật", StringComparison.OrdinalIgnoreCase))
             {
                 return "Luật";
             }    
-            facultyName = this.Convert(facultyName);
+            facultyName = Convert(facultyName).ToUpper();
             switch (facultyName)
             {
                 case "CNTT":
