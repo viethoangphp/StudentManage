@@ -83,11 +83,13 @@ namespace StudentManage.BUS
             return false;
             
         }
+
         public int InsertFromExcel(UserExcelModel model)
         {
             var user = new User();
             user.GroupId = 2;
             user.PositionID = 2;
+
             var classID = dao.GetClassIDByClassName(model.className);
             // nếu không có thì thêm
             if (classID != -1)

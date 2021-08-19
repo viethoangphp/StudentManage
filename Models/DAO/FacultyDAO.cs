@@ -22,7 +22,7 @@ namespace Models.DAO
         }
         public Faculty GetFacultyByName(string facultyName)
         {
-            var result = db.Faculties.Where(m => m.Name.Trim().Equals(facultyName.Trim())).FirstOrDefault();
+            var result = db.Faculties.AsNoTracking().Where(m => m.Name.Trim().Equals(facultyName.Trim())).FirstOrDefault();
             if (result != null)
                 return result;
             return null;

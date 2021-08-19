@@ -140,57 +140,73 @@ namespace StudentManage.Controllers
         {
             int error = 0;
             int success = 0;
+            int total = list.Count;
+
             List<UserExcelModel> listError = new List<UserExcelModel>();
-             foreach(var item in list)
-             {
-                if (!String.IsNullOrEmpty(item.fullname) && !String.IsNullOrEmpty(item.email) && !String.IsNullOrEmpty(item.studentCode) &&
-                    !String.IsNullOrEmpty(item.phone) && !String.IsNullOrEmpty(item.facultyName) && !String.IsNullOrEmpty(item.className) &&
-                    !String.IsNullOrEmpty(item.unionID))
+
+            // Convert list model excel to model union book
+            var listUnionBook = new List<UnionModel>();
+            foreach (var item in list)
+            {
+                // Check validate data
+                if (string.IsNullOrEmpty(item.fullname) || string.IsNullOrEmpty(item.email) || string.IsNullOrEmpty(item.studentCode) ||
+                    string.IsNullOrEmpty(item.phone) || string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className) ||
+                    string.IsNullOrEmpty(item.unionID))
                 {
-                    int num = -1;
-                    Int32.TryParse(item.unionID, out num);
-                    if (num > 0)
-                    {
-                        var isInsert = new UserBUS().InsertFromExcel(item);
-                        if (isInsert > 0)
-                        {
-                            var book = new UnionModel();
-                            book.create_At = DateTime.Now;
-                            book.create_by = (int)Session["USER_ID"];
-                            book.userID = isInsert;
-                            book.unionID = item.unionID;
-                            book.status = 1;
-                            book.returnDate = DateTime.Now;
-                            var result = new UnionBUS().Insert(book);
-                            if (result < 0) error++;
-                            success++;
-                        }
-                        else
-                        {
-                            error++;
-                            listError.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        error++;
-                        listError.Add(item);
-                    }
-                }
-                else
-                {
-                    error++;
                     listError.Add(item);
+                    error++;
                     continue;
                 }
-              
+
+                // Check union number id
+                int num = -1;
+                if (!int.TryParse(item.unionID, out num))
+                {
+                    listError.Add(item);
+                    error++;
+                    continue;
+                }
+
+                // Convert to UnionModel
+                var isInsert = new UserBUS().InsertFromExcel(item);
+                if (isInsert <= 0)
+                {
+                    listError.Add(item);
+                    error++;
+                    continue;
+                }
+
+                var book = new UnionModel();
+                book.create_At = DateTime.Now;
+                book.create_by = (int)Session["USER_ID"];
+                book.userID = isInsert;
+                book.unionID = item.unionID;
+                book.status = 1;
+                book.returnDate = DateTime.Now;
+
+                listUnionBook.Add(book);
             }
+
+            // Insert list data to db
+            var listFail = UnionBUS.SaveListUnionBook(listUnionBook);
+
+            // Get list error
+            error += listFail.Count;
+            foreach (var itemFail in listFail)
+            {
+                var modelFail = list.Where(x => !string.IsNullOrEmpty(x.unionID) && x.unionID.Trim().Equals(itemFail)).First();
+                listError.Add(modelFail);
+            }
+
+            // Return data
             Session["ERROR_LIST"] = listError;
-            return Json(new { 
-                error = error,
-                success = success
+            return Json(new
+            {
+                error,
+                success = total - error
             }, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult GetClassData(DataTableModel model,int facultyId,int year)
         {
             var list = new UserBUS().GetListClassByCondition(facultyId, year);
