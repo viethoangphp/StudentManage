@@ -147,11 +147,8 @@ namespace StudentManage.Controllers
         public JsonResult InsertExcel(List<UserExcelModel> list)
         {
             int error = 0;
-            int success = 0;
             int total = list.Count;
-
             List<UserExcelModel> listError = new List<UserExcelModel>();
-
             // Convert list model excel to model union book
             var listUnionBook = new List<UnionModel>();
             foreach (var item in list)
