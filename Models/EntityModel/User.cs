@@ -30,7 +30,7 @@ namespace Models.EntityModel
         [StringLength(255)]
         public string FullName { get; set; }
 
-        [StringLength(10)]
+        [StringLength(11)]
         public string StudentCode { get; set; }
 
         [StringLength(50)]

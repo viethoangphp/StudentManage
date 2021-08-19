@@ -16,6 +16,7 @@ namespace StudentManage.Models
         public string facultyName { set; get; }
         public string create_at { set; get;}
         public DateTime? create_At { set; get; }
+        public DateTime? update_At { set; get; }
         public DateTime? returnDate { set; get;}
         public int create_by { set; get; }
         public int userID { set; get;}

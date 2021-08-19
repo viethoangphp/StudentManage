@@ -5,6 +5,7 @@ using System.Web;
 using StudentManage.Models;
 using Models.DAO;
 using Models.EntityModel;
+using System.Text.RegularExpressions;
 
 namespace StudentManage.BUS
 {
@@ -62,15 +63,68 @@ namespace StudentManage.BUS
         }
         public string ConvertFacultyName(string facultyName)
         {
+            if(facultyName.Equals("Dược"))
+            {
+                return "Dược";
+            }    
+            if(facultyName.Equals("Luật"))
+            {
+                return "Luật";
+            }    
+            facultyName = this.Convert(facultyName);
             switch (facultyName)
             {
                 case "CNTT":
                     return "Công Nghệ Thông Tin";
                 case "QTKD":
                     return "Quản Trị Kinh Doanh";
+                case "HTTTQL":
+                    return "Hệ Thống Thông Tin Quản Lý";
+                case "KTMT":
+                    return "Kiến Trúc Mỹ Thuật";
+                case "NBH":
+                    return "Nhật Bản Học";
+                case "QTDLNHKS":
+                    return "Quản Trị Du Lịch Nhà Hàng Khách Sạn";
+                case "TA":
+                    return "Tiếng Anh";
+                case "TCTM":
+                    return "Tài Chính Thương Mại";
+                case "TTTK":
+                    return "Truyền Thông Thiết Kế";
+                case "VĐTNN":
+                    return "Viện Đào Tạo Nghề Nghiệp";
+                case "VĐTQT":
+                    return "Viện Đào Tạo Quốc Tế";
+                case "VKT":
+                    return "Viện Kỹ Thuật";
+                case "VJIT":
+                    return "Viện Công Nghệ Việt Nhật";
+                case "VKHUD":
+                    return "Viện Khoa Học Ứng Dụng";
+                case "VKHXHNV":
+                    return "Viện Khoa Học Xã Hội Và Nhân Văn";
+                case "VKIT":
+                    return "Viện Công Nghệ Việt Hàn";
+                case "XD":
+                    return "Xây Dựng";
                 default: return "";
 
             }
+        }
+        public string Convert(string fac)
+        {
+            var arr = fac.ToCharArray();
+            string result = "";
+            for (int i = 0; i < arr.Length; i++)
+            {
+                bool isAlphaBet = Regex.IsMatch(arr[i].ToString(), "[a-z]", RegexOptions.IgnoreCase);
+                if (isAlphaBet)
+                {
+                    result += arr[i];
+                }
+            }
+            return result;
         }
     }
 }
