@@ -70,8 +70,8 @@ namespace StudentManage.BUS
             if(facultyName.Equals("Luật"))
             {
                 return "Luật";
-            }    
-            facultyName = this.Convert(facultyName);
+            }
+            facultyName = Regex.Replace(facultyName, @"[^0-9a-zA-ZĐƯĂÂÊ]+", "");
             switch (facultyName)
             {
                 case "CNTT":
@@ -111,30 +111,6 @@ namespace StudentManage.BUS
                 default: return "";
 
             }
-        }
-        public string Convert(string fac)
-        {
-            var arr = fac.ToCharArray();
-            string result = "";
-            for (int i = 0; i < arr.Length; i++)
-            {
-                bool isAlphaBet = Regex.IsMatch(arr[i].ToString(), "[a-z]", RegexOptions.IgnoreCase);
-                if (isAlphaBet)
-                {
-                    result += arr[i];
-                }
-            }
-            return result;
-        }
-        public int InsertFaculty(FacultyModel model)
-        {
-            Faculty faculty = new Faculty()
-            {
-                Name = model.facultyName,
-                Phone = model.phone,
-                Status = 1
-            };
-            return new FacultyDAO().InsertFaculty(faculty);
         }
     }
 }
