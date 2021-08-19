@@ -201,13 +201,17 @@ $(document).ready(function () {
                         loaderFade();
                         if (data.error > 0) {
                             toastr.error("Import Error " + data.error + " rows !", "Error!");
+                InsertRows(listObj)
+                    .then(function (data) {
+                        if (data.error > 0) {
+                            toastr.error("Import Error " + data.error + " rows !", "Error!");
+                            window.location = "/Union/DownloadErrorHighlight"
                         }
                         if (data.success > 0) {
                             toastr.success("Import " + data.success + " rows !", "Success!");
                         }    
                         $("#myTable").DataTable().ajax.reload();
                     })
-                   
             })
         }
     });
