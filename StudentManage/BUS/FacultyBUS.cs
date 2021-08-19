@@ -70,8 +70,8 @@ namespace StudentManage.BUS
             if(facultyName.Equals("Luật", StringComparison.OrdinalIgnoreCase))
             {
                 return "Luật";
-            }    
-            facultyName = Convert(facultyName).ToUpper();
+            }
+            facultyName = Regex.Replace(facultyName, @"[^0-9a-zA-ZĐƯĂÂÊ]+", "");
             switch (facultyName)
             {
                 case "CNTT":

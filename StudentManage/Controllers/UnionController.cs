@@ -147,11 +147,8 @@ namespace StudentManage.Controllers
         public JsonResult InsertExcel(List<UserExcelModel> list)
         {
             int error = 0;
-            int success = 0;
             int total = list.Count;
-
             List<UserExcelModel> listError = new List<UserExcelModel>();
-
             // Convert list model excel to model union book
             var listUnionBook = new List<UnionModel>();
             foreach (var item in list)
@@ -266,7 +263,7 @@ namespace StudentManage.Controllers
         }
 
         //Export Excel
-        public ActionResult ExportExcel()
+        public ActionResult ExportExcel(int classId, string unionId, int status, int facultyId, int semester)
         {
             //---=== Init ===---
             ExcelPackage pkg = new ExcelPackage();
@@ -296,8 +293,7 @@ namespace StudentManage.Controllers
             colTitleRow.AutoFilter = true;
             
             //Column data
-            List<UnionModel> listUnion = new UnionBUS().GetListAll(0, 10);
-            #warning NEED UPDATE LINE 225
+            List<UnionModel> listUnion = new UnionBUS().GetUnionBookByCondition(classId, unionId, status, facultyId, semester);
             posRow++; // Set to 3 (next row)
             foreach (UnionModel item in listUnion)
             {

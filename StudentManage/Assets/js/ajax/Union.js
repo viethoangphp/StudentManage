@@ -198,6 +198,7 @@ $(document).ready(function () {
                 listObj = JSON.stringify({ 'list': listObj });
                 InsertRows(listObj)
                     .then(function (data) {
+                        loaderFade();
                         if (data.error > 0) {
                             toastr.error("Import Error " + data.error + " rows !", "Error!");
                             window.location = "/Union/DownloadErrorHighlight"
@@ -234,6 +235,17 @@ $(document).ready(function () {
         var semester = $("#semester").val();
         table.ajax.url("/Union/Search?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId +"&semester="+semester).load();
        
+
+    })
+    $("#ExportExcel").on("click", function () {
+        var classid = $("#class").val();
+        var status = $("#status").val();
+        var unionid = $("#unionid").val();
+        var facultyId = $("#faculty").val()
+        var semester = $("#semester").val();
+        toastr.info("File Đang Được Tải Xuống Vui Lòng Chờ Trong Giây Lát !", "Đợi Xíu Nha Thím");
+        window.location = "/Union/ExportExcel?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId + "&semester=" + semester;
+
 
     })
     const listClass = document.getElementById("class");
