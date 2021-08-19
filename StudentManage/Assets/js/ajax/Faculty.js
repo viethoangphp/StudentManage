@@ -28,6 +28,7 @@
     var table = $("#myTable").DataTable({
         searching: false,
         ordering: false,
+        responsive: true,
         processing: true,
         serverSide: true,
         language: {
