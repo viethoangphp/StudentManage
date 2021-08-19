@@ -16,9 +16,16 @@ namespace Models.DAO
             {
                 if(db.Users.Where(m=>m.StudentCode == user.StudentCode).FirstOrDefault() ==null)
                 {
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    return user.UserID;
+                    try
+                    {
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                        return user.UserID;
+                    }
+                    catch (Exception)
+                    {
+                        return -1;
+                    }
                 }
                 else
                 {
@@ -27,9 +34,16 @@ namespace Models.DAO
             }
             else
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return user.UserID;
+                try
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    return user.UserID;
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
             }    
            
         }

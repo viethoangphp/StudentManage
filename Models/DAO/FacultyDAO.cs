@@ -29,9 +29,16 @@ namespace Models.DAO
         }
         public int InsertClass(Class model)
         {
-            db.Classes.Add(model);
-            db.SaveChanges();
-            return model.ClassID;
+            try
+            {
+                db.Classes.Add(model);
+                db.SaveChanges();
+                return model.ClassID;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
         public Class GetClassByClassName(string className)
         {
@@ -40,6 +47,19 @@ namespace Models.DAO
             if (result != null)
                 return result;
             return null;
+        }
+        public int InsertFaculty(Faculty faculty)
+        {
+            try
+            {
+                db.Faculties.Add(faculty);
+                db.SaveChanges();
+                return faculty.FacutyID;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
     }
 }
