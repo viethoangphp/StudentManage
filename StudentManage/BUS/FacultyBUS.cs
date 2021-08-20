@@ -63,11 +63,11 @@ namespace StudentManage.BUS
         }
         public string ConvertFacultyName(string facultyName)
         {
-            if(facultyName.Equals("Dược"))
+            if(facultyName.Equals("Dược", StringComparison.OrdinalIgnoreCase))
             {
                 return "Dược";
             }    
-            if(facultyName.Equals("Luật"))
+            if(facultyName.Equals("Luật", StringComparison.OrdinalIgnoreCase))
             {
                 return "Luật";
             }
@@ -111,6 +111,28 @@ namespace StudentManage.BUS
                 default: return "";
 
             }
+        }
+        public string Convert(string fac)
+        {
+            string result = "";
+            foreach (var ch in fac)
+            {
+                if (char.IsLetter(ch))
+                {
+                    result += ch;
+                }
+            }
+            return result;
+        }
+        public int InsertFaculty(FacultyModel model)
+        {
+            Faculty faculty = new Faculty()
+            {
+                Name = model.facultyName,
+                Phone = model.phone,
+                Status = 1
+            };
+            return new FacultyDAO().InsertFaculty(faculty);
         }
     }
 }
