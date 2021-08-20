@@ -171,6 +171,7 @@ $(document).ready(function () {
     $("#ImportExcel").on("click", function () {
         const fileName = document.getElementById("fileName");
         fileName.click();
+        
     })
     fileName.addEventListener("change", function () {
         console.log("Change" + conuuu);
@@ -185,29 +186,29 @@ $(document).ready(function () {
                 var listObj = [];
                 for (let i = 1; i < rows.length; i++) {
                     var obj = new Object();
-                    obj.unionID = "" + rows[i][0] + "";
-                    obj.fullname = ""+rows[i][1]+"";
-                    obj.studentCode = ""+rows[i][2]+"";
-                    obj.phone = ""+rows[i][3]+"";
+                    obj.unionID =  rows[i][0] ;
+                    obj.fullname = rows[i][1];
+                    obj.studentCode = rows[i][2];
+                    obj.phone = rows[i][3];
                     obj.email = rows[i][4];
                     obj.className = rows[i][5];
                     obj.facultyName = rows[i][6];
                     listObj.push(obj);
                 }
                 console.log(listObj);
-                listObj = JSON.stringify({ 'list': listObj });
-                InsertRows(listObj)
-                    .then(function (data) {
-                        loaderFade();
-                        if (data.error > 0) {
-                            toastr.error("Import Error " + data.error + " rows !", "Error!");
-                            window.location = "/Union/DownloadErrorHighlight"
-                        }
-                        if (data.success > 0) {
-                            toastr.success("Import " + data.success + " rows !", "Success!");
-                        }    
-                        $("#myTable").DataTable().ajax.reload();
-                    })
+                //listObj = JSON.stringify({ 'list': listObj });
+                //InsertRows(listObj)
+                //    .then(function (data) {
+                //        loaderFade();
+                //        if (data.error > 0) {
+                //            toastr.error("Import Error " + data.error + " rows !", "Error!");
+                //            window.location = "/Union/DownloadErrorHighlight"
+                //        }
+                //        if (data.success > 0) {
+                //            toastr.success("Import " + data.success + " rows !", "Success!");
+                //        }    
+                //        $("#myTable").DataTable().ajax.reload();
+                //    })
             })
         }
     });

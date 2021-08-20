@@ -11,6 +11,7 @@ namespace StudentManage.Controllers
         // GET: Home
         public ActionResult Index()
         {
+
             return RedirectToAction("Index","Union");
         }
         public ActionResult Footer()

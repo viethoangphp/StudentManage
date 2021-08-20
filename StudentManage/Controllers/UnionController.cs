@@ -21,12 +21,12 @@ namespace StudentManage.Controllers
         // GET: Union
         public ActionResult Index()
         {
-            var userID = (int)Session["USER_ID"];
-            var posID = new UserBUS().GetUserByID(userID).positionID;
-            if(posID != 1)
+            int userID = (int)Session["USER_ID"];
+            int posID = new UserBUS().GetUserByID(userID).positionID;
+            if (posID != 1)
             {
                 return View("Collaborator");
-            }    
+            }
             return View();
         }
         public ActionResult Faculty()

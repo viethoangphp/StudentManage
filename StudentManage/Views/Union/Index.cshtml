@@ -18,7 +18,7 @@
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
                     <a href="#" id="ImportExcel" class="btn content-btn excel-btn"><i class="fa fa-folder-open"></i>Import Excel</a>
-                    <input type="file" id="fileName" style="display:none" />
+                    <input type="file" id="fileName" style="display:none"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                     <a href="#" id="ExportExcel" class="btn content-btn excel-btn"><i class="fa fa-download"></i>Export Excel</a>
                     <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_union-notebook"><i class="fa fa-plus"></i>Sổ đoàn</a>
                 </div>
@@ -97,7 +97,7 @@
         </div>
     </div>
 </div>
-<iframe id="txtArea1" style="display:none"></iframe>
+
 <!-- /Page Content -->
 <!-- Add Union notebook Modal -->
 <div id="add_union-notebook" class="modal custom-modal fade" data-backdrop="static" role="dialog">
@@ -402,5 +402,4 @@
 
     </script>
     <script src="~/Assets/js/ajax/Union.js"></script>
-
 }
