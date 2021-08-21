@@ -1,0 +1,7 @@
+﻿@using StudentManage.Models
+@model List<FacultyModel>
+
+@foreach(var item in Model)
+            {
+                <option value="@item.facultyID">@item.facultyName</option>
+            }

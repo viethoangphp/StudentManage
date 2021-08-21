@@ -1,18 +1,18 @@
 ﻿$(document).ready(function () {
     $("#form_add").on("submit", function () {
         var formData = new FormData(this)
-        addFacultyAjax(formData).then((data) => {
+        addClassAjax(formData).then((data) => {
             if (data == "true") {
-                toastr.success("Thêm khoa thành công", "Success");
+                toastr.success("Thêm lớp thành công", "Success");
                 sound("/Assets/mp3/smallbox.mp3");
                 table.ajax.reload(null, false)
                 $("#close-btn").click();
                 $("#reset-btn").click();
-            } else if (data == "invaildPhone") {
-                toastr.error("SĐT không dài quá 10 ký tự", "Error");
+            } else if(data == "dup") {
+                toastr.error("Lớp này đã tồn tại", "Error");
                 sound("/Assets/mp3/error.mp3");
             } else {
-                toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Error");
+                toastr.error("Dữ liệu không hợp lệ\nHãy chắc chắn bạn đã điền đầy đủ các trường", "Error");
                 sound("/Assets/mp3/error.mp3");
             }
         })
@@ -20,18 +20,18 @@
     })
     $("#form_edit").on("submit", function () {
         var formData = new FormData(this)
-        editFacultyAjax(formData).then((data) => {
+        editClassAjax(formData).then((data) => {
             if (data == "true") {
                 toastr.success("Cập nhật khoa thành công", "Success");
                 sound("/Assets/mp3/smallbox.mp3");
                 table.ajax.reload(null, false)
                 $("#close-edit-btn").click();
                 $("#reset-edit-btn").click();
-            } else if(data == "invaildPhone"){
-                toastr.error("SĐT không dài quá 10 ký tự", "Error");
+            } else if (data == "dup") {
+                toastr.error("Lớp này đã tồn tại", "Error");
                 sound("/Assets/mp3/error.mp3");
             } else {
-                toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Error");
+                toastr.error("Dữ liệu không hợp lệ\nHãy chắc chắn bạn đã điền đầy đủ các trường", "Error");
                 sound("/Assets/mp3/error.mp3");
             }
         })
@@ -39,10 +39,11 @@
     })
     $(document).on("click", ".editing-btn", function () {
         var id = $(this).data("id");
-        getFacultyAjax(id).then((data) => {
-            $("#edit_id").val(data.facultyID);
-            $("#edit_name").val(data.facultyName);
-            $("#edit_phone").val(data.phone);
+        getClassAjax(id).then((data) => {
+            $("#edit_id").val(data.classID);
+            $("#edit_name").val(data.className);
+            $("#edit_faculty").val(data.facultyID);
+            $("#edit_faculty").trigger('change');
         })
     })
     $(document).on("click", ".delete-dialog", function () {
@@ -51,7 +52,7 @@
     })
     $(document).on("click", "#delete-btn", function () {
         var id = $(this).data("id");
-        deleteFacultyAjax(id).then((data) => {
+        deleteClassAjax(id).then((data) => {
             if (data == "true") {
                 toastr.success("Xóa khoa thành công", "Success");
                 sound("/Assets/mp3/smallbox.mp3");
@@ -63,10 +64,10 @@
             }
         })
     })
-    var addFacultyAjax = function (formData) {
+    var addClassAjax = function (formData) {
         return new Promise((resolve) => {
             $.ajax({
-                url: "/Faculty/Insert",
+                url: "/Class/Insert",
                 method: "post",
                 data: formData,
                 contentType: false,
@@ -78,10 +79,10 @@
             })
         })
     }
-    var editFacultyAjax = function (formData) {
+    var editClassAjax = function (formData) {
         return new Promise((resolve) => {
             $.ajax({
-                url: "/Faculty/Update",
+                url: "/Class/Update",
                 method: "post",
                 data: formData,
                 contentType: false,
@@ -93,12 +94,12 @@
             })
         })
     }
-    var getFacultyAjax = function (id) {
+    var getClassAjax = function (id) {
         return new Promise((resolve) => {
             $.ajax({
-                url: "/Faculty/Get",
+                url: "/Class/Get",
                 method: "post",
-                data: {id:id},
+                data: { id: id },
                 dataType: "json",
                 success: function (data) {
                     resolve(data)
@@ -106,12 +107,12 @@
             })
         })
     }
-    var deleteFacultyAjax = function (id) {
+    var deleteClassAjax = function (id) {
         return new Promise((resolve) => {
             $.ajax({
-                url: "/Faculty/Delete",
+                url: "/Class/Delete",
                 method: "post",
-                data: {id:id},
+                data: { id: id },
                 dataType: "json",
                 success: function (data) {
                     resolve(data)
@@ -135,21 +136,26 @@
             "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
         },
         columns: [
-            { "defaultContent": "-", "class":"text-center"},
-            { "data": "facultyName", "class": "text-center"},
-            { "data": "phone", "class": "text-center" },
-            { "data": "totalClass", "class": "text-center" },
+            { "defaultContent": "-", "class": "text-center" },
+            { "data": "className", "class": "text-center" },
+            { "data": "facultyName", "class": "text-center" },
+            { "data": "totalStudent", "class": "text-center" },
             {
-                "data": "facultyID",
+                "data": "classID",
                 "class": "text-right",
                 "render": function (data) {
-                    return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a><div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item editing-btn' data-id='" + data + "' href='#' data-toggle='modal' data-target='#edit_major'><i class='fa fa-pencil m-r-5'></i> Cập nhật</a> <a class='dropdown-item delete-dialog' data-id='" + data +"' href='#' data-toggle='modal' data-target='#delete_major'><i class='fa fa-trash-o m-r-5'></i> Xóa</a></div></div>";
+                    return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a><div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item editing-btn' data-id='" + data + "' href='#' data-toggle='modal' data-target='#edit_major'><i class='fa fa-pencil m-r-5'></i> Cập nhật</a> <a class='dropdown-item delete-dialog' data-id='" + data + "' href='#' data-toggle='modal' data-target='#delete_major'><i class='fa fa-trash-o m-r-5'></i> Xóa</a></div></div>";
                 }
             }
         ],
         ajax: {
-            url: "/Faculty/GetData",
+            url: "/Class/GetData",
             method: "POST"
         }
+    })
+    $("#btn-search").on("click", function () {
+        var facultyID = $("#facultyID").val()
+        var className = $("#className").val();
+        table.ajax.url("/Class/Search?&facultyID=" + facultyID + "&className=" + className).load();
     })
 })

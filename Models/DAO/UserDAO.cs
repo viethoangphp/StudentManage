@@ -55,6 +55,10 @@ namespace Models.DAO
         {
             return db.Users.Where(m=>m.UserID == id && m.Status ==1).FirstOrDefault();
         }
+        public List<User> GetListUserByClassName(string className)
+        {
+            return db.Users.Where(m=> m.Class.Name == className && m.Status == 1).ToList();
+        }
         public bool ChangePassword(int userID ,string password,string passwordNew)
         {
             var user = db.Users.Find(userID);
@@ -111,6 +115,10 @@ namespace Models.DAO
             {
                 return db.Classes.ToList();
             }
+        }
+        public List<User> GetListUser()
+        {
+            return db.Users.ToList();
         }
     }
 }
