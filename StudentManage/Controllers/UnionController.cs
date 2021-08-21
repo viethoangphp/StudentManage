@@ -147,11 +147,8 @@ namespace StudentManage.Controllers
         public JsonResult InsertExcel(List<UserExcelModel> list)
         {
             int error = 0;
-            int success = 0;
             int total = list.Count;
-
             List<UserExcelModel> listError = new List<UserExcelModel>();
-
             // Convert list model excel to model union book
             var listUnionBook = new List<UnionModel>();
             foreach (var item in list)
@@ -161,6 +158,7 @@ namespace StudentManage.Controllers
                     string.IsNullOrEmpty(item.phone) || string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className) ||
                     string.IsNullOrEmpty(item.unionID))
                 {
+                    item.ErrorMsg = "Thiếu thông tin";
                     listError.Add(item);
                     error++;
                     continue;
@@ -170,6 +168,7 @@ namespace StudentManage.Controllers
                 int num = -1;
                 if (!int.TryParse(item.unionID, out num))
                 {
+                    item.ErrorMsg = "Mã sổ đoàn không đúng định dạng";
                     listError.Add(item);
                     error++;
                     continue;
@@ -179,6 +178,7 @@ namespace StudentManage.Controllers
                 var isInsert = new UserBUS().InsertFromExcel(item);
                 if (isInsert <= 0)
                 {
+                    item.ErrorMsg = "Không tạo được dữ liệu sinh viên hoặc sinh viên này đã tồn tại";
                     listError.Add(item);
                     error++;
                     continue;
@@ -203,6 +203,7 @@ namespace StudentManage.Controllers
             foreach (var itemFail in listFail)
             {
                 var modelFail = list.Where(x => !string.IsNullOrEmpty(x.unionID) && x.unionID.Trim().Equals(itemFail)).First();
+                modelFail.ErrorMsg = "Tạo sổ đoàn không thành công";
                 listError.Add(modelFail);
             }
 
@@ -343,7 +344,7 @@ namespace StudentManage.Controllers
             //---=== Init ===---
             ExcelPackage pkg = new ExcelPackage();
             ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
-            string[] listColName = new string[] {"Mã sổ đoàn", "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp", "Khoa"};
+            string[] listColName = new string[] {"Mã sổ đoàn", "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp", "Khoa", "Mô tả lỗi" };
             //---=== Configure ===---
             //Column name
             int posRow = 1; //Start position of row

@@ -102,15 +102,15 @@ namespace StudentManage.BUS
         }
         public string ConvertFacultyName(string facultyName)
         {
-            if(facultyName.Equals("Dược"))
+            if(facultyName.Equals("Dược", StringComparison.OrdinalIgnoreCase))
             {
                 return "Dược";
             }    
-            if(facultyName.Equals("Luật"))
+            if(facultyName.Equals("Luật", StringComparison.OrdinalIgnoreCase))
             {
                 return "Luật";
-            }    
-            facultyName = this.Convert(facultyName);
+            }
+            facultyName = Regex.Replace(facultyName, @"[^0-9a-zA-ZĐƯĂÂÊ]+", "");
             switch (facultyName)
             {
                 case "CNTT":
@@ -153,14 +153,12 @@ namespace StudentManage.BUS
         }
         public string Convert(string fac)
         {
-            var arr = fac.ToCharArray();
             string result = "";
-            for (int i = 0; i < arr.Length; i++)
+            foreach (var ch in fac)
             {
-                bool isAlphaBet = Regex.IsMatch(arr[i].ToString(), "[a-z]", RegexOptions.IgnoreCase);
-                if (isAlphaBet)
+                if (char.IsLetter(ch))
                 {
-                    result += arr[i];
+                    result += ch;
                 }
             }
             return result;
