@@ -114,6 +114,7 @@ namespace Models.DAO
             //    }
             //}
         }
+      
         public List<UnionBook> GetUnionBookByCondition(int classId, string unionId, int status, int facutyId, int semester)
         {
             int numID = -1;
@@ -126,6 +127,29 @@ namespace Models.DAO
             listResult = listResult.Where(m => status == 0 || m.Status == status);
             listResult = listResult.OrderByDescending(m => m.NumID);
             return listResult.ToList();
+
+        /// <summary>
+        /// Insert a list union to database
+        /// </summary>
+        /// <param name="listData"></param>
+        /// <returns>List error data</returns>
+        public static List<UnionBook> InsertList(List<UnionBook> listData)
+        {
+            try
+            {
+                using (DBContext context = new DBContext())
+                {
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.UnionBooks.AddRange(listData);
+                    context.ChangeTracker.DetectChanges();
+                    context.SaveChanges();
+                }
+            }
+            catch
+            {
+                // Do no thing
+            }
+            return listData.Where(e => e.ID == 0).ToList();
         }
     }
 }

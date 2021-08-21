@@ -12,6 +12,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Reflection;
 using System.Drawing;
+using System.Threading;
 
 namespace StudentManage.Controllers
 {
@@ -77,17 +78,24 @@ namespace StudentManage.Controllers
                             unionBook.returnDate = DateTime.ParseExact(returnDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             var unionBUS = new UnionBUS().Insert(unionBook);
                             var unionID = Convert.ToInt32(unionBUS);
-                            var sendMail = new EmailService();
-                            try
-                            {
-                                sendMail.Send(user.email, "<div style='width: 750px; padding: 10px ;margin: 0 auto; font-size: 1.2rem;'> <div style='border: 3px solid #222; padding: 1px; background-color: #fb0000cf;'> <div style='border: 3px solid #222; padding: 20px;background: #fdf6ec;'> <div style='text-align: center;'> <h1 style='font-size: 1.5rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;'>Đoàn trường đại học công nghệ tp.hcm</h1> <span>-----o0o-----</span> <h3 style='font-size: 1.6rem; margin-top: 9px; text-transform: uppercase;'>biên nhận hồ sơ đoàn viên</h3> </div><div style='text-align: end;'> <p style='margin: 0;'>Sổ " + unionBUS + "/" + DateTime.Now.Year + "</p></div><div style='display:flex;'> <p style='margin: 9px 0;'>Họ và tên:</p><p style='margin: 9px 0;'>&emsp;" + user.fullname + "</p></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Ngày sinh:</p><p style='margin: 9px 0;'>&emsp;" + String.Format("{0:dd/MM/yyyy}", user.birthDay) + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>MSSV:</p><p style='margin: 9px 0;'>&emsp;" + user.studentCode + "</p></div></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Lớp:</p><p style='margin: 9px 0;'>&emsp;" + user.className + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Khoa:</p><p style='margin: 9px 0;'>&emsp;" + user.facultyName + "</p></div></div><div style='margin-top: 20px;'> <p style='margin: 7px 0;'><b style='text-decoration:underline;'>Lưu ý:</b> Giữ gìn biên nhận cẩn thận, mang theo biên nhận khi rút sổ.</p><p style='margin: 7px 0;'>Vui lòng rút sổ trước ngày:" + String.Format("{0:dd/MM/yyyy}", unionBook.returnDate) + "</p><p style='margin: 7px 0;'>Thắc mắc xin liên hệ <b>(028)-3512 0293</b> hoặc <b>doanthanhnien@hutech.edu.vn</b> </p></div><div style='text-align: end;'> <p>TP.Hồ Chí Minh, ngày ... tháng ... năm 20..</p><div style='width: 20%; margin-left: auto; margin-right: 80px; text-align: center;'> <p style='margin: 5px 0; font-weight: 600;'>Người nhận</p><p style='margin: 14px 0;'></p><p style='margin: 14px 0;'></p></div></div></div></div></div>");
-                                return Json(unionID, JsonRequestBehavior.AllowGet);
-                            }
-                            catch (Exception)
-                            {
-                               
-                            }
-                           
+
+                            // Send mail trong thread, ko catch exception vì send mail optional, có thể fail
+                            Thread sendMail = new Thread(() => {
+                                try
+                                {
+                                    var emailService = new EmailService();
+                                    emailService.Send(user.email, "<div style='width: 750px; padding: 10px ;margin: 0 auto; font-size: 1.2rem;'> <div style='border: 3px solid #222; padding: 1px; background-color: #fb0000cf;'> <div style='border: 3px solid #222; padding: 20px;background: #fdf6ec;'> <div style='text-align: center;'> <h1 style='font-size: 1.5rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;'>Đoàn trường đại học công nghệ tp.hcm</h1> <span>-----o0o-----</span> <h3 style='font-size: 1.6rem; margin-top: 9px; text-transform: uppercase;'>biên nhận hồ sơ đoàn viên</h3> </div><div style='text-align: end;'> <p style='margin: 0;'>Sổ " + unionBUS + "/" + DateTime.Now.Year + "</p></div><div style='display:flex;'> <p style='margin: 9px 0;'>Họ và tên:</p><p style='margin: 9px 0;'>&emsp;" + user.fullname + "</p></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Ngày sinh:</p><p style='margin: 9px 0;'>&emsp;" + String.Format("{0:dd/MM/yyyy}", user.birthDay) + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>MSSV:</p><p style='margin: 9px 0;'>&emsp;" + user.studentCode + "</p></div></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Lớp:</p><p style='margin: 9px 0;'>&emsp;" + user.className + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Khoa:</p><p style='margin: 9px 0;'>&emsp;" + user.facultyName + "</p></div></div><div style='margin-top: 20px;'> <p style='margin: 7px 0;'><b style='text-decoration:underline;'>Lưu ý:</b> Giữ gìn biên nhận cẩn thận, mang theo biên nhận khi rút sổ.</p><p style='margin: 7px 0;'>Vui lòng rút sổ trước ngày:" + String.Format("{0:dd/MM/yyyy}", unionBook.returnDate) + "</p><p style='margin: 7px 0;'>Thắc mắc xin liên hệ <b>(028)-3512 0293</b> hoặc <b>doanthanhnien@hutech.edu.vn</b> </p></div><div style='text-align: end;'> <p>TP.Hồ Chí Minh, ngày ... tháng ... năm 20..</p><div style='width: 20%; margin-left: auto; margin-right: 80px; text-align: center;'> <p style='margin: 5px 0; font-weight: 600;'>Người nhận</p><p style='margin: 14px 0;'></p><p style='margin: 14px 0;'></p></div></div></div></div></div>");
+                                }
+                                catch
+                                {
+                                    // Do nothing
+                                }
+                            });
+                            sendMail.IsBackground = true;
+                            sendMail.Start();
+
+                            // Return data
+                            return Json(unionID, JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -140,57 +148,73 @@ namespace StudentManage.Controllers
         {
             int error = 0;
             int success = 0;
+            int total = list.Count;
+
             List<UserExcelModel> listError = new List<UserExcelModel>();
-             foreach(var item in list)
-             {
-                if (!String.IsNullOrEmpty(item.fullname) && !String.IsNullOrEmpty(item.email) && !String.IsNullOrEmpty(item.studentCode) &&
-                    !String.IsNullOrEmpty(item.phone) && !String.IsNullOrEmpty(item.facultyName) && !String.IsNullOrEmpty(item.className) &&
-                    !String.IsNullOrEmpty(item.unionID))
+
+            // Convert list model excel to model union book
+            var listUnionBook = new List<UnionModel>();
+            foreach (var item in list)
+            {
+                // Check validate data
+                if (string.IsNullOrEmpty(item.fullname) || string.IsNullOrEmpty(item.email) || string.IsNullOrEmpty(item.studentCode) ||
+                    string.IsNullOrEmpty(item.phone) || string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className) ||
+                    string.IsNullOrEmpty(item.unionID))
                 {
-                    int num = -1;
-                    Int32.TryParse(item.unionID, out num);
-                    if (num > 0)
-                    {
-                        var isInsert = new UserBUS().InsertFromExcel(item);
-                        if (isInsert > 0)
-                        {
-                            var book = new UnionModel();
-                            book.create_At = DateTime.Now;
-                            book.create_by = (int)Session["USER_ID"];
-                            book.userID = isInsert;
-                            book.unionID = item.unionID;
-                            book.status = 1;
-                            book.returnDate = DateTime.Now;
-                            var result = new UnionBUS().Insert(book);
-                            if (result < 0) error++;
-                            success++;
-                        }
-                        else
-                        {
-                            error++;
-                            listError.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        error++;
-                        listError.Add(item);
-                    }
-                }
-                else
-                {
-                    error++;
                     listError.Add(item);
+                    error++;
                     continue;
                 }
-              
+
+                // Check union number id
+                int num = -1;
+                if (!int.TryParse(item.unionID, out num))
+                {
+                    listError.Add(item);
+                    error++;
+                    continue;
+                }
+
+                // Convert to UnionModel
+                var isInsert = new UserBUS().InsertFromExcel(item);
+                if (isInsert <= 0)
+                {
+                    listError.Add(item);
+                    error++;
+                    continue;
+                }
+
+                var book = new UnionModel();
+                book.create_At = DateTime.Now;
+                book.create_by = (int)Session["USER_ID"];
+                book.userID = isInsert;
+                book.unionID = item.unionID;
+                book.status = 1;
+                book.returnDate = DateTime.Now;
+
+                listUnionBook.Add(book);
             }
+
+            // Insert list data to db
+            var listFail = UnionBUS.SaveListUnionBook(listUnionBook);
+
+            // Get list error
+            error += listFail.Count;
+            foreach (var itemFail in listFail)
+            {
+                var modelFail = list.Where(x => !string.IsNullOrEmpty(x.unionID) && x.unionID.Trim().Equals(itemFail)).First();
+                listError.Add(modelFail);
+            }
+
+            // Return data
             Session["ERROR_LIST"] = listError;
-            return Json(new { 
-                error = error,
-                success = success
+            return Json(new
+            {
+                error,
+                success = total - error
             }, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult GetClassData(DataTableModel model,int facultyId,int year)
         {
             var list = new UserBUS().GetListClassByCondition(facultyId, year);

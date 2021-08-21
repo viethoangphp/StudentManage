@@ -93,7 +93,7 @@ namespace Models.DAO
         }
         public int GetClassIDByClassName(string className)
         {
-            var result = db.Classes.Where(m => m.Name.Trim() == className && m.Status == 1).FirstOrDefault();
+            var result = db.Classes.AsNoTracking().Where(m => m.Name.Trim() == className && m.Status == 1).FirstOrDefault();
             if(result != null)
             {
                 return result.ClassID;
