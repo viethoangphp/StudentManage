@@ -25,8 +25,11 @@ namespace StudentManage.BUS
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender: 1;
                 user.studentCode = model.StudentCode;
-                user.facultyName = model.Class.Faculty.Name;
-                user.className = model.Class.Name;
+                if(model.ClassID !=null)
+                {
+                    user.facultyName = model.Class.Faculty.Name;
+                    user.className = model.Class.Name;
+                }    
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
                 user.cityID =(model.CityID != null)? (int)model.CityID:0;
