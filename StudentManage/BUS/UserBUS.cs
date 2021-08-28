@@ -173,5 +173,30 @@ namespace StudentManage.BUS
             item.Status = 1;
             return UserDAO.Update(item);
         }
+        public List<UserModel> GetListUserByClass(int id)
+        {
+            List<User> listUser = new UserDAO().GetListUser().Where(m=>m.ClassID == id).ToList();
+            List<UserModel> list = new List<UserModel>();
+            foreach (var item in listUser)
+            {
+                UserModel model = new UserModel()
+                {
+                    className = item.Class.Name,
+                    facultyName = item.Class.Faculty.Name,
+                    fullname = item.FullName,
+                    studentCode = item.StudentCode,
+                    email = item.Email,
+                    phone = item.Phone,
+                    address = item.Address,
+                    birthDay = item.Birthday,
+                    cityID = item.CityID != null ? (int)item.CityID : 0,
+                    districtID = item.DistrictID != null ? (int)item.DistrictID : 0,
+                    wardID = item.WardID != null ? (int)item.WardID : 0,
+                    gender = item.Gender != null ? (int)item.Gender : 1
+                };
+                list.Add(model);
+            }
+            return list;
+        }
     }
 }

@@ -52,11 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseModel\ListClassByConditionModel.cs" />
     <Compile Include="BaseModel\UnionBookByConditionModel.cs" />
+    <Compile Include="DAO\ConfigDAO.cs" />
     <Compile Include="DAO\FacultyDAO.cs" />
     <Compile Include="DAO\UnionDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="EntityModel\Class.cs" />
+    <Compile Include="EntityModel\Config.cs" />
     <Compile Include="EntityModel\DBContext.cs" />
     <Compile Include="EntityModel\DetailEvalution.cs" />
     <Compile Include="EntityModel\EvaluativeCriteria.cs" />
