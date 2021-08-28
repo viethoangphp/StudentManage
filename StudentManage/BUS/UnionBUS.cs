@@ -21,6 +21,10 @@ namespace StudentManage.BUS
         {
             return dao.getTotalRecord();
         }
+        public void UpdateIsEmail(int id,int isEmail)
+        {
+             dao.UpdateIsEmail(id,isEmail);
+        }
         public List<UnionModel> GetListAll(int start, int length)
         {
             var list = dao.GetListAll(start, length);
@@ -49,6 +53,10 @@ namespace StudentManage.BUS
             {
                 var union = new UnionModel();
                 union.id = item.ID;
+                union.userID = (int)item.UserID;
+                union.cityId =(item.User1.CityID == null) ? 0: Convert.ToInt32(item.User1.CityID);
+                union.districtId = (item.User1.DistrictID == null) ? 0 : Convert.ToInt32(item.User1.DistrictID);
+                union.wardId = (item.User1.DistrictID == null) ? 0 : Convert.ToInt32(item.User1.WardID);
                 union.unionID = item.User1.StudentCode.Substring(0, 2) + "-" + item.NumID.ToString().PadLeft(5, '0');
                 union.fullname = item.User1.FullName;
                 union.studentCode = item.User1.StudentCode;
@@ -56,9 +64,16 @@ namespace StudentManage.BUS
                 union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
                 union.status = (int)item.Status;
-                union.birthDay = String.Format("{0:dd/MM/yyyy}", item.User.Birthday);
+                union.birthDay = String.Format("{0:dd/MM/yyyy}", item.User1.Birthday);
                 union.update_At = item.Update_At;
-                union.returnDate = item.ReturnDate;
+                union.ReturnDate = String.Format("{0:dd/MM/yyyy}", item.ReturnDate);
+                union.isEmail = Convert.ToInt32(item.isEmail);
+                union.JoinDate = String.Format("{0:dd/MM/yyyy}", item.User1.JoinDate);
+                union.address = item.User1.Address;
+                union.facultyId = item.User1.Class.FacutyID;
+                union.gender = (int)item.User1.Gender;
+                union.phone = item.User1.Phone;
+                union.email = item.User1.Email;
                 return union;
             }
             return null;
@@ -128,6 +143,7 @@ namespace StudentManage.BUS
 
             book.Create_At = DateTime.Now;
             book.Create_By = model.create_by;
+            book.isEmail = model.isEmail;
             book.ReturnDate = model.returnDate;
             if (model.unionID != null)
             {
@@ -156,6 +172,13 @@ namespace StudentManage.BUS
 
             // Save list model to table UnionBook
             return UnionDAO.InsertList(listEntityModel).Select(x => x.NumID.Value).ToList();
+        }
+        public int Update(UnionModel book)
+        {
+            var item = new UnionBook();
+            item.ID = book.id;
+            item.NumID = Convert.ToInt32(book.unionID);
+            return dao.Update(item);
         }
     }
 }

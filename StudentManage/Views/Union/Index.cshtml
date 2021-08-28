@@ -17,8 +17,9 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
+                    <a href="#" class="btn content-btn" id="returnSendMail"><i class="fa fa-envelope-open-o"></i>Gửi Email</a>
                     <a href="#" id="ImportExcel" class="btn content-btn excel-btn"><i class="fa fa-folder-open"></i>Import Excel</a>
-                    <input type="file" id="fileName" style="display:none"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                    <input type="file" id="fileName" style="display:none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                     <a href="#" id="ExportExcel" class="btn content-btn excel-btn"><i class="fa fa-download"></i>Export Excel</a>
                     <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_union-notebook"><i class="fa fa-plus"></i>Sổ đoàn</a>
                 </div>
@@ -41,7 +42,7 @@
                 <label class="focus-label">Niên Khóa</label>
             </div>
         </div>
-       @Html.Action("Faculty","Union")
+        @Html.Action("Faculty", "Union")
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus select-focus">
                 <select class="select floating" id="class">
@@ -56,6 +57,8 @@
                     <option value="0"> -- Tất cả -- </option>
                     <option value="1"> Đã nộp </option>
                     <option value="2"> Đã rút </option>
+                    <option value="3"> Đã Gửi Mail </option>
+                    <option value="4"> Chưa Gửi Mail </option>
                 </select>
                 <label class="focus-label">Trạng thái</label>
             </div>
@@ -78,7 +81,9 @@
                 <table class="table table-hover custom-table mb-0 datatable" id="myTable">
                     <thead>
                         <tr>
-                            <th class="text-center">STT</th>
+                            <th class="text-center">
+                                <input type="checkbox" name="checkAll" value="0" id="checkAll" />
+                            </th>
                             <th class="text-center">Mã sổ đoàn</th>
                             <th class="text-center">Họ và tên</th>
                             <th class="text-center">MSSV</th>
@@ -90,7 +95,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
                     </tbody>
                 </table>
             </div>
@@ -118,7 +122,7 @@
                                     Họ và tên
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="fullname">
+                                <input class="form-control" type="text" style="text-transform:capitalize;" name="fullname">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -221,7 +225,7 @@
                             <div class="form-group">
                                 <label>
                                     Quận/Huyện
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="district" name="districtID">
                                     <option value="0">Chọn Quận/Huyện</option>
@@ -260,70 +264,175 @@
 <!-- /Add Union notebook Modal -->
 <!-- Edit Union notebook Modal -->
 <div id="edit_union-notebook" class="modal custom-modal fade" data-backdrop="static" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Cập nhật sổ đoàn</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Cập Nhật Thông Tin Sổ Đoàn</h5>
+                <button type="button" class="close" id="modal-add-union-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="union_update">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Mã sổ đoàn</label>
-                                <input class="form-control" type="text" value="INV-0001" disabled>
+                                <label>
+                                    Mã Sổ Đoàn
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" style="text-transform:capitalize;" name="unionId" readonly>
+                                <input type="hidden" name="userID">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Trạng thái</label>
-                                <select class="select">
-                                    <option>Đã nộp</option>
-                                    <option>Đã rút</option>
-                                </select>
+                                <label>
+                                    Xác Nhận Gửi Mail
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="isEmail" disabled>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Họ và tên</label>
-                                <input class="form-control" type="text" value="Diệp Thế Duy">
+                                <label>
+                                    Họ và tên
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" style="text-transform:capitalize;" name="fullname">
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Ngày sinh</label>
+                                <label>
+                                    Mã Số Sinh Viên
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="studentCode">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Số Điện Thoại
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="phone">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Email
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Ngày sinh
+                                    <span class="text-danger">*</span>
+                                </label>
                                 <div class="cal-icon">
-                                    <input class="form-control datetimepicker" type="text"
-                                           value="16/12/2000">
+                                    <input class="form-control datetimepicker"
+                                           type="text" name="birthDayString">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Khoa</label>
-                                <select class="select">
-                                    <option>Công nghệ thông tin</option>
-                                    <option>Quản trị kinh doanh</option>
-                                    <option>Ngôn ngữ anh</option>
+                                <label>
+                                    Giới Tính
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" name="gender">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Lớp</label>
-                                <select class="select">
-                                    <option value="3"> 18DTHD1 </option>
+                                <label>
+                                    Lớp
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="className" style="text-transform:uppercase;">
+                            </div>
+                        </div>
+                        @Html.Action("ListFacuty", "Union")
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Lấy Sổ Trước Ngày
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input class="form-control datetimepicker"
+                                           type="text" name="returnDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Ngày Vào Đoàn
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input class="form-control datetimepicker"
+                                           type="text" name="joinDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Tỉnh/Thành Phố
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="city_update" name="cityID">
+                                    <option value="0">Chọn Tỉnh/Thành Phố</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Quận/Huyện
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="district_update" name="districtID">
+                                    <option value="0">Chọn Quận/Huyện</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Phường/Xã
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="ward_update" name="wardID">
+                                    <option value="0">Chọn Phường/Xã</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Địa Chỉ Chi Tiết
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="address" id="address_update">
                             </div>
                         </div>
                     </div>
                     <div class="submit-section">
-                        <button class="btn btn-primary submit-btn">Cập nhật</button>
+                        <button class="btn btn-primary submit-btn">Cập Nhật</button>
                     </div>
                 </form>
             </div>
@@ -402,4 +511,130 @@
 
     </script>
     <script src="~/Assets/js/ajax/Union.js"></script>
+    <script>
+        $(document).on("click", ".btn-update", function () {
+            var id = $(this).data("id");
+            update_union(id).then(function (data) {
+                console.log(data);
+                rederData(data).then(() => {
+                    $('#edit_union-notebook select').trigger("change");
+                });
+
+            })
+        })
+        const update_union = function (id) {
+            return new Promise(function (resolve) {
+                $.ajax({
+                    url: "/Union/View/",
+                    method: "POST",
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+                        resolve(data);
+                    }
+                })
+            })
+        }
+        function rederData(responsive) {
+            return new Promise((resolve) => {
+                $('#edit_union-notebook select[name="cityID"]').val(0);
+                const form = document.getElementById("edit_union-notebook");
+                form.getElementsByTagName("input").unionId.value = responsive.unionID;
+                form.getElementsByTagName("input").isEmail.value = (responsive.isEmail == 3) ? "Đã Gửi" : "Chưa Gửi";
+                form.getElementsByTagName("input").fullname.value = responsive.fullname;
+                form.getElementsByTagName("input").studentCode.value = responsive.studentCode;
+                form.getElementsByTagName("input").phone.value = responsive.phone;
+                form.getElementsByTagName("input").userID.value = responsive.userID;
+                form.getElementsByTagName("input").email.value = responsive.email;
+                form.getElementsByTagName("input").birthDayString.value = responsive.birthDay;
+                form.getElementsByTagName("input").className.value = responsive.className;
+                form.getElementsByTagName("input").returnDate.value = responsive.ReturnDate;
+                form.getElementsByTagName("input").joinDate.value = responsive.JoinDate;
+                form.getElementsByTagName("input").address.value = responsive.address;
+                $('#edit_union-notebook select[name="gender"]').val(responsive.gender);
+                $('#edit_union-notebook select[name="facultyID"]').val(responsive.facultyId);
+                $('#edit_union-notebook select').trigger("change");
+                var cityID = responsive.cityId;
+                var districtID = responsive.districtId;
+                var wardID = responsive.wardId;
+                const address = document.getElementById("address");
+                const city = document.getElementById("city_update")
+                const district = document.getElementById("district_update")
+                const ward = document.getElementById("ward_update")
+                var api = "https://provinces.open-api.vn/api/?depth=3";
+                fetch(api,{
+                    method: "GET",
+                    ContentType: "application/json"
+                })
+                .then(response => response.json())
+                .then(function(data){
+                    let count = 0;
+                    data.forEach(item => {
+                        city.options[city.options.length] = new Option(item.name, item.code)
+                        if (cityID != 0) {
+                            if (cityID == city.options[count].value) {
+                                city.options[count].selected = true
+                            }
+                            count++;
+                        }
+
+                    });
+                    $('#edit_union-notebook select').trigger("change");
+                    if (cityID != 0) {
+                        count = 0;
+                        var listDistrict = data.filter(m => m.code == cityID)
+                        listDistrict[0].districts.forEach(item => {
+                            district.options[district.options.length] = new Option(item.name, item.code)
+                            if (districtID != 0) {
+                                if (districtID == district.options[count].value) {
+                                    district.options[count].selected = true
+                                }
+                                count++;
+                            }
+                        })
+                    }
+
+                    if (districtID != 0) {
+                        count = 0;
+                        var listWard = listDistrict[0].districts.filter(m => m.code == districtID)
+                        listWard[0].wards.forEach(item => {
+                            ward.options[ward.options.length] = new Option(item.name, item.code)
+                            if (wardID != 0) {
+                                if (wardID == ward.options[count].value) {
+                                    ward.options[count].selected = true
+                                }
+                                count++;
+                            }
+                        })
+                    }
+                    var listDistrict;
+                    var listWard;
+                    city.onchange = function()
+                    {
+                        district.length = 1
+                        ward.length = 1
+                        if(this.value != 0)
+                        {
+                            listDistrict = data.filter(m=>m.code == this.value)
+                            listDistrict[0].districts.forEach(item=>{
+                                district.options[district.options.length] = new Option(item.name,item.code)
+                            })
+
+                        }
+                    }
+                    district.onchange = function () {
+                        ward.length = 1
+                        if (this.value != 0) {
+                            var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
+                            listWard[0].wards.forEach(item => {
+                                ward.options[ward.options.length] = new Option(item.name, item.code)
+                            })
+                        }
+                    }
+                })
+                .catch(err => console.log("Lỗi"))
+            })
+        }
+
+    </script>
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +12,8 @@ using StudentManage.Library;
 using StudentManage.Models;
 namespace StudentManage.Controllers
 {
-    public class ProfileController : BaseController
+    [UserAuthorze]
+    public class ProfileController : Controller
     {
         // GET: Profile
         protected UserBUS modelBUS = new UserBUS();
@@ -28,6 +30,7 @@ namespace StudentManage.Controllers
                 if(model.passwordNew.Equals(model.confirmPassword))
                 {
                     var userID = (int)Session["USER_ID"];
+                    model.passwordOld = HashPassword.HashSHA256(model.passwordOld, new SHA256CryptoServiceProvider());
                     var isChange = modelBUS.ChangePassword(userID, model.passwordOld, model.passwordNew);
                     if (isChange)
                         return Json("true", JsonRequestBehavior.AllowGet);
