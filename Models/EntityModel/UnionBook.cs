@@ -22,7 +22,7 @@ namespace Models.EntityModel
         public DateTime? ReturnDate { get; set; }
 
         public int? Status { get; set; }
-
+        public int? isEmail { set; get; }
         public DateTime? Update_At { get; set; }
 
         public virtual User User { get; set; }

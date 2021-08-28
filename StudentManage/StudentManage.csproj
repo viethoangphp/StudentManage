@@ -153,6 +153,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Library\EmailService.cs" />
+    <Compile Include="Library\HashPassword.cs" />
+    <Compile Include="Library\UserAuthorze.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\ClassModel.cs" />
     <Compile Include="Models\DataTableModel.cs" />

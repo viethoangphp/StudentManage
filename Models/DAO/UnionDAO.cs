@@ -64,7 +64,7 @@ namespace Models.DAO
             listResult = listResult.Where(m => semester == 0 || m.User1.Class.Name.StartsWith(semester.ToString()));
             listResult = listResult.Where(m => facutyId == 0 || m.User1.Class.FacutyID == facutyId);
             listResult = listResult.Where(m => classId == 0 || m.User1.ClassID == classId);
-            listResult = listResult.Where(m => status == 0 || m.Status == status);
+            listResult = listResult.Where(m => status == 0 || m.Status == status || m.isEmail == status);
             listResult = listResult.OrderByDescending(m => m.NumID);
             return new UnionBookByConditionModel
             {
@@ -124,7 +124,7 @@ namespace Models.DAO
             listResult = listResult.Where(m => semester == 0 || m.User1.Class.Name.StartsWith(semester.ToString()));
             listResult = listResult.Where(m => facutyId == 0 || m.User1.Class.FacutyID == facutyId);
             listResult = listResult.Where(m => classId == 0 || m.User1.ClassID == classId);
-            listResult = listResult.Where(m => status == 0 || m.Status == status);
+            listResult = listResult.Where(m => status == 0 || m.Status == status || m.isEmail == status);
             listResult = listResult.OrderByDescending(m => m.NumID);
             return listResult.ToList();
         }
@@ -151,5 +151,28 @@ namespace Models.DAO
             }
             return listData.Where(e => e.ID == 0).ToList();
         }
+        public void UpdateIsEmail(int id, int isEmail)
+        {
+            try
+            {
+                var union = db.UnionBooks.Where(m => m.ID == id).FirstOrDefault();
+                union.isEmail = isEmail;
+                db.SaveChanges();
+            }
+            catch
+            {
+
+            }
+        }
+        public int Update(UnionBook book)
+        {
+            var item = db.UnionBooks.Where(m => m.ID == book.ID).FirstOrDefault();
+            if (item == null) return -1;
+            item.ReturnDate = book.ReturnDate;
+            item.NumID = book.NumID;
+            db.SaveChanges();
+            return 1;
+        }
+       
     }
 }

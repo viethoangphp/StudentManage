@@ -48,26 +48,12 @@ var addUnionAjax = function (formData) {
                 resolve(data);
             }
         })
-        
-       
     })
 }
 $("#modal-add-union-close").on("click", function () {
     ClearData();
 })
-$(".btn-update").on("click", function () {
-    var id = $(this).data("id");
-    $.ajax({
-        url: "/Union/View/",
-        method: "POST",
-        data: { id: id },
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
-        }
-    })
 
-})
 function ClearData() {
     $("#union_add input").val("")
     $("#union_add select").val("0").change()
@@ -79,18 +65,21 @@ var table = $("#myTable").DataTable({
     serverSide: true,
     language: {
         "lengthMenu": "Display _MENU_ records per page",
-        "zeroRecords": "Không Có Dữ Liệu Nào Thím Ạ :(((",
-        "info": "Đang ở trang _PAGE_/_PAGES_ thím ạ ahihi",
-        "infoEmpty": "Không Tìm Thấy",
+        "zeroRecords": "Không Có Dữ Liệu Nào Phù Hợp",
+        "info": "Hiển thị trang _PAGE_/_PAGES_ ",
+        "infoEmpty": "Không Tìm Thấy Kết Quả Phù Hợp",
         "infoFiltered": "(filtered from _MAX_ total records)",
-        "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ahihi...",
-        "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
+        "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát...",
+        "processing": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ...",
     },
-    "columnDefs": [
-        { "visible": false, "targets": 0 }
-    ],
     columns: [
-        { "data": "id" ,"class":"text-center"},
+        {
+            "data": "id",
+            "class": "text-center",
+            "render": function (data) {
+                return "<input class='checklist' type='checkbox' data-id='"+data+"'/>"
+            }
+        },
         { "data": "unionID", "class": "text-center" },
         { "data": "fullname" ,"class": "text-center"},
         { "data": "studentCode", "class": "text-center" },
@@ -117,11 +106,11 @@ var table = $("#myTable").DataTable({
                 return "<div class='dropdown action-label'>" +
                     "<a class='btn btn-white btn-sm btn-rounded dropdown-toggle' href='#' " +
                     "data-toggle='dropdown' aria-expanded='false'>" +
-                    "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã rút" +
+                    "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã rút" +
                     "</a>" +
                     "<div class='dropdown-menu dropdown-menu-right'>" +
                     "<a class='dropdown-item selectItem' href='#' data-id=" + row.id + ">" +
-                    "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã nộp" +
+                    "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã nộp" +
                     "</a>" +
                     "</div>" +
                     "</div>";
@@ -131,7 +120,7 @@ var table = $("#myTable").DataTable({
             "data": "id",
             "class": "text-right",
             "render": function (data) {
-                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/" + data + "'><i class='fa fa-print m-r-5'></i> In Biểu Mẫu </a><a class='dropdown-item sendReturnEmail' href='#'  data-id='" + data +"'><i class='fa fa-envelope m-r-5'></i> Gửi Lại Email Nộp Sổ Đoàn</a></div></div>";
+                return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a> <div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item btn-update' href='/Union/Print/" + data + "'><i class='fa fa-print m-r-5'></i> In Biểu Mẫu </a><a class='dropdown-item sendReturnEmail' href='#'  data-id='" + data +"'><i class='fa fa-envelope m-r-5'></i> Gửi Lại Email Nộp Sổ Đoàn</a><a class='dropdown-item btn-update' href='#' data-toggle='modal' data-id='"+data+"' data-target='#edit_union-notebook'> <i class='fa fa-pencil m-r-5'></i>Cập Nhật Thông Tin Sổ Đoàn</a></div></div>";
             }
         }
     ],
@@ -144,8 +133,9 @@ var table = $("#myTable").DataTable({
 loadIndex();
 $(document).on("click", ".selectItem", function () {
     var id = $(this).data("id")
-    console.log($(this).data("id"));
-    var item = this.parentNode.parentNode.querySelector("a").innerHTML
+   
+    var item = this.parentNode.parentNode.querySelector("a").innerHTML;
+    console.log(item);
     this.parentNode.parentNode.querySelector("a").innerHTML = this.innerHTML;
     this.innerHTML = item;
     $.ajax({
@@ -156,11 +146,10 @@ $(document).on("click", ".selectItem", function () {
         success: function (data) {
             if (data) {
                 sound("/Assets/mp3/smallbox.mp3");
-                toastr.success("Cập Nhật Thành Công", "Success!");
-                $("#myTable").DataTable().ajax.reload();
+                toastr.success("Cập Nhật Thành Công", "Thành Công!");
             } else {
                 sound("/Assets/mp3/error.mp3");
-                toastr.error("Lỗi Hệ Thống", "Error!");
+                toastr.error("Lỗi Hệ Thống", "Lỗi!");
             }
         }
     })
@@ -185,10 +174,10 @@ $(document).ready(function () {
                 var listObj = [];
                 for (let i = 1; i < rows.length; i++) {
                     var obj = new Object();
-                    obj.unionID = "" + rows[i][0] + "";
-                    obj.fullname = ""+rows[i][1]+"";
-                    obj.studentCode = ""+rows[i][2]+"";
-                    obj.phone = ""+rows[i][3]+"";
+                    obj.unionID =  rows[i][0] ;
+                    obj.fullname = rows[i][1];
+                    obj.studentCode = rows[i][2];
+                    obj.phone = rows[i][3];
                     obj.email = rows[i][4];
                     obj.className = rows[i][5];
                     obj.facultyName = rows[i][6];
@@ -200,14 +189,17 @@ $(document).ready(function () {
                     .then(function (data) {
                         loaderFade();
                         if (data.error > 0) {
-                            toastr.error("Import Error " + data.error + " rows !", "Error!");
+                            fileName.value = "";
+                            toastr.error("Import Error " + data.error + " rows !", "Lỗi!");
                             window.location = "/Union/DownloadErrorHighlight"
                         }
                         if (data.success > 0) {
-                            toastr.success("Import " + data.success + " rows !", "Success!");
+                            fileName.value = "";
+                            toastr.success("Import " + data.success + " rows !", "Thành Công!");
                         }    
                         $("#myTable").DataTable().ajax.reload();
                     })
+               
             })
         }
     });
@@ -243,7 +235,7 @@ $(document).ready(function () {
         var unionid = $("#unionid").val();
         var facultyId = $("#faculty").val()
         var semester = $("#semester").val();
-        toastr.info("File Đang Được Tải Xuống Vui Lòng Chờ Trong Giây Lát !", "Đợi Xíu Nha Thím");
+        toastr.info("File Đang Được Tải Xuống Vui Lòng Chờ Trong Giây Lát !", "Thông Báo");
         window.location = "/Union/ExportExcel?classId=" + classid + "&status=" + status + "&unionId=" + unionid + "&facultyId=" + facultyId + "&semester=" + semester;
 
 
@@ -308,4 +300,93 @@ function loadIndex() {
         });
     }).draw();
 }
+$("#union_update").on("submit", function () {
+    var formData = new FormData(this)
+    UpdateUnion(formData).then(function (data) {
+        loaderFade();
+        setTimeout(function () {
+            if (data > 0) {
+                sound("/Assets/mp3/smallbox.mp3");
+                toastr.success("Cập Nhật Thành Công !", "Thành Công!");
+                $("#myTable").DataTable().ajax.reload();
+            } else if (data == "dup") {
+                sound("/Assets/mp3/error.mp3");
+                toastr.error("Mã Số Sinh Viên Đã Tồn Tại Trong Hệ Thống", "Lỗi!");
+                document.getElementsByName("studentCode")[0].value = "";
+            } else if (data == "false") {
+                sound("/Assets/mp3/error.mp3");
+                toastr.error("Bạn Không Được Để Trống Những Trường Dữ Liệu Có Dấu (*) . Vui lòng kiểm tra và thử lại .Thanks", "Lỗi!");
+            } else if (data == "errorEmail") {
+                sound("/Assets/mp3/error.mp3");
+                toastr.error("Email Không Hợp Lệ . Vui lòng kiểm tra và thử lại .Thanks", "Lỗi!");
+            } else {
+                sound("/Assets/mp3/error.mp3");
+                toastr.error("Mã Số Sinh Viên Không Hợp Lệ ", "Lỗi!");
+            }
+        }, 1500)
+    })
+    return false;
+})
+var UpdateUnion = function (formData) {
+    return new Promise(function (resolve) {
+        $('#loader').fadeIn('slow');
+        $('#loader-wrapper').fadeIn('slow');
+        $.ajax({
+            url: "/Union/Update",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                resolve(data);
+            }
+        })
+    })
+}
+var checkAll = document.getElementById("checkAll");
+var checklist = document.getElementsByClassName("checklist");
 
+checkAll.addEventListener("change", function () {
+    for (let i = 0; i < checklist.length; i++) {
+        checklist[i].checked = this.checked;
+    }
+})
+var returnSendMail = document.getElementById("returnSendMail");
+returnSendMail.onclick = function () {
+    var list = [];
+    for (let i = 0; i < checklist.length; i++) {
+        if (checklist[i].checked)
+            list.push(checklist[i].getAttribute("data-id"));
+    }
+    list = JSON.stringify({ 'list': list});
+    sentListMail(list).then((data) => {
+        loaderFade();
+        console.log(data);
+        if (data == "true") {
+            sound("/Assets/mp3/smallbox.mp3");
+            toastr.success("Gửi Mail Thành Công !", "Thành Công!");
+            $("#myTable").DataTable().ajax.reload();
+        } else {
+            sound("/Assets/mp3/error.mp3");
+            toastr.warning("Vui lòng chọn người bạn muốn gửi mail", "Lỗi");
+        }
+    })
+}
+const sentListMail = function (list) {
+    return new Promise((resolve) => {
+        $('#loader').fadeIn('slow');
+        $('#loader-wrapper').fadeIn('slow');
+        $.ajax({
+            url: "/Union/ReturnSendMain",
+            type: "POST",
+            data: list,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                resolve(data);
+            }
+        })
+    })
+}
