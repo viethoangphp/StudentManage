@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.EntityModel;
-
 namespace Models.DAO
 {
     public class UserDAO
@@ -24,14 +23,14 @@ namespace Models.DAO
                     }
                     catch (Exception)
                     {
-                        return -1;
+                        return -1; 
                     }
                 }
                 else
                 {
                     return -1;
                 }
-            }
+            } 
             else
             {
                 try
@@ -115,6 +114,33 @@ namespace Models.DAO
             {
                 return db.Classes.ToList();
             }
+        }
+        public static int Update(User user)
+        {
+            using(DBContext db = new DBContext())
+            {
+                var item = db.Users.Where(m => m.UserID == user.UserID && m.Status == 1).FirstOrDefault();
+                if (item == null) return -1;
+                if(db.Users.Where(m=>m.StudentCode == user.StudentCode && m.UserID != user.UserID).FirstOrDefault() == null)
+                {
+                    item.FullName = user.FullName;
+                    item.StudentCode = user.StudentCode;
+                    item.Phone = user.Phone;
+                    item.Email = user.Email;
+                    item.Gender = user.Gender;
+                    item.Birthday = user.Birthday;
+                    item.ClassID = user.ClassID;
+                    item.JoinDate = user.JoinDate;
+                    item.CityID = user.CityID;
+                    item.DistrictID = user.DistrictID;
+                    item.WardID = user.WardID;
+                    item.Address = user.Address;
+                    db.SaveChanges();
+                    return 1;
+                }
+                return -1;
+            }
+           
         }
         public List<User> GetListUser()
         {

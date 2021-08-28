@@ -33,7 +33,11 @@ namespace StudentManage.BUS
             var result = new FacultyDAO().GetFacultyByName(name);
             if (result != null)
             {
-                FacultyModel model = new FacultyModel() { facultyID = result.FacutyID, facultyName = result.Name };
+                FacultyModel model = new FacultyModel() 
+                { 
+                    facultyID = result.FacutyID, 
+                    facultyName = result.Name 
+                };
                 return model;
             }
             return null;

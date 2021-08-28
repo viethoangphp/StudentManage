@@ -16,17 +16,18 @@ using System.Threading;
 
 namespace StudentManage.Controllers
 {
-    public class UnionController : BaseController
+    [UserAuthorze]
+    public class UnionController :Controller
     {
         // GET: Union
         public ActionResult Index()
         {
-            var userID = (int)Session["USER_ID"];
-            var posID = new UserBUS().GetUserByID(userID).positionID;
-            if(posID != 1)
+            int userID = (int)Session["USER_ID"];
+            int posID = new UserBUS().GetUserByID(userID).positionID;
+            if (posID != 1)
             {
                 return View("Collaborator");
-            }    
+            }
             return View();
         }
         public ActionResult Faculty()
@@ -74,6 +75,7 @@ namespace StudentManage.Controllers
                             unionBook.create_by = (int)Session["USER_ID"];
                             unionBook.userID = userID;
                             unionBook.status = 1;
+                           
                             var returnDate = Request.Form["returnDate"];
                             unionBook.returnDate = DateTime.ParseExact(returnDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             var unionBUS = new UnionBUS().Insert(unionBook);
@@ -83,17 +85,19 @@ namespace StudentManage.Controllers
                             Thread sendMail = new Thread(() => {
                                 try
                                 {
+                                    UnionBUS isSendMail = new UnionBUS();
                                     var emailService = new EmailService();
                                     emailService.Send(user.email, "<div style='width: 750px; padding: 10px ;margin: 0 auto; font-size: 1.2rem;'> <div style='border: 3px solid #222; padding: 1px; background-color: #fb0000cf;'> <div style='border: 3px solid #222; padding: 20px;background: #fdf6ec;'> <div style='text-align: center;'> <h1 style='font-size: 1.5rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;'>Đoàn trường đại học công nghệ tp.hcm</h1> <span>-----o0o-----</span> <h3 style='font-size: 1.6rem; margin-top: 9px; text-transform: uppercase;'>biên nhận hồ sơ đoàn viên</h3> </div><div style='text-align: end;'> <p style='margin: 0;'>Sổ " + unionBUS + "/" + DateTime.Now.Year + "</p></div><div style='display:flex;'> <p style='margin: 9px 0;'>Họ và tên:</p><p style='margin: 9px 0;'>&emsp;" + user.fullname + "</p></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Ngày sinh:</p><p style='margin: 9px 0;'>&emsp;" + String.Format("{0:dd/MM/yyyy}", user.birthDay) + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>MSSV:</p><p style='margin: 9px 0;'>&emsp;" + user.studentCode + "</p></div></div><div style='display:flex;'> <div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Lớp:</p><p style='margin: 9px 0;'>&emsp;" + user.className + "</p></div><div style='display:flex; width:50%'> <p style='margin: 9px 0;'>Khoa:</p><p style='margin: 9px 0;'>&emsp;" + user.facultyName + "</p></div></div><div style='margin-top: 20px;'> <p style='margin: 7px 0;'><b style='text-decoration:underline;'>Lưu ý:</b> Giữ gìn biên nhận cẩn thận, mang theo biên nhận khi rút sổ.</p><p style='margin: 7px 0;'>Vui lòng rút sổ trước ngày:" + String.Format("{0:dd/MM/yyyy}", unionBook.returnDate) + "</p><p style='margin: 7px 0;'>Thắc mắc xin liên hệ <b>(028)-3512 0293</b> hoặc <b>doanthanhnien@hutech.edu.vn</b> </p></div><div style='text-align: end;'> <p>TP.Hồ Chí Minh, ngày ... tháng ... năm 20..</p><div style='width: 20%; margin-left: auto; margin-right: 80px; text-align: center;'> <p style='margin: 5px 0; font-weight: 600;'>Người nhận</p><p style='margin: 14px 0;'></p><p style='margin: 14px 0;'></p></div></div></div></div></div>");
+                                    isSendMail.UpdateIsEmail(unionID, 3);
                                 }
                                 catch
                                 {
-                                    // Do nothing
+                                    UnionBUS isSendMail = new UnionBUS();
+                                    isSendMail.UpdateIsEmail(unionID,4);
                                 }
                             });
                             sendMail.IsBackground = true;
                             sendMail.Start();
-
                             // Return data
                             return Json(unionID, JsonRequestBehavior.AllowGet);
                         }
@@ -153,6 +157,7 @@ namespace StudentManage.Controllers
             var listUnionBook = new List<UnionModel>();
             foreach (var item in list)
             {
+                EmailService emailService = new EmailService();
                 // Check validate data
                 if (string.IsNullOrEmpty(item.fullname) || string.IsNullOrEmpty(item.email) || string.IsNullOrEmpty(item.studentCode) ||
                     string.IsNullOrEmpty(item.phone) || string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className) ||
@@ -163,7 +168,13 @@ namespace StudentManage.Controllers
                     error++;
                     continue;
                 }
-
+                if(!emailService.IsValid(item.email))
+                {
+                    item.ErrorMsg = "Email Không Đúng Định Dạng";
+                    listError.Add(item);
+                    error++;
+                    continue;
+                }    
                 // Check union number id
                 int num = -1;
                 if (!int.TryParse(item.unionID, out num))
@@ -191,7 +202,7 @@ namespace StudentManage.Controllers
                 book.unionID = item.unionID;
                 book.status = 1;
                 book.returnDate = DateTime.Now;
-
+                book.isEmail = 4;
                 listUnionBook.Add(book);
             }
 
@@ -215,7 +226,6 @@ namespace StudentManage.Controllers
                 success = total - error
             }, JsonRequestBehavior.AllowGet);
         }
-
         public JsonResult GetClassData(DataTableModel model,int facultyId,int year)
         {
             var list = new UserBUS().GetListClassByCondition(facultyId, year);
@@ -245,16 +255,39 @@ namespace StudentManage.Controllers
         }
         public JsonResult SendEmail(int id)
         {
+            var unionBUS = new UnionBUS();
             try
             {
-                var unionBUS = new UnionBUS();
                 unionBUS.SendReturnEmail(id);
+                unionBUS.UpdateIsEmail(id,3);
                 return Json("true", JsonRequestBehavior.AllowGet);
             }
             catch
             {
+                unionBUS.UpdateIsEmail(id,4);
                 return Json("true", JsonRequestBehavior.AllowGet);
             }
+        }
+        public JsonResult ReturnSendMain(List<int> list)
+        {
+            if(list != null)
+            {
+                var unionBUS = new UnionBUS();
+                foreach (var item in list)
+                {
+                    try
+                    {
+                        unionBUS.SendReturnEmail(item);
+                        unionBUS.UpdateIsEmail(item, 3);
+                    }
+                    catch
+                    {
+                        unionBUS.UpdateIsEmail(item, 4);
+                    }
+                }
+                return Json("true", JsonRequestBehavior.AllowGet);
+            }    
+            return Json("false", JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListFacuty()
         {
@@ -391,6 +424,62 @@ namespace StudentManage.Controllers
             stream.Position = 0;
 
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", "Error " + DateTime.Now.ToString() + ".xlsx");
+        }
+        public JsonResult Update(UserModel model)
+        {
+           ModelState.Remove("birthDay");
+            if(ModelState.IsValid)
+            {
+               if(model.studentCode.Trim().Length <= 10)
+               {
+                    EmailService checkMail = new EmailService();
+                    if(checkMail.IsValid(model.email))
+                    {
+                        model.groupID = 2;
+                        model.positionID = 2;
+                        model.birthDay = DateTime.ParseExact(model.birthDayString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        var classModel = new FacultyBUS().GetClassModelByName(model.className);
+                        if (classModel == null)
+                        {
+                            ClassModel classItem = new ClassModel()
+                            {
+                                className = model.className,
+                                facultyID = model.facultyID,
+                                status = 1
+                            };
+                            var classId = new FacultyBUS().InsertClass(classItem);
+                            model.classID = classId;
+                        }
+                        else
+                        {
+                            model.classID = classModel.classID;
+                        }
+                        var userID = new UserBUS().Update(model);
+                        var unionId = new UnionBUS().Update(new UnionModel()
+                        {
+                            returnDate = DateTime.ParseExact(Request.Form["returnDate"], "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            unionID = Request.Form["unionId"].Substring(3)
+                        }) ;
+                        if (userID > 0)
+                        {
+                            return Json(userID, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json("dup", JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json("errorEmail", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json("errorStudentCode", JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json("false",JsonRequestBehavior.AllowGet);
         }
     }
 }

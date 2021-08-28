@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using Models.DAO;
+using StudentManage.Library;
 namespace StudentManage.Models
 {
     public class LoginModel
@@ -16,7 +18,8 @@ namespace StudentManage.Models
         {
             var dao = new UserDAO();
             var user = dao.GetUserByUsername(username);
-            if(user != null)
+            password = HashPassword.HashSHA256(password, new SHA256CryptoServiceProvider());
+            if (user != null)
             {
                 if(user.Password.Trim() == password)
                 {
