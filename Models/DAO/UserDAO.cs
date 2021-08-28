@@ -126,7 +126,7 @@ namespace Models.DAO
                     item.FullName = user.FullName;
                     item.StudentCode = user.StudentCode;
                     item.Phone = user.Phone;
-                    item.Email = user.Email;
+                    item.Email = user.Email.Trim();
                     item.Gender = user.Gender;
                     item.Birthday = user.Birthday;
                     item.ClassID = user.ClassID;

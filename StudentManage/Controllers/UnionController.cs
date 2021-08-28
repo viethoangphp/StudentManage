@@ -433,7 +433,7 @@ namespace StudentManage.Controllers
                if(model.studentCode.Trim().Length <= 10)
                {
                     EmailService checkMail = new EmailService();
-                    if(checkMail.IsValid(model.email))
+                    if(checkMail.IsValid(model.email.Trim()))
                     {
                         model.groupID = 2;
                         model.positionID = 2;
