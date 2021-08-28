@@ -126,15 +126,15 @@
         responsive: true,
         processing: true,
         serverSide: true,
-        language: {
-            "lengthMenu": "Display _MENU_ records per page",
-            "zeroRecords": "Không Có Dữ Liệu Nào Thím Ạ :(((",
-            "info": "Đang ở trang _PAGE_/_PAGES_ thím ạ ahihi",
-            "infoEmpty": "Không Tìm Thấy",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ahihi...",
-            "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
-        },
+        //language: {
+        //    "lengthMenu": "Display _MENU_ records per page",
+        //    "zeroRecords": "Không Có Dữ Liệu Nào Thím Ạ :(((",
+        //    "info": "Đang ở trang _PAGE_/_PAGES_ thím ạ ahihi",
+        //    "infoEmpty": "Không Tìm Thấy",
+        //    "infoFiltered": "(filtered from _MAX_ total records)",
+        //    "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ahihi...",
+        //    "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
+        //},
         columns: [
             { "defaultContent": "-", "class": "text-center" },
             { "data": "className", "class": "text-center" },
@@ -144,7 +144,7 @@
                 "data": "classID",
                 "class": "text-right",
                 "render": function (data) {
-                    return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a><div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item editing-btn' data-id='" + data + "' href='#' data-toggle='modal' data-target='#edit_major'><i class='fa fa-pencil m-r-5'></i> Cập nhật</a> <a class='dropdown-item delete-dialog' data-id='" + data + "' href='#' data-toggle='modal' data-target='#delete_major'><i class='fa fa-trash-o m-r-5'></i> Xóa</a></div></div>";
+                    return "<div class='dropdown dropdown-action'> <a href='#' class='action-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'><i class='material-icons'>more_vert</i></a><div class='dropdown-menu dropdown-menu-right'> <a class='dropdown-item view-btn' href='/Class/List/" + data + "'><i class='fa fa-eye m-r-5'></i> Xem DSSV</a> <a class='dropdown-item editing-btn' data-id='" + data + "' href='#' data-toggle='modal' data-target='#edit_major'><i class='fa fa-pencil m-r-5'></i> Cập nhật</a> <a class='dropdown-item delete-dialog' data-id='" + data +"' href='#' data-toggle='modal' data-target='#delete_major'><i class='fa fa-trash-o m-r-5'></i> Xóa</a></div></div>";
                 }
             }
         ],

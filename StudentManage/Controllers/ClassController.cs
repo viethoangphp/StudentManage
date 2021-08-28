@@ -112,5 +112,23 @@ namespace StudentManage.Controllers
                 }, JsonRequestBehavior.AllowGet);
             return Json(false, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult List(int? id)
+        {
+            if (id == null || id <= 0) return RedirectToAction("Index");
+            return View(new FacultyBUS().GetClassByID((int)id));
+        }
+        [HttpPost]
+        public JsonResult List(DataTableModel model,int id)
+        {
+            List<UserModel> list = new UserBUS().GetListUserByClass(id).Skip(model.start).Take(model.length).ToList();
+            int count = new UserBUS().GetListUserByClass(id).Count;
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = count,
+                recordsFiltered = count,
+                data = list
+            }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

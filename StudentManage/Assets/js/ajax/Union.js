@@ -77,15 +77,15 @@ var table = $("#myTable").DataTable({
     ordering: false,
     processing: true,
     serverSide: true,
-    language: {
-        "lengthMenu": "Display _MENU_ records per page",
-        "zeroRecords": "Không Có Dữ Liệu Nào Thím Ạ :(((",
-        "info": "Đang ở trang _PAGE_/_PAGES_ thím ạ ahihi",
-        "infoEmpty": "Không Tìm Thấy",
-        "infoFiltered": "(filtered from _MAX_ total records)",
-        "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ahihi...",
-        "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
-    },
+    //language: {
+    //    "lengthMenu": "Display _MENU_ records per page",
+    //    "zeroRecords": "Không Có Dữ Liệu Nào Thím Ạ :(((",
+    //    "info": "Đang ở trang _PAGE_/_PAGES_ thím ạ ahihi",
+    //    "infoEmpty": "Không Tìm Thấy",
+    //    "infoFiltered": "(filtered from _MAX_ total records)",
+    //    "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ahihi...",
+    //    "processing": "Đợi Chút Xíu Có Liền Ngay Cho Thím ahiii...",
+    //},
     "columnDefs": [
         { "visible": false, "targets": 0 }
     ],

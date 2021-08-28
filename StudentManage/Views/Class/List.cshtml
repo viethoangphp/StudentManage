@@ -1,0 +1,242 @@
+﻿
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@using StudentManage.Models;
+@model ClassModel
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Lớp @Model.className (@Model.facultyName)</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
+                    <li class="breadcrumb-item active">Danh sách sinh viên</li>
+                </ul>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
+                    <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_modal">
+                        <i class="fa fa-plus"></i> Sinh Viên
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    @*<div class="row filter-row justify-content-end">
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating" id="facultyID">
+                    <option value="0"> -- Tất cả -- </option>
+                    @Html.Action("FacultyPartial", "Class")
+                </select>
+                <label class="focus-label">Khoa/Viện</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+            <div class="form-group form-focus">
+                <input type="text" class="form-control floating" id="className">
+                <label class="focus-label">Tên lớp</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-12">
+            <a href="#" id="btn-search" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>*@
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped custom-table mb-0 datatable" id="myTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">MSSV</th>
+                            <th class="text-center">Họ và tên</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">SĐT</th>
+                            <th class="text-right">Tác vụ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*<tr>
+                                <td class="text-center">1</td>
+                                <td class="text-center">18DTHD1</td>
+                                <td class="text-center">CNTT</td>
+                                <td class="text-center">40</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                               data-target="#edit_major">
+                                                <i class="fa fa-pencil m-r-5"></i>
+                                                Cập nhật
+                                            </a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                               data-target="#delete_major">
+                                                <i class="fa fa-trash-o m-r-5"></i>
+                                                Xóa
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->
+<!-- Edit Modal -->
+<div id="edit_student" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật thông tin sinh viên</h5>
+                <button type="button" class="close" id="close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="union_add">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Họ và tên
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="fullname">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Mã Số Sinh Viên
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="studentCode">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Số Điện Thoại
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="phone">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Email
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Ngày sinh
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input class="form-control datetimepicker"
+                                           type="text" name="birthDayString">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Giới Tính
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" name="gender">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Lớp
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="className" style="text-transform:uppercase;">
+                            </div>
+                        </div>
+                        @Html.Action("ListFacuty", "Union")
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Tỉnh/Thành Phố
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="city" name="cityID">
+                                    <option value="0">Chọn Tỉnh/Thành Phố</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Quận/Huyện
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="district" name="districtID">
+                                    <option value="0">Chọn Quận/Huyện</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Phường/Xã
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" id="ward" name="wardID">
+                                    <option value="0">Chọn Phường/Xã</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Địa Chỉ Chi Tiết
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="address">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Modal -->
+
+@section js{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Assets/js/ajax/StudentList.js"></script>
+    <script src="~/Assets/js/lib/sound.js"></script>
+}
