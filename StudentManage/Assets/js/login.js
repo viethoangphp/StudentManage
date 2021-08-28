@@ -16,10 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
         var username = $("#username").val();
         var password = $("#password").val();
         login(username, password).then((data) => {
-            loaderFade();
+            
                 if (data == "true") {
                     window.location = "/";
                 } else {
+                    loaderFade();
                     setTimeout(() => {
                         toastr.error("Tên Đăng Nhập Hoặc Mật Khẩu Không Chính Xác !", "Error");
                     }, 1000)

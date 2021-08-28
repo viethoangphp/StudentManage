@@ -116,14 +116,15 @@
                             <i class="la la-user"></i>
                             Thông tin cá nhân
                         </a>
-                        <a class="dropdown-item" href="settings.html">
+                        <a class="dropdown-item" href="/Settings">
                             <i class="las la-cog"></i>
                             Cài đặt
                         </a>
-                        <a class="dropdown-item text-danger" href="/Login/Logout">
+                        <a class="dropdown-item text-danger" href="#" data-target="#logout" data-toggle="modal">
                             <i class="las la-sign-out-alt"></i>
                             Đăng xuất
                         </a>
+
                     </div>
                 </li>
             </ul>
@@ -138,7 +139,7 @@
                         <i class="la la-user"></i>
                         Thông tin cá nhân
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="/Settings">
                         <i class="las la-cog"></i>
                         Cài đặt
                     </a>
@@ -171,25 +172,56 @@
                                 </li>
                             </ul>
                         </li>
-
-                    </ul>
-                    <ul>
-                        <!-- Đánh giá điểm rèn luyện -->
-                        <li class="menu-title">
-                            <span>Danh mục</span>
-                        </li>
                         <li class="submenu">
                             <a href="#">
-                                <i class="la la-files-o"></i> <span>Đánh giá đoàn viên</span> <span class="menu-arrow"></span>
+                                <i class="la la-users"></i> <span> Quản lý người dùng</span> <span class="menu-arrow"></span>
                             </a>
                             <ul style="display: none;">
                                 <li>
-                                    <a href="/Union">Điểm cá nhân</a>
+                                    <a href="3">Danh sách</a>
+                                </li>
+                                <li>
+                                    <a href="#">Phân quyền</a>
                                 </li>
                             </ul>
                         </li>
-
+                        <li class="submenu">
+                            <a href="#">
+                                <i class="la la-users"></i> <span> Quản lý khoa & lớp</span> <span class="menu-arrow"></span>
+                            </a>
+                            <ul style="display: none;">
+                                <li>
+                                    <a href="/Faculty">Danh sách khoa</a>
+                                </li>
+                                <li>
+                                    <a href="/Class">Danh sách lớp</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal custom-modal fade" id="logout" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Đăng Xuất</h3>
+                            <p>Bạn có muốn đăng xuất tài khoản khỏi hệ thống không?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="/Login/Logout" class="btn continue-btn">Đăng Xuất</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-dismiss="modal"
+                                       class="btn cancel-btn">Hủy</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

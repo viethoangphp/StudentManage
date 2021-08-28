@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Quản lý khoa & lớp</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
+                    <li class="breadcrumb-item active">Danh sách lớp</li>
+                </ul>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
+                    <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_major">
+                        <i class="fa fa-plus"></i> Lớp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    <div class="row filter-row justify-content-end">
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+                <div class="form-group form-focus select-focus">
+                    <select class="select floating" id="facultyID">
+                        <option value="0"> -- Tất cả -- </option>
+                        @Html.Action("FacultyPartial","Class")
+                    </select>
+                    <label class="focus-label">Khoa/Viện</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-5 col-12">
+                <div class="form-group form-focus">
+                    <input type="text" class="form-control floating" id="className">
+                    <label class="focus-label">Tên lớp</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-12">
+                <a href="#" id="btn-search" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+            </div>
+        </div>
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped custom-table mb-0 datatable" id="myTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">Tên lớp</th>
+                            <th class="text-center">Khoa</th>
+                            <th class="text-center">Số lượng SV</th>
+                            <th class="text-right">Tác vụ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*<tr>
+                                <td class="text-center">1</td>
+                                <td class="text-center">18DTHD1</td>
+                                <td class="text-center">CNTT</td>
+                                <td class="text-center">40</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                               data-target="#edit_major">
+                                                <i class="fa fa-pencil m-r-5"></i>
+                                                Cập nhật
+                                            </a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                               data-target="#delete_major">
+                                                <i class="fa fa-trash-o m-r-5"></i>
+                                                Xóa
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->
+<!-- Add Major Modal -->
+<div id="add_major" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm lớp</h5>
+                <button type="button" class="close" id="close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_add">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Tên lớp
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" name="className">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Khoa
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" name="facultyID">
+                                    <option value="0">--- Chọn ---</option>
+                                    @Html.Action("FacultyPartial", "Class")
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button type="reset" id="reset-btn" hidden>Reset</button>
+                        <button class="btn btn-primary submit-btn">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Major Modal -->
+<!-- Edit Major Modal -->
+<div id="edit_major" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật thông tin lớp</h5>
+                <button type="button" class="close" id="close-edit-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_edit">
+                    <div class="row">
+                        <input type="text" id="edit_id" name="classID" hidden />
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Tên lớp
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control" type="text" id="edit_name" name="className">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Khoa
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="select" name="facultyID" id="edit_faculty">
+                                    <option value="0">--- Chọn ---</option>
+                                    @Html.Action("FacultyPartial","Class")
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button type="reset" id="reset-edit-btn" hidden>Reset</button>
+                        <button class="btn btn-primary submit-btn">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Major Modal -->
+<!-- Delete Major Modal -->
+<div class="modal custom-modal fade" id="delete_major" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Xóa khoa</h3>
+                    <span>Bạn có chắc chắn muốn xóa?</span>
+                    <p>Điều này bao gồm xóa tất cả các lớp có trong khoa</p>
+
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="#" id="delete-btn" class="btn continue-btn">Xóa</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" id="dismiss-delete" data-dismiss="modal"
+                               class="btn cancel-btn">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Major Modal -->
+
+@section js{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Assets/js/ajax/Class.js"></script>
+    <script src="~/Assets/js/lib/sound.js"></script>
+}

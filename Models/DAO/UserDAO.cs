@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.EntityModel;
-
 namespace Models.DAO
 {
     public class UserDAO
@@ -16,20 +15,34 @@ namespace Models.DAO
             {
                 if(db.Users.Where(m=>m.StudentCode == user.StudentCode).FirstOrDefault() ==null)
                 {
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    return user.UserID;
+                    try
+                    {
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                        return user.UserID;
+                    }
+                    catch (Exception)
+                    {
+                        return -1; 
+                    }
                 }
                 else
                 {
                     return -1;
                 }
-            }
+            } 
             else
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return user.UserID;
+                try
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    return user.UserID;
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
             }    
            
         }
@@ -40,6 +53,10 @@ namespace Models.DAO
         public User GetUserByID(int id)
         {
             return db.Users.Where(m=>m.UserID == id && m.Status ==1).FirstOrDefault();
+        }
+        public List<User> GetListUserByClassName(string className)
+        {
+            return db.Users.Where(m=> m.Class.Name == className && m.Status == 1).ToList();
         }
         public bool ChangePassword(int userID ,string password,string passwordNew)
         {
@@ -75,7 +92,7 @@ namespace Models.DAO
         }
         public int GetClassIDByClassName(string className)
         {
-            var result = db.Classes.Where(m => m.Name.Trim() == className && m.Status == 1).FirstOrDefault();
+            var result = db.Classes.AsNoTracking().Where(m => m.Name.Trim() == className && m.Status == 1).FirstOrDefault();
             if(result != null)
             {
                 return result.ClassID;
@@ -97,6 +114,37 @@ namespace Models.DAO
             {
                 return db.Classes.ToList();
             }
+        }
+        public static int Update(User user)
+        {
+            using(DBContext db = new DBContext())
+            {
+                var item = db.Users.Where(m => m.UserID == user.UserID && m.Status == 1).FirstOrDefault();
+                if (item == null) return -1;
+                if(db.Users.Where(m=>m.StudentCode == user.StudentCode && m.UserID != user.UserID).FirstOrDefault() == null)
+                {
+                    item.FullName = user.FullName;
+                    item.StudentCode = user.StudentCode;
+                    item.Phone = user.Phone;
+                    item.Email = user.Email.Trim();
+                    item.Gender = user.Gender;
+                    item.Birthday = user.Birthday;
+                    item.ClassID = user.ClassID;
+                    item.JoinDate = user.JoinDate;
+                    item.CityID = user.CityID;
+                    item.DistrictID = user.DistrictID;
+                    item.WardID = user.WardID;
+                    item.Address = user.Address;
+                    db.SaveChanges();
+                    return 1;
+                }
+                return -1;
+            }
+           
+        }
+        public List<User> GetListUser()
+        {
+            return db.Users.ToList();
         }
     }
 }
