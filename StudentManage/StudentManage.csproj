@@ -139,6 +139,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BUS\ConfigBUS.cs" />
     <Compile Include="BUS\FacultyBUS.cs" />
     <Compile Include="BUS\UnionBUS.cs" />
     <Compile Include="BUS\UserBUS.cs" />
@@ -148,6 +149,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\UnionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -158,6 +161,7 @@
     <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\ClassModel.cs" />
     <Compile Include="Models\DataTableModel.cs" />
+    <Compile Include="Models\EmailSettingsModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\SearchUnionModel.cs" />
@@ -230,7 +234,9 @@
     <Content Include="Assets\img\thumnail.png" />
     <Content Include="Assets\img\user.jpg" />
     <Content Include="Assets\img\video-call.jpg" />
+    <Content Include="Assets\js\ajax\Class.js" />
     <Content Include="Assets\js\ajax\Faculty.js" />
+    <Content Include="Assets\js\ajax\StudentList.js" />
     <Content Include="Assets\js\ajax\Union.js" />
     <Content Include="Assets\js\ajax\UnionCollaborator.js" />
     <Content Include="Assets\js\ajax\User.js" />
@@ -348,10 +354,14 @@
     <Content Include="Views\Union\Faculty.cshtml" />
     <Content Include="Views\Faculty\Index.cshtml" />
     <Content Include="Views\Class\Index.cshtml" />
+    <Content Include="Views\Class\FacultyPartial.cshtml" />
+    <Content Include="Views\Class\List.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Student\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -20,6 +20,9 @@ namespace StudentManage.BUS
                 FacultyModel model = new FacultyModel();
                 model.facultyID = item.FacutyID;
                 model.facultyName = item.Name;
+                model.phone = item.Phone;
+                model.status = (int)item.Status;
+                model.totalClass = GetListClassByFaculty(item.FacutyID).Count();
                 list.Add(model);
             }
             return list;
@@ -39,13 +42,49 @@ namespace StudentManage.BUS
             }
             return null;
         }
+        public Tuple<int, List<ClassModel>> GetListClass(int start,int length)
+        {
+            var result = new FacultyDAO().GetListClass(start,length);
+            var listUser = new UserDAO().GetListUser(); 
+            List<ClassModel> list = new List<ClassModel>();
+            foreach (var item in result.List)
+            {
+                ClassModel model = new ClassModel()
+                {
+                    classID = item.ClassID,
+                    className = item.Name,
+                    facultyID = item.FacutyID,
+                    facultyName = item.Faculty.Name,
+                    totalStudent = listUser.Where(m=>m.Class.Name.Contains(item.Name)).Count(), //Try optimizing performance this line. Original code: totalStudent = new UserDAO().GetListUserByClassName(item.Name).Count()
+                    status = (int)item.Status
+                };
+                list.Add(model);
+            }
+            return new Tuple<int,List<ClassModel>>(result.TotalRecords,list);
+        }
+        public List<ClassModel> GetListClassByFaculty(int id)
+        {
+            List<ClassModel> list = new List<ClassModel>();
+            var result = new FacultyDAO().GetListClassByFaculty(id);
+            foreach (var item in result)
+            {
+                ClassModel model = new ClassModel()
+                {
+                    classID = item.ClassID,
+                    className = item.Name,
+                    status = (int)item.Status
+                };
+                list.Add(model);
+            }
+            return list;
+        }
         public int InsertClass(ClassModel model)
         {
             Class classItem = new Class()
             {
                 Name = model.className,
                 FacutyID = model.facultyID,
-                Status = model.status
+                Status = 1
             };
             return new FacultyDAO().InsertClass(classItem);
         }
@@ -128,6 +167,21 @@ namespace StudentManage.BUS
             }
             return result;
         }
+        public FacultyModel GetFacultyByID(int id)
+        {
+            Faculty fac = new FacultyDAO().GetFacultyByID(id);
+            if(fac != null)
+            {
+                FacultyModel model = new FacultyModel()
+                {
+                    facultyID = fac.FacutyID,
+                    facultyName = fac.Name,
+                    phone = fac.Phone,
+                };
+                return model;
+            }
+            return null;
+        }
         public int InsertFaculty(FacultyModel model)
         {
             Faculty faculty = new Faculty()
@@ -137,6 +191,78 @@ namespace StudentManage.BUS
                 Status = 1
             };
             return new FacultyDAO().InsertFaculty(faculty);
+        }
+        public int UpdateFaculty(FacultyModel model)
+        {
+            Faculty faculty = new FacultyDAO().GetFacultyByID(model.facultyID);
+            if (faculty != null)
+            {
+                faculty.Name = model.facultyName;
+                faculty.Phone = model.phone;
+                return new FacultyDAO().UpdateFaculty(faculty);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public int DeleteFaculty(int id)
+        {
+            return new FacultyDAO().DeleteFaculty(id);
+        }
+        public ClassModel GetClassByID(int id)
+        {
+            Class cls = new FacultyDAO().GetClassByID(id);
+            if(cls != null)
+            {
+                ClassModel model = new ClassModel()
+                {
+                    classID = cls.ClassID,
+                    className = cls.Name,
+                    facultyID = cls.FacutyID,
+                    facultyName = cls.Faculty.Name
+                };
+                return model;
+            }
+            return null;
+        }
+        public int UpdateClass(ClassModel model)
+        {
+            Class cls = new FacultyDAO().GetClassByID(model.classID);
+            if (cls != null)
+            {
+                cls.ClassID = model.classID;
+                cls.Name = model.className;
+                cls.FacutyID = model.facultyID;
+                return new FacultyDAO().UpdateClass(cls);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public int DeleteClass(int id)
+        {
+            return new FacultyDAO().DeleteClass(id);
+        }
+        public Tuple<int, List<ClassModel>> GetListClassByCondition(int start, int lenght, int facultyID, string className)
+        {
+            var result = new FacultyDAO().GetListClassByCondition(start, lenght, facultyID, className);
+            var listCls = new List<ClassModel>();
+            var listUser = new UserDAO().GetListUser();
+            foreach (var cls in result.List)
+            {
+                ClassModel model = new ClassModel()
+                {
+                    classID = cls.ClassID,
+                    className = cls.Name,
+                    facultyID = cls.FacutyID,
+                    facultyName = cls.Faculty.Name,
+                    totalStudent = listUser.Where(m => m.Class.Name.Contains(cls.Name)).Count(),
+                };
+                listCls.Add(model);
+            }
+            return new Tuple<int, List<ClassModel>>(result.TotalRecords, listCls);
         }
     }
 }

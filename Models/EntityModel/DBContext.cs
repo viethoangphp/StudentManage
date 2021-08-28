@@ -13,6 +13,7 @@ namespace Models.EntityModel
         }
 
         public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<Config> Configs { get; set; }
         public virtual DbSet<DetailEvalution> DetailEvalutions { get; set; }
         public virtual DbSet<EvaluativeCriteria> EvaluativeCriterias { get; set; }
         public virtual DbSet<EvaluativeMain> EvaluativeMains { get; set; }
@@ -30,6 +31,10 @@ namespace Models.EntityModel
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Config>()
+                .Property(e => e.KeyName)
+                .IsUnicode(false);
+
             modelBuilder.Entity<DetailEvalution>()
                 .Property(e => e.Image_proof)
                 .IsFixedLength()
