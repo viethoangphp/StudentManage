@@ -13,12 +13,12 @@ namespace StudentManage.BUS
         protected DetailEvaluationDAO dao = new DetailEvaluationDAO();
 
         /*
-         Lấy ra các Main và tiêu chí để render được Form chấm điểm
+         * Lấy ra các Main và tiêu chí để render được Form chấm điểm
          */
-        //lấy tất cả Main
-        public List<EvaluativeMainModel> getAllMainByTemplate(string templateName)
+        // lấy tất cả Main
+        public List<EvaluativeMainModel> GetAllMainByTemplate(string templateName)
         {
-            var result = dao.getAllMainByTemplate(templateName);
+            var result = dao.GetAllMainByTemplate(templateName);
             List<EvaluativeMainModel> listModel = new List<EvaluativeMainModel>();
             foreach (var item in result)
             {
@@ -33,10 +33,10 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
-        //Lấy tất cả các tiêu chi by TemplateName
-        public List<EvaluativeCriteriaModel> getAllCriteriaByTemplate(string templateName)
+        // Lấy tất cả các tiêu chi by TemplateName
+        public List<EvaluativeCriteriaModel> GetAllCriteriaByTemplate(string templateName)
         {
-            var result = dao.getAllCriteriaByTemplate(templateName);
+            var result = dao.GetAllCriteriaByTemplate(templateName);
             List<EvaluativeCriteriaModel> listModel = new List<EvaluativeCriteriaModel>();
             foreach (var item in result)
             {
@@ -54,12 +54,12 @@ namespace StudentManage.BUS
         }
 
         /*
-         *Phần Chấm điểm đoàn viên
+         * Phần Chấm điểm đoàn viên
          */
-        //Lấy tất cá các Form đã chấm (đã qua) của đoàn viên
-        public List<EvalutionFormModel> getPassedEvalutionFormsById(int userId)
+        // Lấy tất cá các Form đã chấm (đã qua) của đoàn viên
+        public List<EvalutionFormModel> GetPassedEvalutionFormsById(int userId)
         {
-            var result = dao.getPassedEvalutionFormsById(userId);
+            var result = dao.GetPassedEvalutionFormsById(userId);
             List<EvalutionFormModel> listModel = new List<EvalutionFormModel>();
             foreach (var item in result)
             {
@@ -75,10 +75,10 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
-        //Lấy tất các các DetailForm của Form đã chấm
-        public List<DetailEvalutionModel> getDetailFormsById(int userId)
+        // Lấy tất các các DetailForm của Form đã chấm
+        public List<DetailEvalutionModel> GetDetailFormsById(int userId)
         {
-            var result = dao.getDetailFormsById(userId);
+            var result = dao.GetDetailFormsById(userId);
             List<DetailEvalutionModel> listModel = new List<DetailEvalutionModel>();
             foreach (var item in result)
             {
@@ -106,10 +106,10 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
-        //Lấy tất cả các học kì từ HK đầu tiên đến NAY
-        public List<SemesterModel> getSemesterById(int userId)
+        // Lấy tất cả các học kì từ HK đầu tiên đến NAY
+        public List<SemesterModel> GetSemesterById(int userId)
         {
-            var result = dao.getSemesterById(userId);
+            var result = dao.GetSemesterById(userId);
             List<SemesterModel> listSemesters = new List<SemesterModel>();
             foreach (var item in result)
             {
@@ -130,11 +130,11 @@ namespace StudentManage.BUS
             }
             return listSemesters;
         }
-        //Lấy vòng chấm hiện tại
-        public int getTurnNow(int semsterId, int userid)
+        // Lấy vòng chấm hiện tại
+        public int GetTurnNow(int semsterId, int userid)
         {
-            var preSemes = dao.getPresentSemester();
-            var detail = dao.getDetailFormsById(userid);
+            var preSemes = dao.GetPresentSemester();
+            var detail = dao.GetDetailFormsById(userid);
             int? turn = detail.Where(x=>x.EvalutionForm.SemesterID==semsterId).Select(x=>x.Level).Distinct().Max();
             if(turn == null)
             {
@@ -142,10 +142,10 @@ namespace StudentManage.BUS
             }    
             return (int)turn;
         }
-        //get present semester of User
-        public SemesterModel getPresentSemester(int userid)
+        // Get present semester of User
+        public SemesterModel GetPresentSemester(int userid)
         {
-            var result = dao.getPresentSemester();
+            var result = dao.GetPresentSemester();
             var hasForm = result.EvalutionForms.Where(x => x.Create_by == userid).FirstOrDefault();
             
             SemesterModel model = new SemesterModel();
@@ -162,7 +162,7 @@ namespace StudentManage.BUS
             return model;
         }
         //==========================================
-        //Insert EvaluationForm
+        // Insert EvaluationForm
         public int InsertEvaluationForm(EvalutionFormModel form)
         {
             EvalutionForm model = new EvalutionForm()
@@ -181,11 +181,11 @@ namespace StudentManage.BUS
             var user = new UserDAO().GetUserByID(userid);
             int position = user.Position.PositionID;
             int positionTurn;
-            int turn = getTurnNow(getPresentSemester(userid).semesterId,userid); 
-            int dv = dao.findPositionByName("Đoàn Viên");
-            int btcd = dao.findPositionByName("Bí Thư Chi Đoàn");
-            int btdk = dao.findPositionByName("Bí Thư Đoàn Khoa");
-            int btdt = dao.findPositionByName("Bí Thư Đoàn Trường");
+            int turn = GetTurnNow(GetPresentSemester(userid).semesterId,userid); 
+            int dv = dao.FindPositionByName("Đoàn Viên");
+            int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
+            int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
+            //int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
             if (position == dv ) positionTurn = 1;
             else
             {
@@ -212,7 +212,7 @@ namespace StudentManage.BUS
                     else positionTurn = 4;
                 }    
             }    
-            var preSemes = getPresentSemester(userid);
+            var preSemes = GetPresentSemester(userid);
             foreach (EvaluationModel item in listDetail)
             {
                 DetailEvalution model = new DetailEvalution()
