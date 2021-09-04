@@ -19,17 +19,44 @@ namespace StudentManage.Controllers
             return View();
         }
         // Form chấm điểm đoàn viên
-        public ActionResult EvaluationForm()
+        public ActionResult EvaluationForm(int? formId)
         {
             EvaluationBUS modelBUS = new EvaluationBUS();
+            // Thông tin User
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+
+            // Render Form chấm điểm
             var listMain = modelBUS.GetAllMainByTemplate("G4");
             var listCriteria = modelBUS.GetAllCriteriaByTemplate("G4");
+            // Lấy detail của Form nếu Đã có Form 
+            if (formId != null)
+            {   
+                //Kiểm tra giả mạo link Form ID
+                if(modelBUS.GetEvaluationFormById((int)formId).createBy != user.userID)
+                {
+                    return RedirectToAction("Union", "UnionEvaluation");
+                }    
+                var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
+                ViewBag.listDetail = details;
+                int turn;
+                // ? Kiểm tra Form có phải thuộc Hk đang xét=> Form đang chấm thì set lượt chấm hiện tại
+                if (modelBUS.GetEvaluationFormById((int)formId).semesterId == modelBUS.GetPresentSemester(user.userID).semesterId)
+                {
+                    //Đếm lượt chấm hiện tại
+                    turn = modelBUS.GetTurnNow(modelBUS.GetPresentSemester(user.userID).semesterId, user.userID);
+                }
+                else
+                {
+                    // Form đã chấm set lượt chấm 4
+                    turn = 4;
+                }
+                ViewBag.turn = turn;
+            }
+            //  ===========================================================
+
             ViewBag.listMain = listMain;
             ViewBag.listCriteria = listCriteria;
             ViewBag.user = user;
-
-            
             return View();
         }
         // View đoàn viên
@@ -38,15 +65,14 @@ namespace StudentManage.Controllers
             int userId = (int)Session["USER_ID"];
             var detailforms = modelBUS.GetDetailFormsById(userId);
             var listSemesters = modelBUS.GetSemesterById(userId);
-            
+
             //// Tính điểm
             foreach (var semester in listSemesters)
             {
-               
                 // Xét theo từng semester
                 if (semester.FormId != null)
                 {
-                    // Đếm lượt
+                    // Đếm lượt chấm hiện tại
                     var turn = modelBUS.GetTurnNow(semester.semesterId, userId);
                     // Gán điểm 
                     switch (turn)
@@ -99,7 +125,9 @@ namespace StudentManage.Controllers
         [HttpPost]
         public ActionResult Evaluation(List<EvaluationModel> listmodel)
         {
-           var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            //Kiểm tra xem Quyền chấm phiếu: Người chấm phiếu phải là Đoàn viên đang đăng nhập hoặc Các bí thư đoàn trường
+            //
+            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             // Tạo mới form nếu chưa tạo
             var preSemes = modelBUS.GetPresentSemester(user.userID);
             if (preSemes.FormId == null)
@@ -121,7 +149,6 @@ namespace StudentManage.Controllers
             else
             {
                 modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
-                TempData["message"] = 2;
             }
             return RedirectToAction("EvaluationForm");
         }

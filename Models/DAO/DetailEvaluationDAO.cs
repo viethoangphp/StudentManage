@@ -41,6 +41,11 @@ namespace Models.DAO
         {
             return db.DetailEvalutions.Where(x => x.EvalutionForm.Create_by == userId).ToList();
         }
+        // Get all detail By FormID
+        public List<DetailEvalution> GetDetailEvalutionsByFormId(int formId)
+        {
+            return db.DetailEvalutions.Where(x => x.FormId == formId).OrderBy(x=>x.Level).ToList();
+        }
         // Get list semester till now - include present semester
         public List<Semester> GetSemesterById(int userId)
         {
@@ -55,6 +60,11 @@ namespace Models.DAO
             DateTime now = DateTime.Now;
             return db.Semesters.Where(x => DateTime.Compare((DateTime)x.Day_Start, (DateTime)now) <= 1 && DateTime.Compare((DateTime)x.Day_End, (DateTime)now) >= 1).FirstOrDefault();
         }
+        // Get Evaluation Form by Form id 
+        public EvalutionForm GetEvaluationFormById(int formId)
+        {
+            return db.EvalutionForms.Where(x => x.FormId == formId).FirstOrDefault();
+        }    
         //========================================================
         // Insert EvaluationForm
         public int InsertEvaluationForm(EvalutionForm form)

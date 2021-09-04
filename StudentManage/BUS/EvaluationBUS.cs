@@ -75,7 +75,7 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
-        // Lấy tất các các DetailForm của Form đã chấm
+        // Lấy tất các các DetailForm của Form đã chấm thuộc User
         public List<DetailEvalutionModel> GetDetailFormsById(int userId)
         {
             var result = dao.GetDetailFormsById(userId);
@@ -101,6 +101,36 @@ namespace StudentManage.BUS
                         semesterId = item.EvalutionForm.SemesterID
                     }
 
+                };
+                listModel.Add(model);
+            }
+            return listModel;
+        }
+        // Lấy tất cả các Chi tiết phiếu theo mã Phiếu
+        public List<DetailEvalutionModel> GetDetailEvalutionsByFormId(int formId)
+        {
+            var result = dao.GetDetailEvalutionsByFormId(formId);
+            var listModel = new List<DetailEvalutionModel>();    
+            foreach(var item in result)
+            {
+                DetailEvalutionModel model = new DetailEvalutionModel()
+                {
+                    formId = item.FormId,
+                    userId = item.UserID,
+                    critetiaId = item.CriteriaID,
+                    score = item.Score,
+                    note = item.Note,
+                    level = item.Level,
+                    imageProof = item.Image_proof,
+                    evalutionForm =
+                    {
+                        formId = item.EvalutionForm.FormId,
+                        createAt = item.EvalutionForm.Create_At,
+                        createBy = item.EvalutionForm.Create_by,
+                        total = item.EvalutionForm.Total,
+                        status = item.EvalutionForm.Status,
+                        semesterId = item.EvalutionForm.SemesterID
+                    }
                 };
                 listModel.Add(model);
             }
@@ -159,6 +189,21 @@ namespace StudentManage.BUS
             {
                 model.FormId = hasForm.FormId;
             }
+            return model;
+        }
+        // Get Evaluation Form by Form id 
+        public EvalutionFormModel GetEvaluationFormById(int formId)
+        {
+            var result = dao.GetEvaluationFormById(formId);
+            EvalutionFormModel model = new EvalutionFormModel()
+            {
+                formId = result.FormId,
+                createAt = result.Create_At,
+                createBy = result.Create_by,
+                semesterId= result.SemesterID,
+                status= result.Status,
+                total = result.Total
+            };
             return model;
         }
         //==========================================

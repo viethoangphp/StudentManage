@@ -5,6 +5,7 @@
     var listMain = (List<StudentManage.Models.EvaluativeMainModel>)ViewBag.listMain;
     var listCriteria = (List<StudentManage.Models.EvaluativeCriteriaModel>)ViewBag.listCriteria;
     var user = (StudentManage.Models.UserModel)ViewBag.user;
+    var listDetail = (List<StudentManage.Models.DetailEvalutionModel>)ViewBag.listDetail;
 
 }
 <!-- Page Content -->
@@ -46,7 +47,7 @@
                                 </div>
                                 <div class="small text-muted">Lớp: @user.className</div>
                                 @{
-                                    int year = Int32.Parse(@user.studentCode.Substring(0, 2)) + 2000;
+                                    int year = int.Parse(@user.studentCode.Substring(0, 2)) + 2000;
                                 }
                                 <div class="small text-muted">Khóa : @year - @(year+4)</div>
                             </div>
@@ -104,7 +105,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{ int count = 1;}
+                                    @{
+                                        int count = 1, turn;
+                                        if (ViewBag.turn == null)
+                                        {
+                                            turn = 0;
+                                        }
+                                        else
+                                        {
+                                            turn = ViewBag.turn;
+                                        }
+                                    }
                                     @foreach (var item in listMain)
                                     {
                                         <tr>
@@ -123,15 +134,84 @@
                                                     @{count++; }
                                                     <td>
                                                         @criteria.criteriaContent
-                                                        <b>(0–@criteria.score điểm)</b>
+                                                        <b>(0–@criteria.score điểm).</b>
                                                     </td>
-                                                    <td class="text-center">
-                                                        <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
-                                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId"/>
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
+                                                    @if (turn != 0)
+                                                    {
+                                                        foreach (var detail in listDetail)
+                                                        {
+
+                                                            switch (turn)
+                                                            {
+                                                                case 4:
+                                                                    if (detail.critetiaId == criteria.criteriaId && detail.level == 4)
+                                                                    {
+                                                                        <td class="text-center score-lv4">
+                                                                            @detail.score
+                                                                        </td>
+                                                                    }
+                                                                    goto case 3;
+                                                                case 3:
+                                                                    if (detail.critetiaId == criteria.criteriaId && detail.level == 3)
+                                                                    {
+                                                                        <td class="text-center score-lv3">
+                                                                            @detail.score
+                                                                        </td>
+                                                                    }
+                                                                    goto case 2;
+                                                                case 2:
+                                                                    if (detail.critetiaId == criteria.criteriaId && detail.level == 2)
+                                                                    {
+                                                                        <td class="text-center score-lv2">
+                                                                            @detail.score
+                                                                        </td>
+                                                                    }
+                                                                    goto case 1;
+                                                                case 1:
+                                                                    if (detail.critetiaId == criteria.criteriaId && detail.level == 1)
+                                                                    {
+                                                                        <td class="text-center score-lv1">
+                                                                            @detail.score
+                                                                        </td>
+                                                                    }
+                                                                    break;
+                                                            }
+                                                            for (int i = 1; i <= (4 - turn); i++)
+                                                            {
+                                                                <td class="text-center">
+                                                                    -
+                                                                </td>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-center">
+                                                            -
+                                                        </td>
+                                                        <td class="text-center">
+                                                            -
+                                                        </td>
+                                                        <td class="text-center">
+                                                            -
+                                                        </td>
+                                                        <td class="text-center">
+                                                            -
+                                                        </td>
+                                                    }
+                                                    <!--<td class="text-center">-->
+                                                    @*<input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
+                                    <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId"/>*@
+
+                                                    <!--</td>
+
+                                <td class="text-center">
+                                    0
+                                </td>
+                                <td class="text-center">
+                                    0
+                                </td>-->
+
                                                 </tr>
                                             }
                                         }
@@ -139,30 +219,57 @@
                                     <!-- sum -->
                                     <tr style="background-color:#eee ;">
                                         <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
-                                        <td class="text-center font-weight-bold">90</td>
-                                        <td class="text-center font-weight-bold">90</td>
-                                        <td class="text-center font-weight-bold">90</td>
-                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold" id="total-lv1">90</td>
+                                        <td class="text-center font-weight-bold" id="total-lv2">90</td>
+                                        <td class="text-center font-weight-bold" id="total-lv3">90</td>
+                                        <td class="text-center font-weight-bold" id="total-lv4">90</td>
                                     </tr>
                                     <!-- /sum -->
                                 </tbody>
                             </table>
-                            
+
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
-                            <button onclick="" class="btn btn-warning">Xóa tất cả</button>
-                        </div>
+                        @if (turn != 4)
+                        {
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
+                                <button onclick="" class="btn btn-warning">Xóa tất cả</button>
+                            </div>
+                        }
                     </form>
                     <!-- when done jugedment -->
                     <!-- <div class="d-flex justify-content-center">
                         <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
                                 class="las la-thumbs-up font-35 text-info"></i></p>
                     </div> -->
-                    
+
                 </div>
             </div>
         </div>
     </div>
     <!-- /Jugedment table -->
 </div>
+@section js
+{
+    <script>
+        $(document).ready(function () {
+            var listlv1 = $(".score-lv1");
+            var listlv2 = $(".score-lv2");
+            var listlv3 = $(".score-lv3");
+            var listlv4 = $(".score-lv4");
+            var total1 = 0, total2 = 0, total3 = 0, total4 = 0;
+            for (let i = 0; i < listlv1.length; i++)
+            {
+                total1 += parseInt(listlv1[i].innerText);
+                total2 += parseInt(listlv2[i].innerText);
+                total3 += parseInt(listlv3[i].innerText);
+                total4 += parseInt(listlv4[i].innerText); 
+            }
+            $('#total-lv1').text(total1);
+            $('#total-lv2').text(total2);
+            $('#total-lv3').text(total3);
+            $('#total-lv4').text(total4);
+        })
+    </script>
+
+}
