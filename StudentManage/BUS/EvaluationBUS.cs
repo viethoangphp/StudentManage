@@ -16,9 +16,9 @@ namespace StudentManage.BUS
          * Lấy ra các Main và tiêu chí để render được Form chấm điểm
          */
         // lấy tất cả Main
-        public List<EvaluativeMainModel> GetAllMainByTemplate(string templateName)
+        public List<EvaluativeMainModel> GetAllMainByTemplateId(int templateId)
         {
-            var result = dao.GetAllMainByTemplate(templateName);
+            var result = dao.GetAllMainByTemplateId(templateId);
             List<EvaluativeMainModel> listModel = new List<EvaluativeMainModel>();
             foreach (var item in result)
             {
@@ -34,9 +34,9 @@ namespace StudentManage.BUS
             return listModel;
         }
         // Lấy tất cả các tiêu chi by TemplateName
-        public List<EvaluativeCriteriaModel> GetAllCriteriaByTemplate(string templateName)
+        public List<EvaluativeCriteriaModel> GetAllCriteriaByTemplateId(int templateId)
         {
-            var result = dao.GetAllCriteriaByTemplate(templateName);
+            var result = dao.GetAllCriteriaByTemplateId(templateId);
             List<EvaluativeCriteriaModel> listModel = new List<EvaluativeCriteriaModel>();
             foreach (var item in result)
             {
@@ -52,7 +52,7 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
-
+        //==============================================================================
         /*
          * Phần Chấm điểm đoàn viên
          */
@@ -172,7 +172,18 @@ namespace StudentManage.BUS
             }    
             return (int)turn;
         }
-        // Get present semester of User
+        //lấy vòng chấm của một phiếu bất kì
+        public int GetTurnByFormId(int formId)
+        {
+            var form = GetEvaluationFormById(formId);
+            int? turn = dao.GetDetailEvalutionsByFormId(formId).Select(x=>x.Level).Distinct().Max();
+            if(turn == null)
+            {
+                return 0;
+            }
+            return (int)turn;
+        }
+        // Lấy HK  hiện tại của User
         public SemesterModel GetPresentSemester(int userid)
         {
             var result = dao.GetPresentSemester();
@@ -191,7 +202,7 @@ namespace StudentManage.BUS
             }
             return model;
         }
-        // Get Evaluation Form by Form id 
+        // Lấy EvaluationForm có Formid 
         public EvalutionFormModel GetEvaluationFormById(int formId)
         {
             var result = dao.GetEvaluationFormById(formId);
@@ -206,7 +217,6 @@ namespace StudentManage.BUS
             };
             return model;
         }
-        //==========================================
         // Insert EvaluationForm
         public int InsertEvaluationForm(EvalutionFormModel form)
         {
@@ -230,7 +240,7 @@ namespace StudentManage.BUS
             int dv = dao.FindPositionByName("Đoàn Viên");
             int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
             int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
-            //int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
+            // int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
             if (position == dv ) positionTurn = 1;
             else
             {
@@ -274,5 +284,83 @@ namespace StudentManage.BUS
             }
             return 1;
         }
+        // lấy UserGroup có groupID
+        public GroupUserModel GetGroupUserById(int groupId)
+        {
+            var result = dao.GetGroupUserById(groupId);
+            if(result!=null)
+            {
+                GroupUserModel model = new GroupUserModel()
+                {
+                    groupId = result.GroupId,
+                    name = result.Name,
+                    status = (int)result.Status,
+                    templateId = result.TemplateID,
+                    timeId = result.TimeID
+                };
+                return model;
+            }
+            return null;
+        }
+        //Tính điểm Form theo học kỳ của User
+        public List<SemesterModel> CalcScoreByUserId(int userId)
+        {
+            var detailforms = GetDetailFormsById(userId);
+            var listSemesters = GetSemesterById(userId);
+
+            //// Tính điểm
+            foreach (var semester in listSemesters)
+            {
+                // Xét theo từng semester
+                if (semester.FormId != null)
+                {
+                    // Đếm lượt chấm hiện tại
+                    var turn = GetTurnNow(semester.semesterId, userId);
+                    // Gán điểm 
+                    switch (turn)
+                    {
+                        case 4:
+                            semester.score4 = 0;
+                            goto case 3;
+                        case 3:
+                            semester.score3 = 0;
+                            goto case 2;
+                        case 2:
+                            semester.score2 = 0;
+                            goto case 1;
+                        case 1:
+                            semester.score1 = 0;
+                            break;
+                    }
+                    // Cộng điểm vào biến khi Chi tiết phiếu này có mã học kỳ bằng mã hk đang xét, theo level
+                    foreach (var detail in detailforms)
+                    {
+                        // level1 Đoàn viên chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 1)
+                        {
+                            semester.score1 += detail.score;
+                        }
+                        // level2 BT chi đoàn chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 2)
+                        {
+                            semester.score2 += detail.score;
+                        }
+                        // level3 BT đoàn khoa chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 3)
+                        {
+                            semester.score3 += detail.score;
+                        }
+                        // level4 BT đoàn trường chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 4)
+                        {
+                            semester.score4 += detail.score;
+                        }
+                    }
+                }
+            }
+            listSemesters[0].inProcess = true;
+            return listSemesters;
+        }    
     }
+    
 }

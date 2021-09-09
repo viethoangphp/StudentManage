@@ -17,15 +17,15 @@ namespace Models.DAO
          * Phiếu chấm điểm
          */
         // Get all main Criteria
-        public List<EvaluativeMain> GetAllMainByTemplate(string templateName)
+        public List<EvaluativeMain> GetAllMainByTemplateId(int templateId)
         {
-            var temID = db.TemplateForms.Where(x => x.Name == templateName).FirstOrDefault().TemplateID;
+            var temID = db.TemplateForms.Where(x => x.TemplateID == templateId).FirstOrDefault().TemplateID;
             return db.EvaluativeMains.Where(x=>x.TemplateID == temID).ToList();
         }
         // Get all criteria evaluation by template
-        public List<EvaluativeCriteria> GetAllCriteriaByTemplate(string templateName)
+        public List<EvaluativeCriteria> GetAllCriteriaByTemplateId(int templateId)
         {
-            return db.EvaluativeCriterias.Where(x => x.EvaluativeMain.TemplateForm.Name == templateName).ToList();
+            return db.EvaluativeCriterias.Where(x => x.EvaluativeMain.TemplateForm.TemplateID == templateId).ToList();
         }
         // Get all passed Form evalution
         public List<EvalutionForm> GetPassedEvalutionFormsById(int userid)
@@ -98,6 +98,11 @@ namespace Models.DAO
         public int FindPositionByName(string name)
         {
             return db.Positions.Where(x=>x.Name==name && x.Status == 1).FirstOrDefault().PositionID;
+        }
+        // Get UserGroup By ID
+        public GroupUser GetGroupUserById(int groupId)
+        {
+            return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
         }
     }
 }

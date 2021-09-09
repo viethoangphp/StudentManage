@@ -23,6 +23,7 @@ namespace StudentManage.BUS
                 var user = new UserModel();
                 user.userID = model.UserID;
                 user.fullname = model.FullName;
+                user.groupID = model.GroupId;
                 user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;

@@ -13,5 +13,11 @@ namespace StudentManage.Models
         public int? total {  get; set; }
         public int? status { get; set; }
         public int semesterId{ get; set; }
+
+        //Added field
+        public bool? inProcess { set; get; }
+
+        
+
     }
 }

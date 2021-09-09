@@ -6,9 +6,10 @@ using System.Web.Mvc;
 using StudentManage.BUS;
 using StudentManage.Models;
 using Models.EntityModel;
-
+using StudentManage.Library;
 namespace StudentManage.Controllers
 {
+    [UserAuthorze]
     public class UnionEvaluationController : Controller
     {
         protected EvaluationBUS modelBUS = new EvaluationBUS();
@@ -22,24 +23,29 @@ namespace StudentManage.Controllers
         public ActionResult EvaluationForm(int? formId)
         {
             EvaluationBUS modelBUS = new EvaluationBUS();
+            /*
             // Thông tin User
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
 
             // Render Form chấm điểm
-            var listMain = modelBUS.GetAllMainByTemplate("G4");
-            var listCriteria = modelBUS.GetAllCriteriaByTemplate("G4");
+            int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
+
+            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
+            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
+
             // Lấy detail của Form nếu Đã có Form 
             if (formId != null)
             {   
                 //Kiểm tra giả mạo link Form ID
-                if(modelBUS.GetEvaluationFormById((int)formId).createBy != user.userID)
-                {
-                    return RedirectToAction("Union", "UnionEvaluation");
-                }    
+                //if(modelBUS.GetEvaluationFormById((int)formId).createBy != user.userID)
+                //{
+                //    return RedirectToAction("Union", "UnionEvaluation");
+                //}    
                 var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
                 ViewBag.listDetail = details;
+
+                //  Kiểm tra Form có phải thuộc Hk đang xét=> Form đang chấm thì set lượt chấm hiện tại
                 int turn;
-                // ? Kiểm tra Form có phải thuộc Hk đang xét=> Form đang chấm thì set lượt chấm hiện tại
                 if (modelBUS.GetEvaluationFormById((int)formId).semesterId == modelBUS.GetPresentSemester(user.userID).semesterId)
                 {
                     //Đếm lượt chấm hiện tại
@@ -57,68 +63,73 @@ namespace StudentManage.Controllers
             ViewBag.listMain = listMain;
             ViewBag.listCriteria = listCriteria;
             ViewBag.user = user;
+            */
+            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            // Render Form chấm điểm
+            int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
+            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
+            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
+
+            int[] total = new int[4];
+            // Gán điểm theo tiêu chí và lượt chấm
+            if(formId!=null)
+            {
+                var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
+                int? turn = (int)details.Select(x=>x.level).Distinct().Max();
+                turn = (turn==null) ? 0 : turn;
+                
+                foreach (var critial in listCriteria)
+                {
+                    foreach (var detail in details)
+                    {
+                        switch(turn)
+                        {
+                            case 4:
+                                if (detail.critetiaId == critial.criteriaId && detail.level == 4)
+                                {
+                                    critial.score4 = detail.score;
+                                    total[3] += (int)detail.score; 
+                                }
+                                goto case 3;
+                            case 3:
+                                if (detail.critetiaId == critial.criteriaId && detail.level == 3)
+                                {
+                                    critial.score3 = detail.score;
+                                    total[2] += (int)detail.score;
+                                }
+                                goto case 2;
+                            case 2:
+                                if (detail.critetiaId == critial.criteriaId && detail.level == 2)
+                                {
+                                    critial.score2 = detail.score;
+                                    total[1] += (int)detail.score;
+                                }
+                                goto case 1;
+                            case 1:
+                                if (detail.critetiaId == critial.criteriaId && detail.level == 1)
+                                {
+                                    critial.score1 = detail.score;
+                                    total[0] += (int)detail.score;
+                                }
+                                break;
+                        }       
+                    }
+                }
+            }    
+            // ==========================================================
+            ViewBag.user = user;
+            ViewBag.listMain = listMain;
+            ViewBag.listCriteria = listCriteria;
+            ViewBag.total = total;
             return View();
         }
         // View đoàn viên
         public ActionResult Union()
         {
             int userId = (int)Session["USER_ID"];
-            var detailforms = modelBUS.GetDetailFormsById(userId);
-            var listSemesters = modelBUS.GetSemesterById(userId);
-
-            //// Tính điểm
-            foreach (var semester in listSemesters)
-            {
-                // Xét theo từng semester
-                if (semester.FormId != null)
-                {
-                    // Đếm lượt chấm hiện tại
-                    var turn = modelBUS.GetTurnNow(semester.semesterId, userId);
-                    // Gán điểm 
-                    switch (turn)
-                    {
-                        case 4:
-                            semester.score4 = 0;
-                            goto case 3;
-                        case 3:
-                            semester.score3 = 0;
-                            goto case 2;
-                        case 2:
-                            semester.score2 = 0;
-                            goto case 1;
-                        case 1:
-                            semester.score1 = 0;
-                            break;
-                    }
-                    // Cộng điểm vào biến khi Chi tiết phiếu này có mã học kỳ bằng mã hk đang xét, theo level
-                    foreach (var detail in detailforms)
-                    {
-                        // level1 Đoàn viên chấm
-                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 1)
-                        {
-                            semester.score1 += detail.score;
-                        }
-                        // level2 BT chi đoàn chấm
-                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 2)
-                        {
-                            semester.score2 += detail.score;
-                        }
-                        // level3 BT đoàn khoa chấm
-                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 3)
-                        {
-                            semester.score3 += detail.score;
-                        }
-                        // level4 BT đoàn trường chấm
-                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 4)
-                        {
-                            semester.score4 += detail.score;
-                        }
-                    }
-                }
-            }
-            listSemesters[0].inProcess = true;
+            // Tính điểm từng phiếu trong từng học kỳ
+            var listSemesters = modelBUS.CalcScoreByUserId(userId);
             //===============================================
-            ViewBag.detail = detailforms;
             ViewBag.semesters = listSemesters;
             return View();
         }

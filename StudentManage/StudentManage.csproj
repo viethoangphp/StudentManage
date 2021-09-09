@@ -170,6 +170,7 @@
     <Compile Include="Models\EvaluativeCriteriaModel.cs" />
     <Compile Include="Models\EvalutionFormModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
+    <Compile Include="Models\GroupUserModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\SearchUnionModel.cs" />
     <Compile Include="Models\SemesterModel.cs" />
