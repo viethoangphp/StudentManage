@@ -18,52 +18,13 @@ namespace StudentManage.Controllers
         {
             // Phân chia trang theo user id
             return View();
+
         }
         // Form chấm điểm đoàn viên
         public ActionResult EvaluationForm(int? formId)
         {
             EvaluationBUS modelBUS = new EvaluationBUS();
-            /*
-            // Thông tin User
-            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
-
-            // Render Form chấm điểm
-            int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
-
-            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
-            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
-
-            // Lấy detail của Form nếu Đã có Form 
-            if (formId != null)
-            {   
-                //Kiểm tra giả mạo link Form ID
-                //if(modelBUS.GetEvaluationFormById((int)formId).createBy != user.userID)
-                //{
-                //    return RedirectToAction("Union", "UnionEvaluation");
-                //}    
-                var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
-                ViewBag.listDetail = details;
-
-                //  Kiểm tra Form có phải thuộc Hk đang xét=> Form đang chấm thì set lượt chấm hiện tại
-                int turn;
-                if (modelBUS.GetEvaluationFormById((int)formId).semesterId == modelBUS.GetPresentSemester(user.userID).semesterId)
-                {
-                    //Đếm lượt chấm hiện tại
-                    turn = modelBUS.GetTurnNow(modelBUS.GetPresentSemester(user.userID).semesterId, user.userID);
-                }
-                else
-                {
-                    // Form đã chấm set lượt chấm 4
-                    turn = 4;
-                }
-                ViewBag.turn = turn;
-            }
-            //  ===========================================================
-
-            ViewBag.listMain = listMain;
-            ViewBag.listCriteria = listCriteria;
-            ViewBag.user = user;
-            */
+            // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             // Render Form chấm điểm
             int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
@@ -75,9 +36,9 @@ namespace StudentManage.Controllers
             if(formId!=null)
             {
                 var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
-                int? turn = (int)details.Select(x=>x.level).Distinct().Max();
+                int? turn = (int)details.Select(x => x.level).Distinct().Max();        
                 turn = (turn==null) ? 0 : turn;
-                
+                ViewBag.turn = turn;
                 foreach (var critial in listCriteria)
                 {
                     foreach (var detail in details)
@@ -151,17 +112,19 @@ namespace StudentManage.Controllers
                     createBy = user.userID,
                 };
                 // Insert Form
-                modelBUS.InsertEvaluationForm(form);
+                int formid = modelBUS.InsertEvaluationForm(form);
                 // Insert Detail
                 modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
-                TempData["message"] = 1;
+                TempData["MESSAGE"] = "Chấm điểm thành công!";
+                return RedirectToAction("EvaluationForm", new { formId = formid });
             }
             // Trường hợp đã có Form
             else
             {
                 modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
+                TempData["MESSAGE"] = "Cập nhật điểm thành công!";
             }
-            return RedirectToAction("EvaluationForm");
+            return RedirectToAction("EvaluationForm",new { formId = preSemes.FormId });
         }
 
         // View Bi thu chi doan

@@ -5,8 +5,6 @@
     var listMain = (List<StudentManage.Models.EvaluativeMainModel>)ViewBag.listMain;
     var listCriteria = (List<StudentManage.Models.EvaluativeCriteriaModel>)ViewBag.listCriteria;
     var user = (StudentManage.Models.UserModel)ViewBag.user;
-    //var total = (int[])ViewBag.total;
-
 }
 <!-- Page Content -->
 <div class="content container-fluid">
@@ -129,29 +127,37 @@
                                                         @criteria.criteriaContent
                                                         <b>(0–@criteria.score điểm).</b>
                                                     </td>
-                                                    <td class="text-center score-lv1">
-                                                        @((criteria.score1 == null) ? Html.Raw("-") : Html.Raw(criteria.score1))
+                                                    <td class="text-center">
+                                                        @if (turn == 1 || turn == 0)
+                                                        {
+                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score1" class="juged-input" min="0" max="@criteria.score" required />
+                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                        }
+                                                        else
+                                                        {
+                                                            @((criteria.score1 == null) ? Html.Raw("-") : Html.Raw(criteria.score1));
+                                                        }
                                                     </td>
-                                                    <td class="text-center score-lv2">
+                                                    <td class="text-center">
                                                         @((criteria.score2 == null) ? Html.Raw("-") : Html.Raw(criteria.score2))
                                                     </td>
-                                                    <td class="text-center score-lv3">
+                                                    <td class="text-center">
                                                         @((criteria.score3 == null) ? Html.Raw("-") : Html.Raw(criteria.score3))
                                                     </td>
-                                                    <td class="text-center score-lv4">
+                                                    <td class="text-center">
                                                         @((criteria.score4 == null) ? Html.Raw("-") : Html.Raw(criteria.score4))
                                                     </td>
-                                                    <!--<td class="text-center">-->
-                                                    @*<input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
-                                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId"/>*@
-                                                    <!--</td>
+                                                    @*<td class="text-center">
+                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
+                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                        </td>
 
-                                                    <td class="text-center">
-                                                        0
-                                                    </td>
-                                                    <td class="text-center">
-                                                        0
-                                                    </td>-->
+                                                        <td class="text-center">
+                                                            0
+                                                        </td>
+                                                        <td class="text-center">
+                                                            0
+                                                        </td>*@
                                                 </tr>
                                             }
                                         }
@@ -169,13 +175,13 @@
                             </table>
 
                         </div>
-                        @*@if (turn != 4)
-                            {
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
-                                    <button onclick="" class="btn btn-warning">Xóa tất cả</button>
-                                </div>
-                            }*@
+                        @if (turn != 4)
+                        {
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
+                                <button onclick="" class="btn btn-warning">Xóa tất cả</button>
+                            </div>
+                        }
                     </form>
                     <!-- when done jugedment -->
                     <!-- <div class="d-flex justify-content-center">
@@ -191,7 +197,23 @@
 </div>
 @section js
 {
-    <script>
-    </script>
+    @if (TempData["MESSAGE"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                toastr.success("@TempData["MESSAGE"]", "Thông báo");
+                sound("/Assets/mp3/smallbox.mp3");
+            })
+        </script>
+    }
+    @if (TempData["ERROR"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                toastr.success("@TempData["UPDATE"]", "Lỗi");
+                sound("/Assets/mp3/error.mp3");
+            })
+        </script>
+    }
 
 }

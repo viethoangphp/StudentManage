@@ -175,6 +175,7 @@
     <Compile Include="Models\SearchUnionModel.cs" />
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
+    <Compile Include="Models\TimeEvaluationModel.cs" />
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />

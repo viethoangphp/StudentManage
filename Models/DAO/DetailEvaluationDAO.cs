@@ -99,10 +99,16 @@ namespace Models.DAO
         {
             return db.Positions.Where(x=>x.Name==name && x.Status == 1).FirstOrDefault().PositionID;
         }
+        // Get TimeEvaluation byt Id
+        public TimeEvalution GetTimeEvaluationByTimeId(int timeId)
+        {
+            return db.TimeEvalutions.Find(timeId);
+        }
         // Get UserGroup By ID
         public GroupUser GetGroupUserById(int groupId)
         {
             return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
         }
+
     }
 }

@@ -188,7 +188,6 @@ namespace StudentManage.BUS
         {
             var result = dao.GetPresentSemester();
             var hasForm = result.EvalutionForms.Where(x => x.Create_by == userid).FirstOrDefault();
-            
             SemesterModel model = new SemesterModel();
             model.semesterId = result.SemesterID;
             model.dayEnd = result.Day_End;
@@ -196,9 +195,13 @@ namespace StudentManage.BUS
             model.status = result.Status;
             model.year = result.Year;
             model.name = result.Name;
-            if(hasForm!=null)
+            if (hasForm != null)
             {
                 model.FormId = hasForm.FormId;
+            }
+            else
+            {
+                model.FormId = null;
             }
             return model;
         }
@@ -234,36 +237,50 @@ namespace StudentManage.BUS
         public int InsertListDetailEvaluation(List<EvaluationModel> listDetail, int userid)
         {
             var user = new UserDAO().GetUserByID(userid);
+            // Tìm Position
             int position = user.Position.PositionID;
-            int positionTurn;
-            int turn = GetTurnNow(GetPresentSemester(userid).semesterId,userid); 
             int dv = dao.FindPositionByName("Đoàn Viên");
             int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
             int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
-            // int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
+            int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
+            //
+            int positionTurn;
+            int turn = GetTurnNow(GetPresentSemester(userid).semesterId,userid); 
+
             if (position == dv ) positionTurn = 1;
             else
             {
                 if(position == btcd)
                 {
-                    positionTurn = 2;
-                    if(turn<positionTurn)
+                    if (IsInTimeEvaluation(2) == 0)
                     {
-                        positionTurn = turn + 1;
-                    }    
-                }    
-                    
+                        positionTurn = 1;
+                    }
+                    else
+                    {
+                        positionTurn = 2;
+                    }                     
+                }     
                 else
                 {
                     if (position == btdk)
                     {
-                        positionTurn = 3;
-                        if (turn < positionTurn)
+                        if(IsInTimeEvaluation(2)==0)
                         {
-                            positionTurn = turn + 1;
-                        }
-                    }    
-                        
+                            positionTurn = 1;
+                        } 
+                        else
+                        {
+                            if(IsInTimeEvaluation(3)==0)
+                            {
+                                positionTurn = 2;
+                            }    
+                            else
+                            {
+                                positionTurn = 3;
+                            }    
+                        }    
+                    }
                     else positionTurn = 4;
                 }    
             }    
@@ -284,7 +301,7 @@ namespace StudentManage.BUS
             }
             return 1;
         }
-        // lấy UserGroup có groupID
+        // Lấy UserGroup có groupID
         public GroupUserModel GetGroupUserById(int groupId)
         {
             var result = dao.GetGroupUserById(groupId);
@@ -302,7 +319,22 @@ namespace StudentManage.BUS
             }
             return null;
         }
-        //Tính điểm Form theo học kỳ của User
+        // Lấy thời gian đánh giá theo GroupUser Id 
+            //  0 : Đang trong thời gian đánh giá
+            //  1 : Đã qua thời gian đánh giá
+        public int IsInTimeEvaluation(int groupId)
+        {
+            var groupUser = GetGroupUserById(groupId);
+            var timeEvaluation = dao.GetTimeEvaluationByTimeId(groupUser.timeId);
+            if(DateTime.Compare(DateTime.Now, (DateTime)timeEvaluation.Date_Start) > 0 && 
+               DateTime.Compare((DateTime)timeEvaluation.Date_End,DateTime.Now) > 0)
+            {
+                return 0;
+            }
+            return 1;
+
+        }
+        // Tính điểm Form theo học kỳ của User
         public List<SemesterModel> CalcScoreByUserId(int userId)
         {
             var detailforms = GetDetailFormsById(userId);
