@@ -28,8 +28,11 @@ namespace StudentManage.BUS
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender: 1;
                 user.studentCode = model.StudentCode;
-                user.facultyName = model.Class.Faculty.Name;
-                user.className = model.Class.Name;
+                if(model.ClassID !=null)
+                {
+                    user.facultyName = model.Class.Faculty.Name;
+                    user.className = model.Class.Name;
+                }    
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
                 user.cityID =(model.CityID != null)? (int)model.CityID:0;
@@ -172,6 +175,31 @@ namespace StudentManage.BUS
             item.Address = user.address;
             item.Status = 1;
             return UserDAO.Update(item);
+        }
+        public List<UserModel> GetListUserByClass(int id)
+        {
+            List<User> listUser = new UserDAO().GetListUser().Where(m=>m.ClassID == id).ToList();
+            List<UserModel> list = new List<UserModel>();
+            foreach (var item in listUser)
+            {
+                UserModel model = new UserModel()
+                {
+                    className = item.Class.Name,
+                    facultyName = item.Class.Faculty.Name,
+                    fullname = item.FullName,
+                    studentCode = item.StudentCode,
+                    email = item.Email,
+                    phone = item.Phone,
+                    address = item.Address,
+                    birthDay = item.Birthday,
+                    cityID = item.CityID != null ? (int)item.CityID : 0,
+                    districtID = item.DistrictID != null ? (int)item.DistrictID : 0,
+                    wardID = item.WardID != null ? (int)item.WardID : 0,
+                    gender = item.Gender != null ? (int)item.Gender : 1
+                };
+                list.Add(model);
+            }
+            return list;
         }
     }
 }

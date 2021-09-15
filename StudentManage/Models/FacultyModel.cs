@@ -13,5 +13,7 @@ namespace StudentManage.Models
         public string facultyName { set; get;}
         [Required]
         public string phone { get; set; }
+        public int totalClass { get; set; }
+        public int status { get; set; }
     }
 }
