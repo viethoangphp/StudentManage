@@ -18,11 +18,11 @@ namespace StudentManage.Controllers
         {
             // Phân chia trang theo user id
             return View();
-
         }
         // Form chấm điểm đoàn viên
         public ActionResult EvaluationForm(int? formId)
         {
+           
             EvaluationBUS modelBUS = new EvaluationBUS();
             // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
@@ -76,12 +76,13 @@ namespace StudentManage.Controllers
                         }       
                     }
                 }
-            }    
+            }
             // ==========================================================
             ViewBag.user = user;
             ViewBag.listMain = listMain;
             ViewBag.listCriteria = listCriteria;
             ViewBag.total = total;
+            
             return View();
         }
         // View đoàn viên
@@ -89,46 +90,92 @@ namespace StudentManage.Controllers
         {
             int userId = (int)Session["USER_ID"];
             // Tính điểm từng phiếu trong từng học kỳ
+
             var listSemesters = modelBUS.CalcScoreByUserId(userId);
+
+            // Trường hợp đoàn viên chưa trải qua học kì nào
+            if (listSemesters == null)
+            {
+                listSemesters = new List<SemesterModel>();
+                SemesterModel nowSemester = new SemesterModel();
+                nowSemester = modelBUS.GetPresentSemester();
+                listSemesters.Add(nowSemester);
+            } 
             //===============================================
             ViewBag.semesters = listSemesters;
             return View();
         }
+        
         [HttpPost]
         public ActionResult Evaluation(List<EvaluationModel> listmodel)
         {
-            //Kiểm tra xem Quyền chấm phiếu: Người chấm phiếu phải là Đoàn viên đang đăng nhập hoặc Các bí thư đoàn trường
-            //
+            // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
-            // Tạo mới form nếu chưa tạo
-            var preSemes = modelBUS.GetPresentSemester(user.userID);
-            if (preSemes.FormId == null)
-            {
-                EvalutionFormModel form = new EvalutionFormModel()
-                {
-                    semesterId = preSemes.semesterId,
-                    status = 1,
-                    createAt = DateTime.Now,
-                    createBy = user.userID,
-                };
-                // Insert Form
-                int formid = modelBUS.InsertEvaluationForm(form);
-                // Insert Detail
-                modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
-                TempData["MESSAGE"] = "Chấm điểm thành công!";
-                return RedirectToAction("EvaluationForm", new { formId = formid });
-            }
-            // Trường hợp đã có Form
-            else
-            {
-                modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
-                TempData["MESSAGE"] = "Cập nhật điểm thành công!";
-            }
-            return RedirectToAction("EvaluationForm",new { formId = preSemes.FormId });
-        }
+            // Render Form chấm điểm
+            int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
+            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
+            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
 
+            var listError = new List<EvaluationModel>();
+            for (int i = 0, length = listCriteria.Count; i < length; i++)
+            {
+                int evaScore = listmodel[i].score;
+                if(evaScore < 0 || evaScore>listCriteria[1].score)
+                {
+                    ModelState.AddModelError("listmodel[" + i + "].score", "");
+                    var model = new EvaluationModel()
+                    {
+                        criteriaId = listmodel[i].criteriaId,
+                        score = evaScore
+                    };
+                    listError.Add(model);
+                }    
+            }
+            var preSemes = modelBUS.GetPresentSemesterByUserId(user.userID);
+            if(ModelState.IsValid)
+            {
+                // Tạo mới form nếu chưa tạo
+                if (preSemes.FormId == null)
+                {
+                    EvalutionFormModel form = new EvalutionFormModel()
+                    {
+                        semesterId = preSemes.semesterId,
+                        status = 1,
+                        createAt = DateTime.Now,
+                        createBy = user.userID,
+                    };
+                    // Insert Form
+                    int formId = modelBUS.InsertEvaluationForm(form);
+                    // Insert Detail
+                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
+                    TempData["MESSAGE"] = "Chấm điểm thành công!";
+                    return RedirectToAction("Union");
+                }
+                // Trường hợp đã có Form
+                else
+                {
+                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
+                    TempData["MESSAGE"] = "Cập nhật điểm thành công!";
+                }
+                return RedirectToAction("Union");
+            }
+            TempData["ERROR"] = "Điểm không hợp lệ!";
+            TempData["listError"] = listError;
+            return RedirectToAction("EvaluationForm", new { formId = preSemes.FormId});
+        }
         // View Bi thu chi doan
+        public ActionResult ClassEvaluation()
+        {
+            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+
+            var listClass = new UserBUS().GetListUserByClass(user.classID);
+
+            var nowSemester = modelBUS.GetPresentSemester();
+            
+            return View();
+        }    
         // View Bi thu doan khoa
         // View Bi thu doan truong
+        
     }
 }

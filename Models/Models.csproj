@@ -56,7 +56,7 @@
     <Compile Include="DAO\ConfigDAO.cs" />
     <Compile Include="BaseModel\SemesterFormModel.cs" />
     <Compile Include="BaseModel\UnionBookByConditionModel.cs" />
-    <Compile Include="DAO\DetailEvaluationDAO.cs" />
+    <Compile Include="DAO\UnionEvaluationDAO.cs" />
     <Compile Include="DAO\FacultyDAO.cs" />
     <Compile Include="DAO\UnionDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />

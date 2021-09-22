@@ -78,7 +78,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form action="~/UnionEvaluation/evaluation" method="post">
+                    <form action="~/UnionEvaluation/Evaluation" method="post">
                         <div class="table-responsive" style="white-space:unset">
                             <table class="table table-bordered table-hover mb-0 juged-table">
                                 <thead>
@@ -130,7 +130,7 @@
                                                     <td class="text-center">
                                                         @if (turn == 1 || turn == 0)
                                                         {
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score1" class="juged-input" min="0" max="@criteria.score" required />
+                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score1" class="juged-input" required min="0" max="@criteria.score" />
                                                             <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
@@ -195,25 +195,23 @@
     </div>
     <!-- /Jugedment table -->
 </div>
+
 @section js
 {
-    @if (TempData["MESSAGE"] != null)
-    {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                toastr.success("@TempData["MESSAGE"]", "Thông báo");
-                sound("/Assets/mp3/smallbox.mp3");
-            })
-        </script>
-    }
     @if (TempData["ERROR"] != null)
     {
+        var list = TempData["listError"] as List<StudentManage.Models.EvaluationModel>;
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                toastr.success("@TempData["UPDATE"]", "Lỗi");
-                sound("/Assets/mp3/error.mp3");
+                toastr.error("@TempData["ERROR"]", "Lỗi");
+                sound("/Assets/mp3/smallbox.mp3");
+                @foreach(var item in list)
+                {
+                    @: $('input[name="listmodel[@(item.criteriaId-1)].score"]').val("");
+                }
             })
+
         </script>
     }
-
 }
+

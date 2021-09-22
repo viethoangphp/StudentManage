@@ -172,6 +172,7 @@
     <Compile Include="Models\FacultyModel.cs" />
     <Compile Include="Models\GroupUserModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PersonalFormModel.cs" />
     <Compile Include="Models\SearchUnionModel.cs" />
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
@@ -370,6 +371,7 @@
     <Content Include="Views\Settings\Index.cshtml" />
     <Content Include="Views\UnionEvaluation\Union.cshtml" />
     <Content Include="Views\UnionEvaluation\EvaluationForm.cshtml" />
+    <Content Include="Views\UnionEvaluation\ClassEvaluation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Models.DAO
 {
     
-    public class DetailEvaluationDAO
+    public class UnionEvaluationDAO
     {
         private DBContext db = new DBContext();
         /*
@@ -51,10 +51,14 @@ namespace Models.DAO
         {
             var result = db.DetailEvalutions.Where(x => x.UserID == userId).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
             var firstform = result.FirstOrDefault();
-            var listSemeter = db.Semesters.Where(x=>DateTime.Compare((DateTime)x.Day_Start,(DateTime)firstform.Semester.Day_Start)>=0).OrderByDescending(x=>x.Day_Start).ToList();
-            return listSemeter;
+            if(firstform != null)
+            {
+                var listSemeter = db.Semesters.Where(x => DateTime.Compare((DateTime)x.Day_Start, (DateTime)firstform.Semester.Day_Start) >= 0).OrderByDescending(x => x.Day_Start).ToList();
+                return listSemeter;
+            }
+            return null;
         }
-        // Get present semesterS
+        // Get present semester
         public Semester GetPresentSemester()
         {
             DateTime now = DateTime.Now;
@@ -99,7 +103,7 @@ namespace Models.DAO
         {
             return db.Positions.Where(x=>x.Name==name && x.Status == 1).FirstOrDefault().PositionID;
         }
-        // Get TimeEvaluation byt Id
+        // Get TimeEvaluation by Id
         public TimeEvalution GetTimeEvaluationByTimeId(int timeId)
         {
             return db.TimeEvalutions.Find(timeId);
@@ -109,6 +113,19 @@ namespace Models.DAO
         {
             return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
         }
+
+        // Is Union
+        // Is class monitor
+        // Is Faculty monitor
+        // Is School monitor
+        //public int GetPositionByUserId(int userId)
+        //{
+        //    var user = new UserDAO().GetUserByID(userId);
+        //    if (user != null)
+        //    {
+
+        //    }
+        //}
 
     }
 }

@@ -159,5 +159,16 @@
     </div>
 </div>
 <!-- /Page Content -->
-
+@section js
+{
+    @if (TempData["MESSAGE"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                toastr.success("@TempData["MESSAGE"]", "Thông báo");
+                sound("/Assets/mp3/smallbox.mp3");
+            })
+        </script>
+    }
+}
 

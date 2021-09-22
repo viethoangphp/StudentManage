@@ -24,6 +24,7 @@ namespace StudentManage.BUS
                 user.userID = model.UserID;
                 user.fullname = model.FullName;
                 user.groupID = model.GroupId;
+                user.classID = (int)model.ClassID;
                 user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;
@@ -186,6 +187,7 @@ namespace StudentManage.BUS
                 UserModel model = new UserModel()
                 {
                     className = item.Class.Name,
+                    classID = (int)item.ClassID,
                     facultyName = item.Class.Faculty.Name,
                     fullname = item.FullName,
                     studentCode = item.StudentCode,
