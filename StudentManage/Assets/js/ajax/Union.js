@@ -64,13 +64,19 @@ var table = $("#myTable").DataTable({
     processing: true,
     serverSide: true,
     language: {
-        "lengthMenu": "Display _MENU_ records per page",
+        "lengthMenu": "Hiển thị _MENU_ dòng",
         "zeroRecords": "Không Có Dữ Liệu Nào Phù Hợp",
         "info": "Hiển thị trang _PAGE_/_PAGES_ ",
         "infoEmpty": "Không Tìm Thấy Kết Quả Phù Hợp",
         "infoFiltered": "(filtered from _MAX_ total records)",
         "loadingRecords": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát...",
         "processing": "Đang Tải Dữ Liệu Vui Lòng Chờ Trong Giây Lát ...",
+        "paginate": {
+            "first": "Đầu",
+            "last": "Cuối",
+            "next": "Sau",
+            "previous": "Trước"
+        }
     },
     columns: [
         {
@@ -308,6 +314,7 @@ $("#union_update").on("submit", function () {
             if (data > 0) {
                 sound("/Assets/mp3/smallbox.mp3");
                 toastr.success("Cập Nhật Thành Công !", "Thành Công!");
+                $("#edit_union-notebook").delay(500).modal("hide");
                 $("#myTable").DataTable().ajax.reload();
             } else if (data == "dup") {
                 sound("/Assets/mp3/error.mp3");
@@ -367,6 +374,7 @@ returnSendMail.onclick = function () {
         if (data == "true") {
             sound("/Assets/mp3/smallbox.mp3");
             toastr.success("Gửi Mail Thành Công !", "Thành Công!");
+            checkAll.checked = false;
             $("#myTable").DataTable().ajax.reload();
         } else {
             sound("/Assets/mp3/error.mp3");

@@ -141,10 +141,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BUS\ConfigBUS.cs" />
     <Compile Include="BUS\FacultyBUS.cs" />
+    <Compile Include="BUS\TemplateBUS.cs" />
     <Compile Include="BUS\UnionBUS.cs" />
     <Compile Include="BUS\UserBUS.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ClassController.cs" />
+    <Compile Include="Controllers\EvaluationController.cs" />
     <Compile Include="Controllers\FacultyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -161,10 +163,17 @@
     <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\ClassModel.cs" />
     <Compile Include="Models\DataTableModel.cs" />
+    <Compile Include="Models\DetailFormModel.cs" />
     <Compile Include="Models\EmailSettingsModel.cs" />
+    <Compile Include="Models\EvaluationMainModel.cs" />
+    <Compile Include="Models\EvaluationModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
+    <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PersonalScore.cs" />
+    <Compile Include="Models\PesonalEvalationModel.cs" />
     <Compile Include="Models\SearchUnionModel.cs" />
+    <Compile Include="Models\TemplateModel.cs" />
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -198,6 +207,7 @@
     <Content Include="Assets\img\logo-hutech-full.png" />
     <Content Include="Assets\img\logo-hutech.png" />
     <Content Include="Assets\img\logo-sv-hutech.png" />
+    <Content Include="Assets\img\logo.gif" />
     <Content Include="Assets\img\logo.png" />
     <Content Include="Assets\img\logo2.png" />
     <Content Include="Assets\img\logo3.png" />
@@ -235,6 +245,7 @@
     <Content Include="Assets\img\user.jpg" />
     <Content Include="Assets\img\video-call.jpg" />
     <Content Include="Assets\js\ajax\Class.js" />
+    <Content Include="Assets\js\ajax\Evaluation.js" />
     <Content Include="Assets\js\ajax\Faculty.js" />
     <Content Include="Assets\js\ajax\StudentList.js" />
     <Content Include="Assets\js\ajax\Union.js" />
@@ -248,12 +259,14 @@
     <Content Include="Assets\js\dataTables.bootstrap4.min.js" />
     <Content Include="Assets\js\dropfiles.js" />
     <Content Include="Assets\js\fullcalendar.min.js" />
+    <Content Include="Assets\js\input-img.js" />
     <Content Include="Assets\js\jquery-3.5.1.min.js" />
     <Content Include="Assets\js\jquery.dataTables.min.js" />
     <Content Include="Assets\js\jquery.fullcalendar.js" />
     <Content Include="Assets\js\jquery.maskedinput.min.js" />
     <Content Include="Assets\js\jquery.slimscroll.min.js" />
     <Content Include="Assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="Assets\js\lib\Notification.js" />
     <Content Include="Assets\js\lib\sound.js" />
     <Content Include="Assets\js\line-chart.js" />
     <Content Include="Assets\js\login.js" />
@@ -357,6 +370,10 @@
     <Content Include="Views\Class\FacultyPartial.cshtml" />
     <Content Include="Views\Class\List.cshtml" />
     <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Evaluation\Detail.cshtml" />
+    <Content Include="Views\Evaluation\Index.cshtml" />
+    <Content Include="Views\Evaluation\List.cshtml" />
+    <Content Include="Views\Evaluation\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
