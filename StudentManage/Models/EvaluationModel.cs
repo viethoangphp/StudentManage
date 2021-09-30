@@ -12,5 +12,6 @@ namespace StudentManage.Models
         public string Requirement { set; get;}
         public int MaxScore { set; get;}
 
+        public string note {  get; set; }
     }
 }
