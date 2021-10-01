@@ -1,0 +1,232 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@model StudentManage.Models.TemplateModel
+<!-- Page Content -->
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Chấm điểm</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Đánh giá học bổng cán bộ Đoàn Hội</li>
+                    <li class="breadcrumb-item active">Chấm điểm cá nhân</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Student info -->
+    
+    <!-- /Student info -->
+    <!-- Jugedment table -->
+    <div class="card m-b-30">
+        <div class="card-header">
+            <h4 class="card-title mb-0">@Model.TemplateName</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="formEvaluation">
+                        <div class="table-responsive" style="white-space:unset">
+                            <table class="table table-bordered table-hover mb-0 juged-table">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th rowspan="2">
+                                            <span style="font-size: 20px;">
+                                                STT
+                                            </span>
+                                        </th>
+                                        <th rowspan="2">
+                                            <span style="font-size: 26px;">
+                                                Nội Dung
+                                            </span>
+                                        </th>
+                                        <th colspan="2">Điểm</th>
+                                        <th rowspan="2">
+                                            <span style="font-size: 26px;">
+                                                Minh Chứng
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th style="width:185px; min-width:100px">Tối đa</th>
+                                        <th style="width:185px; min-width:100px">Tự đánh giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ 
+                                        String[] arrItem = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
+                                        int indexItem = 0; 
+                                        int indexSubItem = 0;
+                                     }
+                                     @foreach (var item in Model.ListMain)
+                                       {
+                                        <!--  section A -->
+                                        <tr>
+                                            <td colspan="4">
+                                                <b>
+                                                    @arrItem[indexItem] . @item.Title
+                                                </b>
+                                            </td>
+                                        </tr>
+                                         foreach (var subItem in item.ListRequriement)
+                                         {
+                                             indexSubItem++;
+                                            <tr>
+                                                <td class="text-center">@indexSubItem</td>
+                                                <td>
+                                                    <b>@subItem.Content</b>
+                                                    <ul class="juged-list">
+                                                        @if(!string.IsNullOrEmpty(subItem.Requirement))
+                                                        {
+                                                            <li>@subItem.Requirement</li>
+                                                        }
+                                                      
+                                                    </ul>
+                                                </td>
+                                                <td class="text-center">@subItem.MaxScore</td>
+                                                <td class="text-center">
+                                                    <input type="number" class="juged-input" value="" min="0" max="@subItem.MaxScore" required name="score[@subItem.CriteriaID]">
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="#" data-toggle="modal" data-target="#viewnote_modal-@subItem.CriteriaID"
+                                                       title="Xem/ Sửa minh chứng">
+                                                        <i class="las la-file-alt font-35 text-success juged-icon"></i>
+                                                        <span class="text-sm d-block text-success">
+                                                            Thêm minh
+                                                            chứng
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <!-- View note Modal -->
+                                            <div id="viewnote_modal-@subItem.CriteriaID" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Xem/ Sửa minh chứng</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="upload-pic_container">
+                                                                        <div class="upload-pic_wrapper">
+                                                                            <div class="upload-pic_image">
+                                                                                <img src="" alt="">
+                                                                            </div>
+                                                                            <div class="upload-pic_content">
+                                                                                <div class="upload-pic_icon">
+                                                                                    <i class="fa fa-file-image-o"></i>
+                                                                                </div>
+                                                                                <div class="upload-pic_text">
+                                                                                    Chưa có ảnh
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="upload-pic_cancel-btn">
+                                                                                <i class="las la-times-circle"></i>
+                                                                            </div>
+                                                                            <div class="upload-pic_file-name"></div>
+                                                                        </div>
+                                                                        <div onclick="defaultBtnActive()" id="upload-pic_custom-btn"
+                                                                                class="btn btn-outline-primary">
+                                                                            Thêm ảnh
+                                                                        </div>
+                                                                        <input id="upload-pic_default-btn" name="imgaes[@subItem.CriteriaID]" type="file" hidden>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="form-group">
+                                                                                <label class="text-center d-block text-lg font-weight-normal">
+                                                                                    -- Nội
+                                                                                    dung
+                                                                                    minh chứng --
+                                                                                </label>
+                                                                                <textarea class="form-control"
+                                                                                          rows="11" name="proof[@subItem.CriteriaID]"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /View note Modal -->
+                                        }
+                                         indexItem++;
+                                    }
+
+                                    <!--  section A -->
+                                    <!-- sum -->
+                                    <tr>
+                                        <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
+                                        <td class="text-center font-weight-bold">100</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td></td>
+                                    </tr>
+                                    <!-- /sum -->
+                                    <!-- sum -->
+                                    <tr style="background-color:#eee ;">
+                                        <td colspan="2" class="text-center">
+                                            <b>
+                                                Xếp loại: (A: >=90 đ, B:
+                                                >=75 đ, C: >=50 đ, D: <=50đ)
+                                            </b>
+                                        </td>
+                                        <td colspan="3" class="text-center font-weight-bold">
+                                            <span class="badge bg-inverse-success text-lg">A</span>
+                                        </td>
+                                    </tr>
+                                    <!-- /sum -->
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">Hoàn Thành</button>
+                        </div>
+                    </form>
+
+                    <!-- when done jugedment -->
+                    <!-- <div class="d-flex justify-content-center">
+        <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
+                class="las la-thumbs-up font-35 text-info"></i></p>
+    </div> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Jugedment table -->
+
+</div>
+<!-- /Page Content -->
+@section js {
+    <script>
+        (function () {
+            const listItem = document.querySelectorAll('.juged-list')
+            listItem.forEach((item, key) => {
+                string = ""
+                myArray = item.innerText.split('-')
+                myArray.forEach(i => {
+                    if(i.length >0)
+                        string += `<li>${i}</li>`
+                } )
+                listItem[key].innerHTML = string
+            })
+        })();
+    </script>
+    <script src="~/Assets/js/ajax/Evaluation.js"></script>
+}

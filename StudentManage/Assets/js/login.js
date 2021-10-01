@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         var username = $("#username").val();
         var password = $("#password").val();
         login(username, password).then((data) => {
-            
                 if (data == "true") {
                     window.location = "/";
                 } else {
@@ -25,7 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         toastr.error("Tên Đăng Nhập Hoặc Mật Khẩu Không Chính Xác !", "Error");
                     }, 1000)
                 }
-            
+
+        }).catch(function () {
+            loaderFade();
+            toastr.error("Bạn Không Được Để Trống Tài Khoản Và Mật Khẩu", "Lỗi");
         })
         return false;
     })

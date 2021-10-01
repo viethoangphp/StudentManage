@@ -78,7 +78,7 @@ namespace Models.EntityModel
         public virtual ICollection<DetailEvalution> DetailEvalutions { get; set; }
 
         public virtual GroupUser GroupUser { get; set; }
-
+      
         public virtual Position Position { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

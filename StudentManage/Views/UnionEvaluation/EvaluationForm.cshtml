@@ -1,0 +1,168 @@
+﻿@model List<StudentManage.Models.EvaluationModel>
+@{
+    ViewBag.Title = "EvaluationForm";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    var listMain = (List<StudentManage.Models.EvaluativeMainModel>)ViewBag.listMain;
+    var listCriteria = (List<StudentManage.Models.EvaluativeCriteriaModel>)ViewBag.listCriteria;
+    var user = (StudentManage.Models.UserModel)ViewBag.user;
+
+}
+<!-- Page Content -->
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Chấm điểm</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html" style="color:#6c757d;">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Đánh giá đoàn viên</li>
+                    <li class="breadcrumb-item active"><a href="#">Chấm điểm cá nhân</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Student info -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Thông tin sinh viên</h4>
+        </div>
+        <div class="card-body">
+            <div class="profile-view">
+                <div class="profile-img-wrap">
+                    <div class="profile-img">
+                        <a href="#"><img alt="" src="~/Assets/img/profiles/user.jpg"></a>
+                    </div>
+                </div>
+                <div class="profile-basic">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="profile-info-left">
+                                <h3 class="user-name m-t-0 mb-0">@user.fullname</h3>
+                                <div class="staff-id">Mã số sinh viên : @user.studentCode</div>
+                                <div class="small text-muted">
+                                    Khoa: @user.facultyName
+                                </div>
+                                <div class="small text-muted">Lớp: @user.className</div>
+                                @{
+                                    int year = Int32.Parse(@user.studentCode.Substring(0, 2)) + 2000;
+                                }
+                                <div class="small text-muted">Khóa : @year - @(year+4)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <ul class="personal-info">
+                                <li>
+                                    <div class="title">Số điện thoại:</div>
+                                    <div class="text"><span>@user.phone</span></div>
+                                </li>
+                                <li>
+                                    <div class="title">Email:</div>
+                                    <div class="text">
+                                        <span>@user.email</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Student info -->
+    <!-- Jugedment table -->
+    <div class="card m-b-30">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Đánh giá rèn luyện</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="~/UnionEvaluation/evaluation" method="post">
+                        <div class="table-responsive" style="white-space:unset">
+                            <table class="table table-bordered table-hover mb-0 juged-table">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th rowspan="2">
+                                            <span style="font-size: 20px;">
+                                                STT
+                                            </span>
+                                        </th>
+                                        <th rowspan="2">
+                                            <span style="font-size: 26px;">
+                                                Nội dung
+                                            </span>
+                                        </th>
+                                        <th colspan="4">Điểm</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th style="width:120px; min-width:100px">ĐV</th>
+                                        <th style="width:120px; min-width:100px">Lớp</th>
+                                        <th style="width:120px; min-width:100px">Khoa</th>
+                                        <th style="width:120px; min-width:100px">Trường</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int count = 1;}
+                                    @foreach (var item in listMain)
+                                    {
+                                        <tr>
+                                            <td colspan="6">
+                                                <b style="font-size: 18px;">
+                                                    @item.content
+                                                </b>
+                                            </td>
+                                        </tr>
+                                        foreach (var criteria in listCriteria)
+                                        {
+                                            if (criteria.mainId == item.mainId)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@count</td>
+                                                    @{count++; }
+                                                    <td>
+                                                        @criteria.criteriaContent
+                                                        <b>(0–@criteria.score điểm)</b>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
+                                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId"/>
+                                                    </td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                    <!-- sum -->
+                                    <tr style="background-color:#eee ;">
+                                        <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                    </tr>
+                                    <!-- /sum -->
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
+                            <button onclick="" class="btn btn-warning">Xóa tất cả</button>
+                        </div>
+                    </form>
+                    <!-- when done jugedment -->
+                    <!-- <div class="d-flex justify-content-center">
+                        <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
+                                class="las la-thumbs-up font-35 text-info"></i></p>
+                    </div> -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Jugedment table -->
+</div>

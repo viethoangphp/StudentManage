@@ -18,9 +18,9 @@
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
                     <a href="#" class="btn content-btn" id="returnSendMail"><i class="fa fa-envelope-open-o"></i>Gửi Email</a>
-                    <a href="#" id="ImportExcel" class="btn content-btn excel-btn"><i class="fa fa-folder-open"></i>Import Excel</a>
+                    <a href="#" id="ImportExcel" class="btn content-btn excel-btn"><i class="fa fa-folder-open"></i>Nhập File Excel</a>
                     <input type="file" id="fileName" style="display:none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                    <a href="#" id="ExportExcel" class="btn content-btn excel-btn"><i class="fa fa-download"></i>Export Excel</a>
+                    <a href="#" id="ExportExcel" class="btn content-btn excel-btn"><i class="fa fa-download"></i>Xuất File Excel</a>
                     <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_union-notebook"><i class="fa fa-plus"></i>Sổ đoàn</a>
                 </div>
             </div>
@@ -78,7 +78,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover custom-table mb-0 datatable" id="myTable">
+                <table class="table table-hover custom-table mb-0 datatable" id="myTable" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -214,7 +214,7 @@
                             <div class="form-group">
                                 <label>
                                     Tỉnh/Thành Phố
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="city" name="cityID">
                                     <option value="0">Chọn Tỉnh/Thành Phố</option>
@@ -236,7 +236,7 @@
                             <div class="form-group">
                                 <label>
                                     Phường/Xã
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="ward" name="wardID">
                                     <option value="0">Chọn Phường/Xã</option>
@@ -247,7 +247,7 @@
                             <div class="form-group">
                                 <label>
                                     Địa Chỉ Chi Tiết
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <input class="form-control" type="text" name="address">
                             </div>
@@ -281,7 +281,7 @@
                                     Mã Sổ Đoàn
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" style="text-transform:capitalize;" name="unionId" readonly>
+                                <input class="form-control" type="text"  name="unionId" readonly>
                                 <input type="hidden" name="userID">
                             </div>
                         </div>
@@ -392,7 +392,7 @@
                             <div class="form-group">
                                 <label>
                                     Tỉnh/Thành Phố
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="city_update" name="cityID">
                                     <option value="0">Chọn Tỉnh/Thành Phố</option>
@@ -403,7 +403,7 @@
                             <div class="form-group">
                                 <label>
                                     Quận/Huyện
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="district_update" name="districtID">
                                     <option value="0">Chọn Quận/Huyện</option>
@@ -414,7 +414,7 @@
                             <div class="form-group">
                                 <label>
                                     Phường/Xã
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <select class="select" id="ward_update" name="wardID">
                                     <option value="0">Chọn Phường/Xã</option>
@@ -425,7 +425,7 @@
                             <div class="form-group">
                                 <label>
                                     Địa Chỉ Chi Tiết
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 <input class="form-control" type="text" name="address" id="address_update">
                             </div>
@@ -543,7 +543,7 @@
                 form.getElementsByTagName("input").isEmail.value = (responsive.isEmail == 3) ? "Đã Gửi" : "Chưa Gửi";
                 form.getElementsByTagName("input").fullname.value = responsive.fullname;
                 form.getElementsByTagName("input").studentCode.value = responsive.studentCode;
-                form.getElementsByTagName("input").phone.value = responsive.phone;
+                form.getElementsByTagName("input").phone.value = responsive.phone.trim();
                 form.getElementsByTagName("input").userID.value = responsive.userID;
                 form.getElementsByTagName("input").email.value = responsive.email;
                 form.getElementsByTagName("input").birthDayString.value = responsive.birthDay;

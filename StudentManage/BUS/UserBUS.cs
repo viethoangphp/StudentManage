@@ -27,15 +27,15 @@ namespace StudentManage.BUS
                 user.email = model.Email;
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender: 1;
-                user.studentCode = model.StudentCode;
-                user.facultyName = model.Class.Faculty.Name;
+                user.studentCode = model.StudentCode.Trim();
+                user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
                 user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
                 user.cityID =(model.CityID != null)? (int)model.CityID:0;
                 user.districtID = (model.DistrictID != null) ? (int)model.DistrictID:0;
                 user.wardID = (model.WardID != null) ? (int)model.WardID:0;
-
+                user.templateId = model.GroupUser.TemplateID;
                 return user;
             }
             return null;
