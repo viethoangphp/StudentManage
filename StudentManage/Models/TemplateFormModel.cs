@@ -10,6 +10,5 @@ namespace StudentManage.Models
         public int templateId {  get; set; }
         public string name {  get; set; }
         public int status { get; set; }
-
     }
 }
