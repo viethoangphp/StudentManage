@@ -33,10 +33,10 @@ namespace Models.EntityModel
         [StringLength(50)]
         public string StudentCode { get; set; }
 
-        [StringLength(50)]
+        [StringLength(255)]
         public string Email { get; set; }
 
-        [StringLength(11)]
+        [StringLength(15)]
         public string Phone { get; set; }
 
         [StringLength(255)]

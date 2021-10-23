@@ -13,7 +13,7 @@ namespace Models.DAO
         {
             if(user.StudentCode != null)
             {
-                if(db.Users.Where(m=>m.StudentCode == user.StudentCode).FirstOrDefault() ==null)
+                if(db.Users.Where(m=>m.StudentCode == user.StudentCode).FirstOrDefault()==null)
                 {
                     try
                     {
@@ -115,7 +115,7 @@ namespace Models.DAO
                 return db.Classes.ToList();
             }
         }
-        public static int Update(User user)
+        public int Update(User user)
         {
             using(DBContext db = new DBContext())
             {

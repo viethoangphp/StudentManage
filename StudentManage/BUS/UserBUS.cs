@@ -171,7 +171,7 @@ namespace StudentManage.BUS
             item.WardID = user.wardID;
             item.Address = user.address;
             item.Status = 1;
-            return UserDAO.Update(item);
+            return new UserDAO().Update(item);
         }
         public List<UserModel> GetListUserByClass(int id)
         {
