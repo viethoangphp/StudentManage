@@ -102,13 +102,18 @@ namespace Models.DAO
         public List<Class> GetListClassByCondition(int facultyId, int year)
         {
             string year1 = year.ToString();
-            if(year != 0 && facultyId !=0)
+            if (year != 0 && facultyId != 0)
             {
-                return db.Classes.Where(m => m.FacutyID == facultyId && m.Name.Substring(0,2).Equals(year1)).ToList();
+                return db.Classes.Where(m => m.FacutyID == facultyId && m.Name.Substring(0, 2).Equals(year1)).ToList();
             }
-            else if(facultyId != 0)
+            else if (facultyId != 0 && year == 0)
             {
                 return db.Classes.Where(m => m.FacutyID == facultyId).ToList();
+            }
+            else if (facultyId == 0 && year != 0)
+            {
+
+                return db.Classes.Where(m => m.Name.Substring(0, 2).Equals(year1)).ToList();
             }
             else
             {
