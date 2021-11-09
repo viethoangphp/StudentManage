@@ -150,7 +150,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BUS\ConfigBUS.cs" />
-    <Compile Include="BUS\EvaluationBUS.cs" />
     <Compile Include="BUS\FacultyBUS.cs" />
     <Compile Include="BUS\TemplateBUS.cs" />
     <Compile Include="BUS\UnionBUS.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\UnionController.cs" />
-    <Compile Include="Controllers\UnionEvaluationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -276,6 +274,7 @@
     <Content Include="Assets\js\Chart.min.js" />
     <Content Include="Assets\js\dataTables.bootstrap4.min.js" />
     <Content Include="Assets\js\dropfiles.js" />
+    <Content Include="Assets\js\ExportExcel.js" />
     <Content Include="Assets\js\fullcalendar.min.js" />
     <Content Include="Assets\js\input-img.js" />
     <Content Include="Assets\js\jquery-3.5.1.min.js" />

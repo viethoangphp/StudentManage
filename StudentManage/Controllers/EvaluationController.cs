@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using StudentManage.Library;
 using StudentManage.BUS;
 using StudentManage.Models;
+using System.IO;
 namespace StudentManage.Controllers
 {
     [UserAuthorze]
@@ -89,7 +90,18 @@ namespace StudentManage.Controllers
         public ActionResult View(int id)
         {
             var model = TemplateBUS.GetTemplateFormDetail(id);
+            //Id for export excel button
+            ViewData["ID"] = id;
             return View(model);
+        }
+        #endregion
+
+        #region Xuất file excel
+        public ActionResult ExportExcel(int id)
+        {
+            MemoryStream stream = TemplateBUS.ExportExcel(id);
+            stream.Position = 0;
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", DateTime.Now.ToString() + ".xlsx");
         }
         #endregion
     }
