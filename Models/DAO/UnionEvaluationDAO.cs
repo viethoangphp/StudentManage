@@ -14,8 +14,9 @@ namespace Models.DAO
     {
         private DBContext db = new DBContext();
         /*
-         * Phiếu chấm điểm
+         * Form render
          */
+        #region FormEvaluation
         // Get all main Criteria
         public List<EvaluativeMain> GetAllMainByTemplateId(int templateId)
         {
@@ -33,9 +34,15 @@ namespace Models.DAO
             var result = db.DetailEvalutions.Where(x => x.UserID == userid).Select(x => x.EvalutionForm).Distinct().OrderByDescending(x => x.Create_At).ToList();
             return result;
         }
+        #endregion
         /*
          * Chấm điểm
          */
+        // Get Semester By Semester Id
+        public Semester GetSemesterBySemesterId(int semesterId)
+        {
+            return db.Semesters.Where(x => x.SemesterID == semesterId).FirstOrDefault();
+        }    
         // Get all detailForm by userId
         public List<DetailEvalution> GetDetailFormsById(int userId)
         {
@@ -62,7 +69,7 @@ namespace Models.DAO
         public Semester GetPresentSemester()
         {
             DateTime now = DateTime.Now;
-            return db.Semesters.Where(x => DateTime.Compare((DateTime)x.Day_Start, (DateTime)now) <= 1 && DateTime.Compare((DateTime)x.Day_End, (DateTime)now) >= 1).FirstOrDefault();
+            return db.Semesters.Where(x =>x.Status == 1).FirstOrDefault();
         }
         // Get Evaluation Form by Form id 
         public EvalutionForm GetEvaluationFormById(int formId)
@@ -113,19 +120,5 @@ namespace Models.DAO
         {
             return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
         }
-
-        // Is Union
-        // Is class monitor
-        // Is Faculty monitor
-        // Is School monitor
-        //public int GetPositionByUserId(int userId)
-        //{
-        //    var user = new UserDAO().GetUserByID(userId);
-        //    if (user != null)
-        //    {
-
-        //    }
-        //}
-
     }
 }

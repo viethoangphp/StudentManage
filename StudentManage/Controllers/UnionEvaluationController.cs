@@ -22,23 +22,27 @@ namespace StudentManage.Controllers
         // Form chấm điểm đoàn viên
         public ActionResult EvaluationForm(int? formId)
         {
-           
             EvaluationBUS modelBUS = new EvaluationBUS();
+            //Model to View
+            UnionFormModel model = new UnionFormModel();
             // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             // Render Form chấm điểm
             int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
             var listMain = modelBUS.GetAllMainByTemplateId(templateId);
             var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
-
-            int[] total = new int[4];
+            // ====================================================================
+            int? turn = 0;
+            int isInTime = 2;
             // Gán điểm theo tiêu chí và lượt chấm
-            if(formId!=null)
+            int[] listTotal = {0,0,0,0};
+            if (formId != null)
             {
                 var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
-                int? turn = (int)details.Select(x => x.level).Distinct().Max();        
+                //Lấy Detail theo level để tìm ra lượt chấm hiện tại 
+                turn = (int)details.Select(x => x.level).Distinct().Max();        
                 turn = (turn==null) ? 0 : turn;
-                ViewBag.turn = turn;
+                model.Turn = turn;
                 foreach (var critial in listCriteria)
                 {
                     foreach (var detail in details)
@@ -49,61 +53,58 @@ namespace StudentManage.Controllers
                                 if (detail.critetiaId == critial.criteriaId && detail.level == 4)
                                 {
                                     critial.score4 = detail.score;
-                                    total[3] += (int)detail.score; 
+                                    listTotal[3] += (int)detail.score; 
                                 }
                                 goto case 3;
                             case 3:
                                 if (detail.critetiaId == critial.criteriaId && detail.level == 3)
                                 {
                                     critial.score3 = detail.score;
-                                    total[2] += (int)detail.score;
+                                    listTotal[2] += (int)detail.score;
                                 }
                                 goto case 2;
                             case 2:
                                 if (detail.critetiaId == critial.criteriaId && detail.level == 2)
                                 {
                                     critial.score2 = detail.score;
-                                    total[1] += (int)detail.score;
+                                    listTotal[1] += (int)detail.score;
                                 }
                                 goto case 1;
                             case 1:
                                 if (detail.critetiaId == critial.criteriaId && detail.level == 1)
                                 {
                                     critial.score1 = detail.score;
-                                    total[0] += (int)detail.score;
+                                    listTotal[0] += (int)detail.score;
                                 }
                                 break;
                         }       
                     }
                 }
             }
-            // ==========================================================
-            ViewBag.user = user;
-            ViewBag.listMain = listMain;
-            ViewBag.listCriteria = listCriteria;
-            ViewBag.total = total;
-            
-            return View();
-        }
-        // View đoàn viên
-        public ActionResult Union()
-        {
-            int userId = (int)Session["USER_ID"];
-            // Tính điểm từng phiếu trong từng học kỳ
-
-            var listSemesters = modelBUS.CalcScoreByUserId(userId);
-
-            // Trường hợp đoàn viên chưa trải qua học kì nào
-            if (listSemesters == null)
+            // Render Input và Button chấm
+            if ((turn == 0 || turn == 1) && isInTime == 1)
             {
-                listSemesters = new List<SemesterModel>();
-                SemesterModel nowSemester = new SemesterModel();
-                nowSemester = modelBUS.GetPresentSemester();
-                listSemesters.Add(nowSemester);
-            } 
-            //===============================================
-            ViewBag.semesters = listSemesters;
-            return View();
+                model.IsInTime = 1;  
+            }
+            if((turn == 1 || turn == 2) && isInTime == 2 && user.groupID == 3)
+            {
+                model.IsInTime = 2;
+            }
+            if ((turn == 2 || turn == 3) && isInTime == 3 && user.groupID == 4)
+            {
+                model.IsInTime = 3;
+            }
+            if ((turn == 3 || turn == 4) && isInTime == 4 && user.groupID == 5)
+            {
+                model.IsInTime = 4;
+            }
+            //=====================================================================
+            model.Total = listTotal;
+            model.ListMain = listMain;
+            model.ListCriteria = listCriteria;
+            ViewBag.user = user;
+            
+            return View(model);
         }
         
         [HttpPost]
@@ -111,11 +112,12 @@ namespace StudentManage.Controllers
         {
             // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
-            // Render Form chấm điểm
+
+            #region InputScoreValidation
+            // Lấy điểm chuẩn các tiêu chí
             int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
             var listMain = modelBUS.GetAllMainByTemplateId(templateId);
             var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
-
             var listError = new List<EvaluationModel>();
             for (int i = 0, length = listCriteria.Count; i < length; i++)
             {
@@ -131,6 +133,8 @@ namespace StudentManage.Controllers
                     listError.Add(model);
                 }    
             }
+            #endregion
+            //==============================================================
             var preSemes = modelBUS.GetPresentSemesterByUserId(user.userID);
             if(ModelState.IsValid)
             {
@@ -163,19 +167,39 @@ namespace StudentManage.Controllers
             TempData["listError"] = listError;
             return RedirectToAction("EvaluationForm", new { formId = preSemes.FormId});
         }
+        // View đoàn viên
+        public ActionResult Union()
+        {
+            int userId = (int)Session["USER_ID"];
+            // Tính điểm từng phiếu trong từng học kỳ
+
+            var listSemesters = modelBUS.CalcScoreByUserId(userId);
+
+            // Trường hợp đoàn viên chưa trải qua học kì nào
+            if (listSemesters == null)
+            {
+                listSemesters = new List<SemesterModel>();
+                SemesterModel nowSemester = new SemesterModel();
+                nowSemester = modelBUS.GetPresentSemester();
+                listSemesters.Add(nowSemester);
+            }
+            //===============================================
+            ViewBag.semesters = listSemesters;
+            return View();
+        }
         // View Bi thu chi doan
         public ActionResult ClassEvaluation()
         {
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
-
-            var listClass = new UserBUS().GetListUserByClass(user.classID);
-
             var nowSemester = modelBUS.GetPresentSemester();
+
+            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, nowSemester.semesterId);
             
-            return View();
+            return View(test);
         }    
         // View Bi thu doan khoa
         // View Bi thu doan truong
+        
         
     }
 }

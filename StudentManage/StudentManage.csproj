@@ -177,6 +177,7 @@
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
     <Compile Include="Models\TimeEvaluationModel.cs" />
+    <Compile Include="Models\UnionFormModel.cs" />
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -260,6 +261,7 @@
     <Content Include="Assets\js\dataTables.bootstrap4.min.js" />
     <Content Include="Assets\js\dropfiles.js" />
     <Content Include="Assets\js\fullcalendar.min.js" />
+    <Content Include="Assets\js\input-img.js" />
     <Content Include="Assets\js\jquery-3.5.1.min.js" />
     <Content Include="Assets\js\jquery.dataTables.min.js" />
     <Content Include="Assets\js\jquery.fullcalendar.js" />

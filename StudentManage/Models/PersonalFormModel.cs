@@ -9,12 +9,14 @@ namespace StudentManage.Models
     {
         public string StudentCode {  get; set; }
         public string FullName {  get; set; }
-        public DateTime BirthDate { get; set; }
+
+        public int formId {  get; set; }
+        public DateTime? BirthDate { get; set; }
         // Điểm
-        public int Score1 { get; set; }
-        public int Score2 { get; set; }
-        public int Score3 { get; set; }
-        public int Score4 { get; set; }
+        public int? Score1 { get; set; }
+        public int? Score2 { get; set; }
+        public int? Score3 { get; set; }
+        public int? Score4 { get; set; }
         // Xếp Loại
         public string Ranking {  get; set; }
         // Trạng thái

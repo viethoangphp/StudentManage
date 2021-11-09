@@ -186,6 +186,7 @@ namespace StudentManage.BUS
             {
                 UserModel model = new UserModel()
                 {
+                    userID = item.UserID,
                     className = item.Class.Name,
                     classID = (int)item.ClassID,
                     facultyName = item.Class.Faculty.Name,

@@ -1,4 +1,4 @@
-﻿
+﻿@model List<StudentManage.Models.PersonalFormModel>
 @{
     ViewBag.Title = "ClassEvaluation";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
@@ -125,145 +125,112 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <strong>1</strong>
-                            </td>
-                            <td>1811062895</td>
-                            <td class="text-left">Diệp Thế Duy</td>
-                            <td>16/12/2000</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>_</td>
-                            <td>_</td>
-                            <td>_</td>
-                            <td>
-                                <span class="badge bg-inverse-warning text-sm">
-                                    Chờ
-                                    khoa
-                                </span>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal"
-                                   data-target="#edit-jugedment_modal">
-                                    <i class="fa fa-eye fa-lg"></i>
-                                </a>
-                                <!-- <div class="dropdown dropdown-action">
-                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                        aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#" data-toggle="modal"
-                                            data-target="#vỉew-jugedment_modal"><i
-                                                class="fa fa-eye m-r-5"></i>
-                                            Xem</a>
-                                        <a class="dropdown-item" href="#" data-toggle="modal"
-                                            data-target="#edit-jugedment_modal"><i
-                                                class="fa fa-pencil m-r-5"></i>
-                                            Sửa</a>
+                        @{ int rowNo = 0; }
+                        @foreach (var form in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@(rowNo += 1)</strong>
+                                </td>
+                                <td>@form.StudentCode</td>
+                                <td class="text-left">
+                                    @form.FullName
+                                </td>
+                                <td>@((form.BirthDate == null) ?  Html.Raw("Chưa cập nhật") : Html.Raw((form.BirthDate).Value.ToString("dd/MM/yyyy")))</td>
+                                <td>@((form.Score1 == null) ?  Html.Raw("-") : Html.Raw(form.Score1))</td>
+                                <td>@((form.Score2 == null) ?  Html.Raw("-") : Html.Raw(form.Score2))</td>
+                                <td>@((form.Score3 == null) ?  Html.Raw("-") : Html.Raw(form.Score3))</td>
+                                <td>@((form.Score4 == null) ?  Html.Raw("-") : Html.Raw(form.Score4))</td>
+                                <td>@((form.Ranking == null) ?  Html.Raw("-") : Html.Raw(form.Ranking))</td>
+                                <td>
+                                    @if (@form.Situation.CompareTo("Hoàn Thành") != 0)
+                                    {
+                                        <span class="badge bg-inverse-warning text-sm">
+                                            @form.Situation
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-inverse-success text-sm">
+                                            Hoàn thành
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="~/UnionEvaluation/FormDetail/@form.formId">
+                                        <i class="fa fa-eye fa-lg"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
+                                       title="Tạo ghi chú">
+                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
 
-                                    </div>
-                                </div> -->
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#viewnote_modal"
-                                   title="Xem/ Sửa ghi chú">
-                                    <i class="las la-comment text-xl text-success juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>2</strong>
-                            </td>
-                            <td>1811062895</td>
-                            <td class="text-left">
-                                Trần Việt Hoàng
-                            </td>
-                            <td>16/12/2000</td>
-                            <td>67</td>
-                            <td>_</td>
-                            <td>_</td>
-                            <td>_</td>
-                            <td>_</td>
-                            <td>
-                                <span class="badge bg-inverse-warning text-sm">
-                                    Chờ
-                                    lớp
-                                </span>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal"
-                                   data-target="#edit-jugedment_modal">
-                                    <i class="fa fa-eye fa-lg"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                   title="Tạo ghi chú">
-                                    <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>3</strong>
-                            </td>
-                            <td>1811062895</td>
-                            <td class="text-left">
-                                Nguyễn Thanh Tú
-                            </td>
-                            <td>16/12/2000</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>Xuất sắc</td>
-                            <td>
-                                <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal"
-                                   data-target="#edit-jugedment_modal">
-                                    <i class="fa fa-eye fa-lg"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                   title="Tạo ghi chú">
-                                    <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>4</strong>
-                            </td>
-                            <td>1811062895</td>
-                            <td class="text-left">
-                                Nguyễn Quang Minh
-                            </td>
-                            <td>16/12/2000</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>67</td>
-                            <td>Xuất sắc</td>
-                            <td>
-                                <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal"
-                                   data-target="#edit-jugedment_modal">
-                                    <i class="fa fa-eye fa-lg"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                   title="Tạo ghi chú">
-                                    <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
+
+                        @*<tr>
+                                <td>
+                                    <strong>3</strong>
+                                </td>
+                                <td>1811062895</td>
+                                <td class="text-left">
+                                    Nguyễn Thanh Tú
+                                </td>
+                                <td>16/12/2000</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>Xuất sắc</td>
+                                <td>
+                                    <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal"
+                                       data-target="#edit-jugedment_modal">
+                                        <i class="fa fa-eye fa-lg"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
+                                       title="Tạo ghi chú">
+                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>4</strong>
+                                </td>
+                                <td>1811062895</td>
+                                <td class="text-left">
+                                    Nguyễn Quang Minh
+                                </td>
+                                <td>16/12/2000</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>67</td>
+                                <td>Xuất sắc</td>
+                                <td>
+                                    <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal"
+                                       data-target="#edit-jugedment_modal">
+                                        <i class="fa fa-eye fa-lg"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
+                                       title="Tạo ghi chú">
+                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -284,7 +251,6 @@
             <div class="modal-body">
                 <form>
                     <div class="row">
-
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Nội dung ghi chú <span class="text-danger">*</span></label>

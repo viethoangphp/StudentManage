@@ -26,6 +26,7 @@ namespace StudentManage.Models
         public int? score3 { set; get; }
         public int? score4 { set; get; }
         public bool? inProcess { set; get; }
+        public string Note {  set; get; }
 
 
     }
