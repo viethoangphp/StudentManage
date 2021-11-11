@@ -24,7 +24,10 @@ namespace StudentManage.BUS
                 user.userID = model.UserID;
                 user.fullname = model.FullName;
                 user.groupID = model.GroupId;
-                user.classID = (int)model.ClassID;
+                if (model.ClassID != null)
+                {
+                    user.classID = (int)model.ClassID;
+                }
                 user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;

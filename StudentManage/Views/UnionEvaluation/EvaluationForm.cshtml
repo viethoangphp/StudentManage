@@ -131,11 +131,11 @@
                                                         @if (Model.IsInTime == 1)
                                                         {
                                                             // Input Score
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score1" class="juged-input" required min="0" max="@criteria.score"
+                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score1" class="juged-input" required min="0" max="@criteria.score"
                                                                    oninvalid="onInvalid(this, @criteria.score)"
                                                                    oninput="onInput(this)" />
                                                             // Criteria Id
-                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
                                                         {
@@ -145,9 +145,9 @@
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 2)
                                                         {
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score2" class="juged-input" required min="0" max="@criteria.score"
+                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score2" class="juged-input" required min="0" max="@criteria.score"
                                                                    oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
-                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
                                                         {
@@ -157,9 +157,9 @@
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 3)
                                                         {
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score3" class="juged-input" required min="0" max="@criteria.score"
+                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score3" class="juged-input" required min="0" max="@criteria.score"
                                                                    oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
-                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
                                                         {
@@ -169,9 +169,9 @@
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 4)
                                                         {
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="@criteria.score4" class="juged-input" required min="0" max="@criteria.score"
+                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score4" class="juged-input" required min="0" max="@criteria.score"
                                                                    oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
-                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
                                                         {
@@ -179,20 +179,20 @@
                                                         }
                                                     </td>
                                                     @*<td class="text-center">
-                                                            <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
-                                                            <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
-                                                        </td>
+                                        <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
+                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
+                                    </td>
 
-                                                        <td class="text-center">
-                                                            0
-                                                        </td>
-                                                        <td class="text-center">
-                                                            0
-                                                        </td>*@
+                                    <td class="text-center">
+                                        0
+                                    </td>
+                                    <td class="text-center">
+                                        0
+                                    </td>*@
                                                 </tr>
-                                            }
-                                        }
-                                    }
+                                                                }
+                                                            }
+                                                        }
                                     <!-- sum -->
                                     <tr style="background-color:#eee ;">
                                         <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
@@ -205,6 +205,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <input type="hidden" name="evaluationFormId" value="@Model.formId" />
                         @if (Model.IsInTime != 0)
                         {
                             <div class="d-flex justify-content-end">

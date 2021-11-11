@@ -25,76 +25,99 @@ namespace StudentManage.Controllers
             EvaluationBUS modelBUS = new EvaluationBUS();
             //Model to View
             UnionFormModel model = new UnionFormModel();
-            // Thông tin user
-            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             // Render Form chấm điểm
-            int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
-            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
-            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
+            //int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
+            var listMain = modelBUS.GetAllMainByTemplateId(4);
+            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(4);
             // ====================================================================
+            // Thông tin user
+            var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            var user = new UserModel();
+           
             int? turn = 0;
-            int isInTime = 2;
+            int isInTime = modelBUS.IsInTime();
             // Gán điểm theo tiêu chí và lượt chấm
             int[] listTotal = {0,0,0,0};
-            if (formId != null)
+            if (formId == null && isInTime == 1)
+            {
+                // Tạo Form khi chưa tạo
+                var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
+                EvalutionFormModel form = new EvalutionFormModel()
+                {
+                    semesterId = preSemes.semesterId,
+                    status = 1,
+                    createAt = DateTime.Now,
+                    createBy = userSession.userID,
+                };
+                // Insert Form
+                formId = modelBUS.InsertEvaluationForm(form);
+                user = userSession;
+            }
+            else
             {
                 var details = modelBUS.GetDetailEvalutionsByFormId((int)formId);
-                //Lấy Detail theo level để tìm ra lượt chấm hiện tại 
-                turn = (int)details.Select(x => x.level).Distinct().Max();        
-                turn = (turn==null) ? 0 : turn;
-                model.Turn = turn;
-                foreach (var critial in listCriteria)
+                var form = modelBUS.GetEvaluationFormById((int)formId);
+                user = new UserBUS().GetUserByID((int)form.createBy);
+                // Xử lý trường hợp Tạo Form nhưng chưa chấm
+                if(details.Count != 0)
                 {
-                    foreach (var detail in details)
+                    //Lấy Detail theo level để tìm ra lượt chấm hiện tại 
+                    turn = (int)details.Select(x => x.level).Distinct().Max();
+                    turn = (turn == null) ? 0 : turn;
+                    model.Turn = turn;
+                    foreach (var critial in listCriteria)
                     {
-                        switch(turn)
+                        foreach (var detail in details)
                         {
-                            case 4:
-                                if (detail.critetiaId == critial.criteriaId && detail.level == 4)
-                                {
-                                    critial.score4 = detail.score;
-                                    listTotal[3] += (int)detail.score; 
-                                }
-                                goto case 3;
-                            case 3:
-                                if (detail.critetiaId == critial.criteriaId && detail.level == 3)
-                                {
-                                    critial.score3 = detail.score;
-                                    listTotal[2] += (int)detail.score;
-                                }
-                                goto case 2;
-                            case 2:
-                                if (detail.critetiaId == critial.criteriaId && detail.level == 2)
-                                {
-                                    critial.score2 = detail.score;
-                                    listTotal[1] += (int)detail.score;
-                                }
-                                goto case 1;
-                            case 1:
-                                if (detail.critetiaId == critial.criteriaId && detail.level == 1)
-                                {
-                                    critial.score1 = detail.score;
-                                    listTotal[0] += (int)detail.score;
-                                }
-                                break;
-                        }       
+                            switch (turn)
+                            {
+                                case 4:
+                                    if (detail.critetiaId == critial.criteriaId && detail.level == 4)
+                                    {
+                                        critial.score4 = detail.score;
+                                        listTotal[3] += (int)detail.score;
+                                    }
+                                    goto case 3;
+                                case 3:
+                                    if (detail.critetiaId == critial.criteriaId && detail.level == 3)
+                                    {
+                                        critial.score3 = detail.score;
+                                        listTotal[2] += (int)detail.score;
+                                    }
+                                    goto case 2;
+                                case 2:
+                                    if (detail.critetiaId == critial.criteriaId && detail.level == 2)
+                                    {
+                                        critial.score2 = detail.score;
+                                        listTotal[1] += (int)detail.score;
+                                    }
+                                    goto case 1;
+                                case 1:
+                                    if (detail.critetiaId == critial.criteriaId && detail.level == 1)
+                                    {
+                                        critial.score1 = detail.score;
+                                        listTotal[0] += (int)detail.score;
+                                    }
+                                    break;
+                            }
+                        }
                     }
-                }
+                }     
             }
             // Render Input và Button chấm
             if ((turn == 0 || turn == 1) && isInTime == 1)
             {
                 model.IsInTime = 1;  
             }
-            if((turn == 1 || turn == 2) && isInTime == 2 && user.groupID == 3)
+            if((turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
             {
                 model.IsInTime = 2;
             }
-            if ((turn == 2 || turn == 3) && isInTime == 3 && user.groupID == 4)
+            if ((turn == 2 || turn == 3) && isInTime == 3 && userSession.groupID == 4)
             {
                 model.IsInTime = 3;
             }
-            if ((turn == 3 || turn == 4) && isInTime == 4 && user.groupID == 5)
+            if ((turn == 3 || turn == 4) && isInTime == 4 && userSession.groupID == 5)
             {
                 model.IsInTime = 4;
             }
@@ -102,13 +125,14 @@ namespace StudentManage.Controllers
             model.Total = listTotal;
             model.ListMain = listMain;
             model.ListCriteria = listCriteria;
+            model.formId =  (int)formId;
             ViewBag.user = user;
             
             return View(model);
         }
         
         [HttpPost]
-        public ActionResult Evaluation(List<EvaluationModel> listmodel)
+        public ActionResult Evaluation(List<EvaluationModel> listmodel, int evaluationFormId)
         {
             // Thông tin user
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
@@ -135,37 +159,29 @@ namespace StudentManage.Controllers
             }
             #endregion
             //==============================================================
-            var preSemes = modelBUS.GetPresentSemesterByUserId(user.userID);
+            var detailForm = modelBUS.GetDetailEvalutionsByFormId(evaluationFormId);
             if(ModelState.IsValid)
             {
-                // Tạo mới form nếu chưa tạo
-                if (preSemes.FormId == null)
+                // TH Tạo Form nhưng chưa chấm - Chấm điểm
+                if (detailForm.Count == 0)
                 {
-                    EvalutionFormModel form = new EvalutionFormModel()
-                    {
-                        semesterId = preSemes.semesterId,
-                        status = 1,
-                        createAt = DateTime.Now,
-                        createBy = user.userID,
-                    };
-                    // Insert Form
-                    int formId = modelBUS.InsertEvaluationForm(form);
                     // Insert Detail
-                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
+                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID, evaluationFormId);
                     TempData["MESSAGE"] = "Chấm điểm thành công!";
                     return RedirectToAction("Union");
                 }
-                // Trường hợp đã có Form
+                // TH Tạo Form và đã chấm - Cập nhật điểm
                 else
                 {
-                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID);
+                    // Insert Detail
+                    modelBUS.InsertListDetailEvaluation(listmodel, user.userID, evaluationFormId);
                     TempData["MESSAGE"] = "Cập nhật điểm thành công!";
                 }
                 return RedirectToAction("Union");
             }
             TempData["ERROR"] = "Điểm không hợp lệ!";
             TempData["listError"] = listError;
-            return RedirectToAction("EvaluationForm", new { formId = preSemes.FormId});
+            return RedirectToAction("EvaluationForm", new { formId = evaluationFormId});
         }
         // View đoàn viên
         public ActionResult Union()

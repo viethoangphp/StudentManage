@@ -194,14 +194,14 @@ namespace StudentManage.BUS
         {
             var preSemes = dao.GetPresentSemester();
             var detail = dao.GetDetailFormsById(userid);
-            int? turn = detail.Where(x => x.EvalutionForm.SemesterID == semsterId).Select(x => x.Level).Distinct().Max();
+            int? turn = detail.Where(x => x.EvalutionForm.SemesterID == semsterId).Max(x => x?.Level);
             if (turn == null)
             {
                 return 0;
             }
             return (int)turn;
         }
-
+        //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         //lấy vòng chấm của một phiếu bất kì
         public int GetTurnByFormId(int formId)
         {
@@ -285,7 +285,7 @@ namespace StudentManage.BUS
             return dao.InsertEvaluationForm(model);
         }
         //Insert chi tiết phiếu
-        public int InsertListDetailEvaluation(List<EvaluationModel> listDetail, int userid)
+        public int InsertListDetailEvaluation(List<EvaluationModel> listDetail, int userid, int evaluationFormId)
         {
             var user = new UserDAO().GetUserByID(userid);
             // Tìm Position
@@ -303,7 +303,7 @@ namespace StudentManage.BUS
             {
                 if (position == btcd)
                 {
-                    if (IsInTimeEvaluation(2) == 0)
+                    if (IsInTimeEvaluationByGroupId(2) == 0)
                     {
                         positionTurn = 1;
                     }
@@ -316,13 +316,13 @@ namespace StudentManage.BUS
                 {
                     if (position == btdk)
                     {
-                        if (IsInTimeEvaluation(2) == 0)
+                        if (IsInTimeEvaluationByGroupId(2) == 0)
                         {
                             positionTurn = 1;
                         }
                         else
                         {
-                            if (IsInTimeEvaluation(3) == 0)
+                            if (IsInTimeEvaluationByGroupId(3) == 0)
                             {
                                 positionTurn = 2;
                             }
@@ -340,7 +340,7 @@ namespace StudentManage.BUS
             {
                 DetailEvalution model = new DetailEvalution()
                 {
-                    FormId = (int)preSemes.FormId,
+                    FormId = evaluationFormId,
                     UserID = userid,
                     CriteriaID = item.criteriaId,
                     Level = positionTurn,
@@ -374,7 +374,7 @@ namespace StudentManage.BUS
         // Lấy thời gian đánh giá theo GroupUser Id 
         //  0 : Đang trong thời gian đánh giá
         //  1 : Đã qua thời gian đánh giá
-        public int IsInTimeEvaluation(int groupId)
+        public int IsInTimeEvaluationByGroupId(int groupId)
         {
             var groupUser = GetGroupUserById(groupId);
             var timeEvaluation = dao.GetTimeEvaluationByTimeId(groupUser.timeId);
@@ -386,6 +386,27 @@ namespace StudentManage.BUS
             return 1;
 
         }
+        public int IsInTime()
+        {
+            if(IsInTimeEvaluationByGroupId(2) == 0)
+            {
+                return 1;
+            }
+            else if(IsInTimeEvaluationByGroupId(3) == 0)
+            {
+                return 2;
+            }
+            else if (IsInTimeEvaluationByGroupId(4) == 0)
+            {
+                return 3;
+            }else if (IsInTimeEvaluationByGroupId(5) == 0)
+            {
+                return 4;
+            }else
+            {
+                return 0;
+            }    
+        }    
 
         // Tính điểm Form 1 Học kỳ của User
         public SemesterModel CalcSingleSemesterScore(int userId, int semesterId)
@@ -446,6 +467,10 @@ namespace StudentManage.BUS
         public List<SemesterModel> CalcScoreByUserId(int userId)
         {
             var detailforms = GetDetailFormsById(userId);
+            var listEvaluationForms = dao.GetAllEvaluationFormsByUserId(userId);
+            
+
+            // Trường hợp đã có Form đã chấm
             var listSemesters = GetSemesterById(userId);
             if (listSemesters != null)
             {
@@ -501,6 +526,23 @@ namespace StudentManage.BUS
                 }
                 listSemesters[0].inProcess = true;
                 return listSemesters;
+            }
+            else
+            {
+                if(listEvaluationForms.Count != 0)
+                {
+                    var presentForm = listEvaluationForms.OrderByDescending(x => x.Create_At).FirstOrDefault();
+                    // Trường hợp Tạo Form nhưng chưa chấm
+                    if (presentForm.SemesterID == GetPresentSemester().semesterId)
+                    {
+                        listSemesters = new List<SemesterModel>();
+                        SemesterModel nowSemester = new SemesterModel();
+                        nowSemester = GetPresentSemester();
+                        nowSemester.FormId = presentForm.FormId;
+                        listSemesters.Add(nowSemester);
+                        return listSemesters;
+                    }
+                }    
             }
             return null;
         }

@@ -25,7 +25,7 @@ namespace Models.EntityModel
         public int CriteriaID { get; set; }
 
         [Key]
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Level { get; set; }
 
@@ -33,7 +33,6 @@ namespace Models.EntityModel
 
         [StringLength(255)]
         public string Note { get; set; }
-
 
         [StringLength(50)]
         public string Image_proof { get; set; }

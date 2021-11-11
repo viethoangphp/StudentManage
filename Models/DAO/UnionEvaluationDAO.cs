@@ -75,7 +75,12 @@ namespace Models.DAO
         public EvalutionForm GetEvaluationFormById(int formId)
         {
             return db.EvalutionForms.Where(x => x.FormId == formId).FirstOrDefault();
-        }    
+        }
+        // Get All Evaluation Form by UserID
+        public List<EvalutionForm> GetAllEvaluationFormsByUserId(int userId)
+        {
+            return db.EvalutionForms.Where(x => x.Create_by == userId).ToList();
+        }
         //========================================================
         // Insert EvaluationForm
         public int InsertEvaluationForm(EvalutionForm form)

@@ -12,6 +12,7 @@ namespace StudentManage.Models
         public int[] Total {  get; set; }
         public int? Turn { get; set; }
         public int IsInTime {  get; set; }
+        public int formId {  get; set; }
         
     }
 }

@@ -28,6 +28,8 @@ namespace Models.EntityModel
 
         public int SemesterID { get; set; }
 
+        public string Note { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DetailEvalution> DetailEvalutions { get; set; }
 
