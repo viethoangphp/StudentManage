@@ -23,18 +23,28 @@ namespace StudentManage.Controllers
         public ActionResult EvaluationForm(int? formId)
         {
             EvaluationBUS modelBUS = new EvaluationBUS();
-            //Model to View
-            UnionFormModel model = new UnionFormModel();
+            
             // Render Form chấm điểm
             //int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
             var listMain = modelBUS.GetAllMainByTemplateId(4);
             var listCriteria = modelBUS.GetAllCriteriaByTemplateId(4);
-            // ====================================================================
-            // Thông tin user
+
+            // Thông tin user Session
             var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            // Thông tin User được chấm
             var user = new UserModel();
-           
+
+            #region Xử lý Render các tiêu chí + điểm đánh giá
+            //Model to View
+            UnionFormModel model = new UnionFormModel();
             int? turn = 0;
+            /* InIsTime() => trả về (int) thời gian chấm đang trong giai đoạn nào?
+             * return 1 - Trong thời gian chấm điểm cá nhân
+             * return 2 - Trong thời gian BTCĐ chấm
+             * return 3 - Trong thời gian BTĐK chấm
+             * return 4 - Trong thời gian BTĐT chấm
+             * return 0 - ngoài các thời gian chấm kể trên
+             */
             int isInTime = modelBUS.IsInTime();
             // Gán điểm theo tiêu chí và lượt chấm
             int[] listTotal = {0,0,0,0};
@@ -104,6 +114,9 @@ namespace StudentManage.Controllers
                     }
                 }     
             }
+            #endregion
+
+            #region Render hiển thị Input và Button chấm
             // Render Input và Button chấm
             if ((turn == 0 || turn == 1) && isInTime == 1)
             {
@@ -121,20 +134,22 @@ namespace StudentManage.Controllers
             {
                 model.IsInTime = 4;
             }
+            #endregion
+
             //=====================================================================
             model.Total = listTotal;
             model.ListMain = listMain;
             model.ListCriteria = listCriteria;
             model.formId =  (int)formId;
             ViewBag.user = user;
-            
+
             return View(model);
         }
         
         [HttpPost]
         public ActionResult Evaluation(List<EvaluationModel> listmodel, int evaluationFormId)
         {
-            // Thông tin user
+            // Thông tin user Session
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
 
             #region InputScoreValidation
@@ -158,7 +173,8 @@ namespace StudentManage.Controllers
                 }    
             }
             #endregion
-            //==============================================================
+
+            #region Insert điểm và trả thông báo + trả về list Error
             var detailForm = modelBUS.GetDetailEvalutionsByFormId(evaluationFormId);
             if(ModelState.IsValid)
             {
@@ -180,7 +196,10 @@ namespace StudentManage.Controllers
                 return RedirectToAction("Union");
             }
             TempData["ERROR"] = "Điểm không hợp lệ!";
-            TempData["listError"] = listError;
+            TempData["listError"] = listError;// ListError từ Validation
+            #endregion
+
+            //===========================================================================
             return RedirectToAction("EvaluationForm", new { formId = evaluationFormId});
         }
         // View đoàn viên
@@ -188,10 +207,10 @@ namespace StudentManage.Controllers
         {
             int userId = (int)Session["USER_ID"];
             // Tính điểm từng phiếu trong từng học kỳ
-
             var listSemesters = modelBUS.CalcScoreByUserId(userId);
 
             // Trường hợp đoàn viên chưa trải qua học kì nào
+            // => Thêm học kỳ hiện tại để Đoàn viên tiến hành đánh giá
             if (listSemesters == null)
             {
                 listSemesters = new List<SemesterModel>();
@@ -199,22 +218,22 @@ namespace StudentManage.Controllers
                 nowSemester = modelBUS.GetPresentSemester();
                 listSemesters.Add(nowSemester);
             }
-            //===============================================
+            //=========================================================================
             ViewBag.semesters = listSemesters;
             return View();
         }
-        // View Bi thu chi doan
+        // View bí thư chi đoàn 
         public ActionResult ClassEvaluation()
         {
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             var nowSemester = modelBUS.GetPresentSemester();
-
-            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, nowSemester.semesterId);
+            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, 1);
             
+            //===========================================================================
             return View(test);
         }    
-        // View Bi thu doan khoa
-        // View Bi thu doan truong
+        // View Bí thư đoàn khoa
+        // View Bí thư đoàn trường
         
         
     }

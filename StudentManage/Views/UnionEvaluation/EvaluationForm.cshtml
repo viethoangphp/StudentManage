@@ -127,6 +127,7 @@
                                                         @criteria.criteriaContent
                                                         <b>(0–@criteria.score điểm).</b>
                                                     </td>
+                                                    <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 1)
                                                         {
@@ -142,11 +143,16 @@
                                                             @((criteria.score1 == null) ? Html.Raw("-") : Html.Raw(criteria.score1));
                                                         }
                                                     </td>
+                                                    <!-- #endregion -->
+                                                    <!-- #region Level 2 - Bí thư chi đoàn -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 2)
                                                         {
+                                                            // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score2" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
+                                                                   oninvalid="onInvalid(this, @criteria.score)"
+                                                                   oninput="onInput(this)" />
+                                                            // Criteria Id
                                                             <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
@@ -154,11 +160,16 @@
                                                             @((criteria.score2 == null) ? Html.Raw("-") : Html.Raw(criteria.score2));
                                                         }
                                                     </td>
+                                                    <!-- #endregion -->
+                                                    <!-- #region Level 3 - Bí thư Đoàn khoa -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 3)
                                                         {
+                                                            // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score3" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
+                                                                   oninvalid="onInvalid(this, @criteria.score)"
+                                                                   oninput="onInput(this)" />
+                                                            // Criteria Id
                                                             <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
@@ -166,11 +177,16 @@
                                                             @((criteria.score3 == null) ? Html.Raw("-") : Html.Raw(criteria.score3));
                                                         }
                                                     </td>
+                                                    <!-- #endregion -->
+                                                    <!-- #region Level 4 - Bí thư Đoàn trường -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 4)
                                                         {
+                                                            // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score4" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="this.setCustomValidity('Điểm phải trong khoảng từ 0 đến @criteria.score')" />
+                                                                   oninvalid="onInvalid(this, @criteria.score)"
+                                                                   oninput="onInput(this)" />
+                                                            // Criteria Id
                                                             <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
                                                         }
                                                         else
@@ -178,21 +194,11 @@
                                                             @((criteria.score2 == null) ? Html.Raw("-") : Html.Raw(criteria.score4));
                                                         }
                                                     </td>
-                                                    @*<td class="text-center">
-                                        <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
-                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId" />
-                                    </td>
-
-                                    <td class="text-center">
-                                        0
-                                    </td>
-                                    <td class="text-center">
-                                        0
-                                    </td>*@
+                                                    <!-- #endregion -->
                                                 </tr>
-                                                                }
-                                                            }
-                                                        }
+                                            }
+                                        }
+                                    }
                                     <!-- sum -->
                                     <tr style="background-color:#eee ;">
                                         <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
@@ -205,7 +211,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!--Form Id Hidden Field-->
                         <input type="hidden" name="evaluationFormId" value="@Model.formId" />
+                        <!--Button Form-->
                         @if (Model.IsInTime != 0)
                         {
                             <div class="d-flex justify-content-end">
@@ -215,6 +223,7 @@
                                 <button type="submit" class="btn btn-primary ml-2">Nộp</button>
                             </div>
                         }
+                        <!--/Button Form-->
                     </form>
                     <!-- when done jugedment -->
                     <!-- <div class="d-flex justify-content-center">
@@ -326,13 +335,13 @@
         // Input Score Validation
         function onInvalid(input, max) {
             input.setCustomValidity('Điểm phải trong khoảng từ 0 đến ' + max);
-            input.style.border = "1px solid #eb4034";
+            input.style.border = "2px solid #eb4034";
         }
         // Oninput Score
         function onInput(input) {
             input.style.border = "1px solid gray";
             input.setCustomValidity("");
-        }
+    }
     </script>
 }
 

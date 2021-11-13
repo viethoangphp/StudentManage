@@ -162,10 +162,81 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                       title="Tạo ghi chú">
-                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                    </a>
+                                    @if (form.Note == null)
+                                    {
+                                        <a href="#" data-toggle="modal" data-target="#addnote_modal_@form.formId"
+                                           title="Tạo ghi chú">
+                                            <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
+                                        </a>
+                                        <!-- Add note Modal -->
+                                        <div id="addnote_modal_@form.formId" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Thêm ghi chú</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form>
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <div class="form-group">
+                                                                        <label>Nội dung ghi chú<span class="text-danger">*</span></label>
+                                                                        <textarea class="form-control" rows="10"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="submit-section">
+                                                                <button class="btn btn-primary submit-btn">Thêm</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Add note Modal -->
+                                    }
+                                    else
+                                    {
+                                        <a href="#" data-toggle="modal" data-target="#viewnote_modal_@form.formId"
+                                           title="Tạo ghi chú">
+                                            <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
+                                        </a>
+                                        <!-- View note Modal -->
+                                        <div id="viewnote_modal_@form.formId" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Xem/ Sửa ghi chú</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form>
+                                                            <div class="row">
+
+                                                                <div class="col-sm-12">
+                                                                    <div class="form-group">
+                                                                        <label>Nội dung ghi chú <span class="text-danger">*</span></label>
+                                                                        <textarea class="form-control" rows="10">@form.Note</textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="submit-section m-t-10 d-flex justify-content-around">
+                                                                <button class="btn btn-outline-danger submit-btn">Xóa ghi chú</button>
+                                                                <button class="btn btn-primary submit-btn">Lưu</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /View note Modal -->
+                                    }
+
                                 </td>
                             </tr>
                         }
@@ -253,7 +324,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label>Nội dung ghi chú <span class="text-danger">*</span></label>
+                                <label>Nội dung ghi chú<span class="text-danger">*</span></label>
                                 <textarea class="form-control" rows="10"></textarea>
                             </div>
                         </div>

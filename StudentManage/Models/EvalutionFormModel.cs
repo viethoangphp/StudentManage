@@ -16,6 +16,7 @@ namespace StudentManage.Models
 
         //Added field
         public bool? inProcess { set; get; }
+        public string note { set; get; }
 
         
 

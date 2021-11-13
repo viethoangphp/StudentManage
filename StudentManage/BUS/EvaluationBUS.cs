@@ -90,7 +90,8 @@ namespace StudentManage.BUS
                     createAt = item.Create_At,
                     createBy = item.Create_by,
                     total = item.Total,
-                    semesterId = item.SemesterID
+                    semesterId = item.SemesterID, 
+                    note = item.Note
                 };
                 listModel.Add(model);
             }
@@ -435,6 +436,9 @@ namespace StudentManage.BUS
                         semester.score1 = 0;
                         break;
                 }
+                // Gán Note
+                semester.Note = form.note;
+
                 // Cộng điểm vào biến khi Chi tiết phiếu này có mã học kỳ bằng mã hk đang xét, theo level
                 foreach (var detail in detailforms)
                 {
@@ -567,8 +571,8 @@ namespace StudentManage.BUS
             foreach (var form in listForms)
             {
                 var person = new UserDAO().GetUserByID((int)form.createBy);
-                var semester = CalcSingleSemesterScore((int)form.createBy, semesterId);
-                if(semester != null)
+                var detailSemester = CalcSingleSemesterScore((int)form.createBy, semesterId);
+                if(detailSemester != null)
                 {
                     PersonalFormModel model = new PersonalFormModel();
                     model.StudentCode = person.StudentCode;
@@ -577,12 +581,12 @@ namespace StudentManage.BUS
                     //Form id
                     model.formId = form.formId;
                     //Note
-                    model.Note = semester.Note;
+                    model.Note = detailSemester.Note;
                     // Điểm                
-                    model.Score1 = semester.score1;
-                    model.Score2 = semester.score2;
-                    model.Score3 = semester.score3;
-                    model.Score4 = semester.score4;
+                    model.Score1 = detailSemester.score1;
+                    model.Score2 = detailSemester.score2;
+                    model.Score3 = detailSemester.score3;
+                    model.Score4 = detailSemester.score4;
                     // Xếp loại
                     if (model.Score4 > 90)
                     {
@@ -610,7 +614,6 @@ namespace StudentManage.BUS
                     else if (model.Score4 == null)
                         model.Situation = "Chờ Trường";
                     else model.Situation = "Hoàn Thành";
-
                     list.Add(model);
                 }    
             }
