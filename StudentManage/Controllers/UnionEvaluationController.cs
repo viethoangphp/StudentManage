@@ -48,20 +48,40 @@ namespace StudentManage.Controllers
             int isInTime = modelBUS.IsInTime();
             // Gán điểm theo tiêu chí và lượt chấm
             int[] listTotal = {0,0,0,0};
-            if (formId == null && isInTime == 1)
+            if (formId == null)
             {
-                // Tạo Form khi chưa tạo
-                var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
-                EvalutionFormModel form = new EvalutionFormModel()
+                // Trong thời gian chấm cá nhân
+                if(isInTime == 1)
                 {
-                    semesterId = preSemes.semesterId,
-                    status = 1,
-                    createAt = DateTime.Now,
-                    createBy = userSession.userID,
-                };
-                // Insert Form
-                formId = modelBUS.InsertEvaluationForm(form);
-                user = userSession;
+                    // Tạo Form khi chưa tạo
+                    var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
+                    EvalutionFormModel form = new EvalutionFormModel()
+                    {
+                        semesterId = preSemes.semesterId,
+                        status = 1,
+                        createAt = DateTime.Now,
+                        createBy = userSession.userID,
+                    };
+                    // Insert Form
+                    formId = modelBUS.InsertEvaluationForm(form);
+                    user = userSession;
+                }   
+                // Sau thời gian chấm cá nhân
+                //if(isInTime == 2)
+                //{
+                //    // Tạo Form khi chưa tạo
+                //    var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
+                //    EvalutionFormModel form = new EvalutionFormModel()
+                //    {
+                //        semesterId = preSemes.semesterId,
+                //        status = 1,
+                //        createAt = DateTime.Now,
+                //        createBy = userSession.userID,
+                //    };
+                //    // Insert Form
+                //    formId = modelBUS.InsertEvaluationForm(form);
+                //    user = userSession;
+                //}    
             }
             else
             {
@@ -122,7 +142,7 @@ namespace StudentManage.Controllers
             {
                 model.IsInTime = 1;  
             }
-            if((turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
+            if((turn == 0 || turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
             {
                 model.IsInTime = 2;
             }
@@ -227,7 +247,7 @@ namespace StudentManage.Controllers
         {
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
             var nowSemester = modelBUS.GetPresentSemester();
-            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, 1);
+            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, nowSemester.semesterId);
             
             //===========================================================================
             return View(test);

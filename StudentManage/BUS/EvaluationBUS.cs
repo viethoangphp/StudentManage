@@ -304,7 +304,7 @@ namespace StudentManage.BUS
             {
                 if (position == btcd)
                 {
-                    if (IsInTimeEvaluationByGroupId(2) == 0)
+                    if (IsInTimeEvaluationByGroupId(2) == 0 || turn == 0)
                     {
                         positionTurn = 1;
                     }
@@ -317,13 +317,13 @@ namespace StudentManage.BUS
                 {
                     if (position == btdk)
                     {
-                        if (IsInTimeEvaluationByGroupId(2) == 0)
+                        if (IsInTimeEvaluationByGroupId(2) == 0 || turn == 0)
                         {
                             positionTurn = 1;
                         }
                         else
                         {
-                            if (IsInTimeEvaluationByGroupId(3) == 0)
+                            if (IsInTimeEvaluationByGroupId(3) == 0 )
                             {
                                 positionTurn = 2;
                             }
@@ -387,6 +387,13 @@ namespace StudentManage.BUS
             return 1;
 
         }
+        /* InIsTime() => trả về (int) thời gian chấm đang trong giai đoạn nào?
+            * return 1 - Trong thời gian chấm điểm cá nhân
+            * return 2 - Trong thời gian BTCĐ chấm
+            * return 3 - Trong thời gian BTĐK chấm
+            * return 4 - Trong thời gian BTĐT chấm
+            * return 0 - ngoài các thời gian chấm kể trên
+            */
         public int IsInTime()
         {
             if(IsInTimeEvaluationByGroupId(2) == 0)
@@ -417,53 +424,60 @@ namespace StudentManage.BUS
             if (form != null)
             {
                 var detailforms = GetDetailEvalutionsByFormId(form.formId);
-                // Đếm lượt chấm hiện tại
-                var turn = GetTurnNow(semesterId, userId);
-
-                // Gán điểm 
-                switch (turn)
+                // Trường hợp có Detail => Có Phiếu và đã chấm
+                if (detailforms.Count != 0)
                 {
-                    case 4:
-                        semester.score4 = 0;
-                        goto case 3;
-                    case 3:
-                        semester.score3 = 0;
-                        goto case 2;
-                    case 2:
-                        semester.score2 = 0;
-                        goto case 1;
-                    case 1:
-                        semester.score1 = 0;
-                        break;
-                }
-                // Gán Note
-                semester.Note = form.note;
+                    // Đếm lượt chấm hiện tại
+                    var turn = GetTurnNow(semesterId, userId);
 
-                // Cộng điểm vào biến khi Chi tiết phiếu này có mã học kỳ bằng mã hk đang xét, theo level
-                foreach (var detail in detailforms)
-                {
-                    // level1 Đoàn viên chấm
-                    if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 1)
+                    // Gán điểm 
+                    switch (turn)
                     {
-                        semester.score1 += detail.score;
+                        case 4:
+                            semester.score4 = 0;
+                            goto case 3;
+                        case 3:
+                            semester.score3 = 0;
+                            goto case 2;
+                        case 2:
+                            semester.score2 = 0;
+                            goto case 1;
+                        case 1:
+                            semester.score1 = 0;
+                            break;
                     }
-                    // level2 BT chi đoàn chấm
-                    if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 2)
+                    // Gán Note
+                    semester.Note = form.note;
+
+                    // Cộng điểm vào biến khi Chi tiết phiếu này có mã học kỳ bằng mã hk đang xét, theo level
+                    foreach (var detail in detailforms)
                     {
-                        semester.score2 += detail.score;
+                        // level1 Đoàn viên chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 1)
+                        {
+                            semester.score1 += detail.score;
+                        }
+                        // level2 BT chi đoàn chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 2)
+                        {
+                            semester.score2 += detail.score;
+                        }
+                        // level3 BT đoàn khoa chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 3)
+                        {
+                            semester.score3 += detail.score;
+                        }
+                        // level4 BT đoàn trường chấm
+                        if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 4)
+                        {
+                            semester.score4 += detail.score;
+                        }
                     }
-                    // level3 BT đoàn khoa chấm
-                    if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 3)
-                    {
-                        semester.score3 += detail.score;
-                    }
-                    // level4 BT đoàn trường chấm
-                    if (detail.evalutionForm.semesterId == semester.semesterId && detail.level == 4)
-                    {
-                        semester.score4 += detail.score;
-                    }
+                    return semester;
                 }
-                return semester;
+                // Trường hợp không có Detail => Có Phiếu nhưng chưa chấm => trả về null
+                return null;
+                
             }
             return null;
         }
@@ -552,70 +566,113 @@ namespace StudentManage.BUS
         }
 
 
-        // Lấy tất cả các phiểu của lớp
+        // Lấy tất cả các phiểu của lớp trong Học kỳ
         public List<PersonalFormModel> GetClassFormByClassIdAndSemesterId(int classId, int semesterId)
         {
+            //Lấy tất cả các thành viên trong lớp
             var listClass = new UserBUS().GetListUserByClass(classId);
             var listForms = new List<EvalutionFormModel>();
             List<PersonalFormModel> list = new List<PersonalFormModel>();
-            // Lấy tất cả các Form của SV 1 lớp, ở 1 hk
+            // Lấy tất cả các Form của SV 1 lớp, ở 1 Học kỳ
             foreach (var person in listClass)
             {
                 EvalutionFormModel model = GetPassedEvalutionFormsById(person.userID).Where(x => x.semesterId == semesterId && x.createBy == person.userID).FirstOrDefault();
-                if(model!=null)
+                if (model != null)
                 {
                     listForms.Add(model);
-                }     
+                }
+                else
+                {
+                    EvalutionFormModel form = new EvalutionFormModel()
+                    {
+                        semesterId = semesterId,
+                        status = 1,
+                        createAt = DateTime.Now,
+                        createBy = person.userID,
+                    };
+                    // Insert Form
+                    form.formId = InsertEvaluationForm(form);
+                    listForms.Add(form);
+                }
             }
             var test = listForms;
+
             foreach (var form in listForms)
             {
                 var person = new UserDAO().GetUserByID((int)form.createBy);
                 var detailSemester = CalcSingleSemesterScore((int)form.createBy, semesterId);
+                if (detailSemester == null)
+                {
+                    if (IsInTime() == 2)
+                    {
+                        var listScore = new List<EvaluationModel>();
+
+                        int totalCriteria = GetAllCriteriaByTemplateId(4).Count;// Phiếu chấm điểm đoàn viên (4)
+
+                        //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
+                        for (int i = 1; i <= totalCriteria; i++)
+                        {
+                            EvaluationModel evaluationModel = new EvaluationModel();
+                            evaluationModel.score = 0;
+                            evaluationModel.criteriaId = i;
+                            listScore.Add(evaluationModel);
+                        }
+                        // Insert Điểm mặc định
+                        InsertListDetailEvaluation(listScore, (int)form.createBy, form.formId);
+                    }
+                    // Ngược lại không làm gì
+                }
+
+                PersonalFormModel model = new PersonalFormModel();
+                model.StudentCode = person.StudentCode;
+                model.FullName = person.FullName;
+                model.BirthDate = person.Birthday;
+                //Form id
+                model.formId = form.formId;
+                
+
                 if(detailSemester != null)
                 {
-                    PersonalFormModel model = new PersonalFormModel();
-                    model.StudentCode = person.StudentCode;
-                    model.FullName = person.FullName;
-                    model.BirthDate = person.Birthday;
-                    //Form id
-                    model.formId = form.formId;
                     //Note
                     model.Note = detailSemester.Note;
-                    // Điểm                
+                    // Điểm
                     model.Score1 = detailSemester.score1;
                     model.Score2 = detailSemester.score2;
                     model.Score3 = detailSemester.score3;
                     model.Score4 = detailSemester.score4;
-                    // Xếp loại
-                    if (model.Score4 > 90)
-                    {
-                        model.Ranking = "Xuất Sắc";
-                    }
-                    else if (model.Score4 > 70)
-                    {
-                        model.Ranking = "Khá";
-                    }
-                    else if (model.Score4 >= 50)
-                    {
-                        model.Ranking = "Trung Bình";
-                    }
-                    else if (model.Score4 != null)
-                    {
-                        model.Ranking = "Yếu";
-                    };
-                    // Tình trạng
-                    if (model.Score1 == null)
-                        model.Situation = "Chờ Chấm";
-                    else if (model.Score2 == null)
-                        model.Situation = "Chờ Lớp";
-                    else if (model.Score3 == null)
-                        model.Situation = "Chờ Khoa";
-                    else if (model.Score4 == null)
-                        model.Situation = "Chờ Trường";
-                    else model.Situation = "Hoàn Thành";
-                    list.Add(model);
-                }    
+                }
+                else
+                {
+                    model.Score1 = 0;
+                }
+                // Xếp loại
+                if (model.Score4 > 90)
+                {
+                    model.Ranking = "Xuất Sắc";
+                }
+                else if (model.Score4 > 70)
+                {
+                    model.Ranking = "Khá";
+                }
+                else if (model.Score4 >= 50)
+                {
+                    model.Ranking = "Trung Bình";
+                }
+                else if (model.Score4 != null)
+                {
+                    model.Ranking = "Yếu";
+                };
+                // Tình trạng
+                if (model.Score1 == null)
+                    model.Situation = "Chờ Chấm";
+                else if (model.Score2 == null)
+                    model.Situation = "Chờ Lớp";
+                else if (model.Score3 == null)
+                    model.Situation = "Chờ Khoa";
+                else if (model.Score4 == null)
+                    model.Situation = "Chờ Trường";
+                else model.Situation = "Hoàn Thành";
+                list.Add(model);
             }
             return list;
         }

@@ -28,10 +28,10 @@ namespace Models.DAO
         {
             return db.EvaluativeCriterias.Where(x => x.EvaluativeMain.TemplateForm.TemplateID == templateId).ToList();
         }
-        // Get all passed Form evalution
-        public List<EvalutionForm> GetPassedEvalutionFormsById(int userid)
+        // Get all passed Form evalution by userid
+        public List<EvalutionForm> GetPassedEvalutionFormsById(int userId)
         {
-            var result = db.DetailEvalutions.Where(x => x.UserID == userid).Select(x => x.EvalutionForm).Distinct().OrderByDescending(x => x.Create_At).ToList();
+            var result = db.EvalutionForms.Where(x=>x.Create_by == userId).ToList();
             return result;
         }
         #endregion

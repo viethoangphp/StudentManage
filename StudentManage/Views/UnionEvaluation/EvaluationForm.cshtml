@@ -45,9 +45,15 @@
                                 </div>
                                 <div class="small text-muted">Lớp: @user.className</div>
                                 @{
-                                    int year = int.Parse(@user.studentCode.Substring(0, 2)) + 2000;
+                                    int studenCode;
+                                    bool isNumber = int.TryParse(user.studentCode, out studenCode);
+                                    if (isNumber)
+                                    {
+                                        int year = int.Parse(user.studentCode.Substring(0, 2)) + 2000;
+                                        <div class="small text-muted">Khóa : @year - @(year + 4)</div>
+                                    }
                                 }
-                                <div class="small text-muted">Khóa : @year - @(year + 4)</div>
+
                             </div>
                         </div>
                         <div class="col-md-7">
