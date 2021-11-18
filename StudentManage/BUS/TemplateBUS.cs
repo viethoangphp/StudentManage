@@ -204,9 +204,11 @@ namespace StudentManage.BUS
             };
             //Latin number array
             string[] latinNumbers = new string[] { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
+            //Columns name array
+            string[] listColName = new string[] { "STT", "NỘI DUNG ĐÁNH GIÁ", "YÊU CẦU", "ĐIỂM TỐI ĐA", "ĐIỂM TỰ ĐÁNH GIÁ", "MINH CHỨNG - GIẢI TRÌNH" };
             //---=== Configure ===---
             //Header & Infomation
-            ExcelRange header = sheet.Cells[1, 1, 1, 6];
+            ExcelRange header = sheet.Cells[1, 1, 1, listColName.Length];
             header.Style.Font.SetFromFont(new Font("Times New Roman", 14)); // This must always first before format other
             header.Style.Font.Bold = true;
             //Add text
@@ -233,7 +235,7 @@ namespace StudentManage.BUS
             //Print header
             foreach (string info in basicInfo)
             {
-                ExcelRange row = sheet.Cells[posRow, 1, posRow, 6];
+                ExcelRange row = sheet.Cells[posRow, 1, posRow, listColName.Length];
                 row.Merge = true;
                 row.Style.Font.SetFromFont(new Font("Times New Roman", 12));
                 row.Style.Font.Bold = true;
@@ -244,10 +246,8 @@ namespace StudentManage.BUS
             // -----===== Column name =====-----
             int startRow = posRow; // Save start row for autofit column later
             int posCol = 1; //Start position of column
-            //Prepare columns name
-            string[] listColName = new string[] { "STT", "NỘI DUNG ĐÁNH GIÁ", "YÊU CẦU", "ĐIỂM TỐI ĐA", "ĐIỂM TỰ ĐÁNH GIÁ", "MINH CHỨNG - GIẢI TRÌNH" };
             //Print columns name
-            int titleRow = posRow; //Title row is current row after print out header information
+            //int titleRow = posRow; //Title row is current row after print out header information
             foreach (string name in listColName)
             {
                 ExcelRange colTitle = sheet.Cells[posRow, posCol];
@@ -280,7 +280,7 @@ namespace StudentManage.BUS
                 posCol = 1;
                 //Init selection
                 ExcelRange numCell = sheet.Cells[posRow, 1];
-                ExcelRange groupName = sheet.Cells[posRow, 2, posRow, 6];
+                ExcelRange groupName = sheet.Cells[posRow, 2, posRow, listColName.Length];
                 //Format
                 groupName.Merge = true;
                 numCell.Style.Font.SetFromFont(new Font("Times New Roman", 12));
@@ -303,6 +303,7 @@ namespace StudentManage.BUS
                     ExcelRange nCell = sheet.Cells[posRow, posCol];
                     nCell.Style.Font.SetFromFont(new Font("Times New Roman", 12));
                     nCell.RichText.Add(num.ToString());
+                    nCell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     //Next cell in row
                     posCol++;
                     for(int i = 0; i < selected.Length; i++)
@@ -324,6 +325,10 @@ namespace StudentManage.BUS
                                 //Wrap cell text
                                 cell.Style.WrapText = true;
                                 cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                                if (info.Name.Equals("MaxScore") || info.Name.Equals("Score"))
+                                {
+                                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                }
                             }
                         }
                         posCol++; //Move col position to next col

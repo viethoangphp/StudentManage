@@ -100,8 +100,9 @@ namespace StudentManage.Controllers
         public ActionResult ExportExcel(int id)
         {
             MemoryStream stream = TemplateBUS.ExportExcel(id);
+            string fileName = TemplateBUS.GetTemplateFormDetail(id).FullName;
             stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", DateTime.Now.ToString() + ".xlsx");
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", fileName + ".xlsx");
         }
         #endregion
     }
