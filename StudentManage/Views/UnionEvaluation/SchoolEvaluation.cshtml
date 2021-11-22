@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewBag.Title = "SchoolEvaluation";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Danh sách khoa</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
+                    <li class="breadcrumb-item active">Danh sách khoa (trường)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    <div class="row filter-row justify-content-end">
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus">
+                <input type="text" class="form-control floating">
+                <label class="focus-label">Mã khoa</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option>Công nghệ thông tin</option>
+                    <option>Quản trị kinh doanh</option>
+                    <option>Ngôn ngữ anh</option>
+                </select>
+                <label class="focus-label">Khoa</label>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option>Chưa đánh giá</option>
+                    <option>Chờ xác nhận</option>
+                </select>
+                <label class="focus-label">Trạng thái</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                       style="width:100%; font-size: 13px;">
+                    <thead>
+                        <tr style="box-shadow:none">
+                            <th rowspan="2">
+                                <span>
+                                    STT
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Tên khoa
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Số điện thoại
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Email
+                                </span>
+                            </th>
+                            <th colspan="2" class="text-center">Khoa</th>
+                            <th rowspan="2">
+                                <span>
+                                    Tác vụ
+                                </span>
+                            </th>
+                        </tr>
+                        <tr style="box-shadow:none">
+                            <th>Đã đánh giá</th>
+                            <th>Chờ xác nhận</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <strong>1</strong>
+                            </td>
+                            <td>Công nghệ thông tin</td>
+                            <td>09318894341</td>
+                            <td>congnghethongtin@gmail.com</td>
+                            <td class="text-center">26</td>
+                            <td class="text-center">40</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>2</strong>
+                            </td>
+                            <td>Luật</td>
+                            <td>09318894341</td>
+                            <td>luat@gmail.com</td>
+                            <td class="text-center">14</td>
+                            <td class="text-center">30</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>2</strong>
+                            </td>
+                            <td>Quản Trị Kinh Doanh</td>
+                            <td>0987564894</td>
+                            <td>qtkd@gmail.com</td>
+                            <td class="text-center">19</td>
+                            <td class="text-center">20</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>2</strong>
+                            </td>
+                            <td>Tài Chính Thương Mại</td>
+                            <td>09986788689</td>
+                            <td>tctm@gmail.com</td>
+                            <td class="text-center">10</td>
+                            <td class="text-center">30</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>2</strong>
+                            </td>
+                            <td>Hệ Thống Thông Tin Quản Lý</td>
+                            <td>09318894341</td>
+                            <td>htttql@gmail.com</td>
+                            <td class="text-center">20</td>
+                            <td class="text-center">30</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>2</strong>
+                            </td>
+                            <td>Viện Khoa Học Ứng Dụng</td>
+                            <td>0986787899</td>
+                            <td>khud@gmail.com</td>
+                            <td class="text-center">25</td>
+                            <td class="text-center">30</td>
+                            <td class="text-center">
+                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->

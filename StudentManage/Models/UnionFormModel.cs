@@ -13,6 +13,6 @@ namespace StudentManage.Models
         public int? Turn { get; set; }
         public int IsInTime {  get; set; }
         public int formId {  get; set; }
-        
+        public int semesterId { get; set; }
     }
 }

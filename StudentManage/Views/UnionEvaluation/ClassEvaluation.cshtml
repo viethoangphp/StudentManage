@@ -1,4 +1,4 @@
-﻿@model List<StudentManage.Models.PersonalFormModel>
+﻿@model int
 @{
     ViewBag.Title = "ClassEvaluation";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
@@ -22,48 +22,41 @@
     <!-- /Page Header -->
     <!-- Search Filter -->
     <div class="row filter-row">
-        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-4 col-12">
-            <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option>Đánh giá rèn luyện học kỳ 2 năm 2020 - 2021</option>
-                    <option>Đánh giá rèn luyện học kỳ 1 năm 2020 - 2021</option>
-                    <option>Đánh giá rèn luyện học kỳ 2 năm 2019 - 2020</option>
-                    <option>Đánh giá rèn luyện học kỳ 2 năm 2019 - 2020</option>
-                </select>
-                <label class="focus-label">Học kỳ</label>
-            </div>
-        </div>
+        <!--Render list semesters-->
+        @Html.Action("ListSemester", "UnionEvaluation")
+        <!--Form Status-->
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option>Đã đánh giá</option>
-                    <option>Chưa đánh giá</option>
+                <select class="select floating" id="select-status">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1">Đã đánh giá</option>
+                    <option value="0">Chưa đánh giá</option>
                 </select>
                 <label class="focus-label">Đã/ chưa đánh giá</label>
             </div>
         </div>
+        <!--Form Condition-->
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option> Đợi chấm </option>
-                    <option> Chờ lớp </option>
-                    <option> Chờ duyệt </option>
-                    <option> Hoàn thành </option>
+                <select class="select floating" id="select-situation">
+                    <option value=""> -- Tất cả -- </option>
+                    <option value="Đợi chấm"> Đợi chấm </option>
+                    <option value="Chờ lớp"> Chờ lớp </option>
+                    <option value="Chờ duyệt"> Chờ duyệt </option>
+                    <option value="Hoàn thành"> Hoàn thành </option>
                 </select>
                 <label class="focus-label">Tình trạng</label>
             </div>
         </div>
+        <!--Search by ID or Name-->
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus">
-                <input type="text" class="form-control floating">
-                <label class="focus-label">MSSV/ Tên đoàn viên</label>
+                <input type="text" class="form-control floating" id="search-string">
+                <label class="focus-label">MSSV/Tên đoàn viên</label>
             </div>
         </div>
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+            <a href="#" class="btn btn-secondary btn-block" id="btn-search"> Tìm kiếm </a>
         </div>
     </div>
     <!-- /Search Filter -->
@@ -71,7 +64,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                <table id="myTable" class="table table-bordered table-striped custom-table mb-0 datatable text-center"
                        style="width:100%; font-size: 13px;">
                     <thead>
                         <tr style="box-shadow:none">
@@ -124,185 +117,7 @@
                             <th>Trường</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @{ int rowNo = 0; }
-                        @foreach (var form in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <strong>@(rowNo += 1)</strong>
-                                </td>
-                                <td>@form.StudentCode</td>
-                                <td class="text-left">
-                                    @form.FullName
-                                </td>
-                                <td>@((form.BirthDate == null) ?  Html.Raw("Chưa cập nhật") : Html.Raw((form.BirthDate).Value.ToString("dd/MM/yyyy")))</td>
-                                <td>@((form.Score1 == null) ?  Html.Raw("-") : Html.Raw(form.Score1))</td>
-                                <td>@((form.Score2 == null) ?  Html.Raw("-") : Html.Raw(form.Score2))</td>
-                                <td>@((form.Score3 == null) ?  Html.Raw("-") : Html.Raw(form.Score3))</td>
-                                <td>@((form.Score4 == null) ?  Html.Raw("-") : Html.Raw(form.Score4))</td>
-                                <td>@((form.Ranking == null) ?  Html.Raw("-") : Html.Raw(form.Ranking))</td>
-                                <td>
-                                    @if (@form.Situation.CompareTo("Hoàn Thành") != 0)
-                                    {
-                                        <span class="badge bg-inverse-warning text-sm">
-                                            @form.Situation
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-inverse-success text-sm">
-                                            Hoàn thành
-                                        </span>
-                                    }
-                                </td>
-                                <td>
-                                    <a href="~/UnionEvaluation/FormDetail/@form.formId">
-                                        <i class="fa fa-eye fa-lg"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    @if (form.Note == null)
-                                    {
-                                        <a href="#" data-toggle="modal" data-target="#addnote_modal_@form.formId"
-                                           title="Thêm ghi chú">
-                                            <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                        </a>
-                                        <!-- Add note Modal -->
-                                        <div id="addnote_modal_@form.formId" class="modal custom-modal fade" data-backdrop="static" role="dialog">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Thêm ghi chú</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form>
-                                                            <div class="row">
-                                                                <div class="col-sm-12">
-                                                                    <div class="form-group">
-                                                                        <label>Nội dung ghi chú<span class="text-danger">*</span></label>
-                                                                        <textarea class="form-control" rows="10"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="submit-section">
-                                                                <button class="btn btn-primary submit-btn">Thêm</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- /Add note Modal -->
-                                    }
-                                    else
-                                    {
-                                        <a href="#" data-toggle="modal" data-target="#viewnote_modal_@form.formId"
-                                           title="Xem/Sửa ghi chú">
-                                            <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                        </a>
-                                        <!-- View note Modal -->
-                                        <div id="viewnote_modal_@form.formId" class="modal custom-modal fade" data-backdrop="static" role="dialog">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Xem/Sửa ghi chú</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form>
-                                                            <div class="row">
 
-                                                                <div class="col-sm-12">
-                                                                    <div class="form-group">
-                                                                        <label>Nội dung ghi chú <span class="text-danger">*</span></label>
-                                                                        <textarea class="form-control" rows="10">@form.Note</textarea>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="submit-section m-t-10 d-flex justify-content-around">
-                                                                <button class="btn btn-outline-danger submit-btn">Xóa ghi chú</button>
-                                                                <button class="btn btn-primary submit-btn">Lưu</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- /View note Modal -->
-                                    }
-
-                                </td>
-                            </tr>
-                        }
-
-
-                        @*<tr>
-                                <td>
-                                    <strong>3</strong>
-                                </td>
-                                <td>1811062895</td>
-                                <td class="text-left">
-                                    Nguyễn Thanh Tú
-                                </td>
-                                <td>16/12/2000</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>Xuất sắc</td>
-                                <td>
-                                    <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal"
-                                       data-target="#edit-jugedment_modal">
-                                        <i class="fa fa-eye fa-lg"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                       title="Tạo ghi chú">
-                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>4</strong>
-                                </td>
-                                <td>1811062895</td>
-                                <td class="text-left">
-                                    Nguyễn Quang Minh
-                                </td>
-                                <td>16/12/2000</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>67</td>
-                                <td>Xuất sắc</td>
-                                <td>
-                                    <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal"
-                                       data-target="#edit-jugedment_modal">
-                                        <i class="fa fa-eye fa-lg"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#addnote_modal"
-                                       title="Tạo ghi chú">
-                                        <i class="las la-comment-medical text-xl text-secondary juged-icon"></i>
-                                    </a>
-                                </td>
-                            </tr>*@
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -310,7 +125,7 @@
 </div>
 <!-- /Page Content -->
 <!-- Add note Modal -->
-<div id="addnote_modal" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+@*<div id="addnote_modal" class="modal custom-modal fade" data-backdrop="static" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -336,10 +151,10 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- /Add note Modal -->
 <!-- View note Modal -->
-<div id="viewnote_modal" class="modal custom-modal fade" data-backdrop="static" role="dialog">
+@*<div id="viewnote_modal" class="modal custom-modal fade" data-backdrop="static" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -367,5 +182,171 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- /View note Modal -->
+@section js{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable({
+                searching: false,
+                ordering: false,
+                responsive: true,
+                processing: true,
+                columns: [
+                    { "defaultContent": "-", "class": "text-center" },
+                    { "data": "StudentCode", "class": "text-center" },
+                    { "data": "FullName"},
+                    { "data": "BirthDate"},
+                    {
+                        "data": "Score1",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "-"
+                            }
+                            else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data": "Score2",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "-"
+                            }
+                            else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data": "Score3",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "-"
+                            }
+                            else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data": "Score4",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "-"
+                            }
+                            else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data": "Ranking",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "-"
+                            }
+                            else
+                            {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data": "Situation", "class": "text-center",
+                        "render": function (data) {
+                            if (data == "Hoàn Thành") {
+                                return "<span class='badge bg-inverse-success text-sm'>" + data + "</span>"
+                            }
+                            else {
+                                return "<span class='badge bg-inverse-warning text-sm'>" + data + "</span>"
+                            }
+                        }
+                    },
+                    {
+                        "data": "formId",
+                        "render": function (data) {
+                            return "<a href='/UnionEvaluation/FormDetail/" + data + "'><i class='fa fa-eye fa-lg'></i></a>";
+                        }
+                    },
+                    {
+                        "data": "Note",
+                        "render": function (data, type, row) {
+                            if (data == null) {
+                                return '<a href="#" data-toggle="modal" data-target="#addnote_modal_' + row['formId'] + '" title="Thêm ghi chú"> <i class="las la-comment-medical text-xl text-secondary juged-icon"></i> </a> <div id="addnote_modal_' + row['formId'] + '" class="modal custom-modal fade" data-backdrop="static" role="dialog"> <div class="modal-dialog modal-dialog-centered" role="document"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title">Thêm ghi chú</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div><div class="modal-body"> <form class="form-note" data-id="' + row['formId'] +'"> <div class="row"> <div class="col-sm-12"> <div class="form-group"> <label>Nội dung ghi chú<span class="text-danger">*</span></label> <textarea id="form-textarea' + row['formId']+'" class="form-control" rows="10"></textarea> </div></div></div><div class="submit-section"> <button type="submit" class="btn btn-primary submit-btn">Thêm</button> </div></form> </div></div></div></div>'
+                            }
+                            else {
+                                return '<a href="#" data-toggle="modal" data-target="#viewnote_modal_' + row['formId'] + '" title="Xem/Sửa ghi chú"> <i class="las la-comment text-xl text-success juged-icon"></i> </a> <div id="viewnote_modal_' + row['formId'] + '" class="modal custom-modal fade" data-backdrop="static" role="dialog"> <div class="modal-dialog modal-dialog-centered" role="document"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title">Xem/Sửa ghi chú</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div><div class="modal-body"> <form class="form-note" data-id="' + row['formId'] + '"> <div class="row"> <div class="col-sm-12"> <div class="form-group"> <label>Nội dung ghi chú <span class="text-danger">*</span></label> <textarea id="form-textarea' + row['formId'] + '" class="form-control" rows="10">' + data + '</textarea> </div></div></div><div class="submit-section m-t-10 d-flex justify-content-around"> <button id="btn-delete-modal" class="btn btn-outline-danger submit-btn">Xóa ghi chú</button> <button type="submit" class="btn btn-primary submit-btn">Lưu</button> </div></form> </div></div></div></div>';
+                            }
+                        }
+                    },
+                ],
+                ajax: {
+                    url: "/UnionEvaluation/GetClassEvaluation/?classId="+@Model
+                }
+            })
+            $('#btn-search').on("click", function () {
+                var semesterId = $('#select-semesterId').val();
+                var status = $('#select-status').val();
+                var situation = $('#select-situation').val();
+                var searchString = $('#search-string').val();
+                console.log("classId-" +@Model+", semesterId-" + semesterId + ", status-" + status + ", situation-" + situation + ", searchText-" + searchString)
+                table.ajax.url("/UnionEvaluation/SearchClassEvaluation?classId=" +@Model+"&semesterId=" + semesterId + "&Status=" + status + "&situation=" + situation + "&searchText=" + searchString).load();  
+            })
+
+
+            $(document).on('submit','.form-note', function (e) {
+                var formId = $(this).data('id');
+                var updateNote = $('#form-textarea' + formId).val();
+                UpdateNote(formId, updateNote).then(function (data) {
+                    if (data)
+                    {
+                        toastr.success("Cập nhật ghi chú thành công!", "Thành công");
+                        sound("/Assets/mp3/smallbox.mp3");
+                        table.ajax.reload();
+                        $('.close').click();
+                    }
+                    else
+                    {
+                        toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Thất bại");
+                        sound("/Assets/mp3/error.mp3");
+                    }
+                })
+                return false;
+            })
+            $(document).on('click', '#btn-delete-modal', function (e) {
+                var formId = $('#btn-delete-modal').closest('form').data('id');
+                UpdateNote(formId, null).then(function (data) {
+                    if (data) {
+                        toastr.success("Xóa ghi chú thành công!", "Thành công");
+                        sound("/Assets/mp3/smallbox.mp3");
+                        table.ajax.reload();
+                        $('.close').click();
+                    }
+                    else {
+                        toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Thất bại");
+                        sound("/Assets/mp3/error.mp3");
+                    }
+                })
+                return false;
+            });
+
+            var UpdateNote = function (formId, updateNote) {
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: "/UnionEvaluation/AddOrUpdateEvaluationFormNote/",
+                        method: "post",
+                        data: { formId: formId, updateNote: updateNote },
+                        dataType: "json",
+                        success: function (data) {
+                            resolve(data)
+                        }
+                    })
+                })
+            }
+        })
+    </script>
+}

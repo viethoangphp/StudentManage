@@ -90,7 +90,7 @@ namespace StudentManage.BUS
                     createAt = item.Create_At,
                     createBy = item.Create_by,
                     total = item.Total,
-                    semesterId = item.SemesterID, 
+                    semesterId = item.SemesterID,
                     note = item.Note
                 };
                 listModel.Add(model);
@@ -160,6 +160,30 @@ namespace StudentManage.BUS
             }
             return listModel;
         }
+        // Lấy tất cả học kỳ 
+        public List<SemesterModel> GetAllSemesters()
+        {
+            var result = dao.GetAllSemesters();
+            List<SemesterModel> list = new List<SemesterModel>();
+            if(result != null)
+            {
+                foreach (var semester in result)
+                {
+                    var model = new SemesterModel();
+                    model.semesterId = semester.SemesterID;
+                    model.name = semester.Name;
+                    model.year = semester.Year;
+                    model.dayStart = semester.Day_Start;
+                    model.dayEnd = semester.Day_End;
+                    model.status = semester.Status;
+                    model.displayName = "Đánh giá rèn luyện học kỳ " + semester.Name + " năm học " + semester.Year;
+                    list.Add(model);
+                    
+                }
+                return list;
+            }
+            return null;
+        }
 
         // Lấy tất cả các học kì từ HK đầu tiên đến NAY của User đang xét
         public List<SemesterModel> GetSemesterById(int userId)
@@ -216,7 +240,7 @@ namespace StudentManage.BUS
         }
 
         // Lấy chi tiết HK hiện tại của User
-        public SemesterModel GetPresentSemesterByUserId(int userid)
+        public SemesterModel GetPresentSemesterDetailByUserId(int userid)
         {
             var result = dao.GetPresentSemester();
             var hasForm = result.EvalutionForms.Where(x => x.Create_by == userid).FirstOrDefault();
@@ -297,14 +321,15 @@ namespace StudentManage.BUS
             int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
             //
             int positionTurn;
-            int turn = GetTurnNow(GetPresentSemesterByUserId(userid).semesterId, userid);
+            EvalutionFormModel evaluationForm = GetEvaluationFormById(evaluationFormId);
+            int turn = GetTurnNow(GetPresentSemesterDetailByUserId(userid).semesterId, (int)evaluationForm.createBy);
 
             if (position == dv) positionTurn = 1;
             else
             {
                 if (position == btcd)
                 {
-                    if (IsInTimeEvaluationByGroupId(2) == 0 || turn == 0)
+                    if (IsInTimeEvaluationByGroupId(2) == 0)
                     {
                         positionTurn = 1;
                     }
@@ -317,13 +342,13 @@ namespace StudentManage.BUS
                 {
                     if (position == btdk)
                     {
-                        if (IsInTimeEvaluationByGroupId(2) == 0 || turn == 0)
+                        if (IsInTimeEvaluationByGroupId(2) == 0)
                         {
                             positionTurn = 1;
                         }
                         else
                         {
-                            if (IsInTimeEvaluationByGroupId(3) == 0 )
+                            if (IsInTimeEvaluationByGroupId(3) == 0)
                             {
                                 positionTurn = 2;
                             }
@@ -336,7 +361,9 @@ namespace StudentManage.BUS
                     else positionTurn = 4;
                 }
             }
-            var preSemes = GetPresentSemesterByUserId(userid);
+            var preSemes = GetPresentSemesterDetailByUserId(userid);
+
+            // Insert Detail Evaluation
             foreach (EvaluationModel item in listDetail)
             {
                 DetailEvalution model = new DetailEvalution()
@@ -396,25 +423,27 @@ namespace StudentManage.BUS
             */
         public int IsInTime()
         {
-            if(IsInTimeEvaluationByGroupId(2) == 0)
+            if (IsInTimeEvaluationByGroupId(2) == 0)
             {
                 return 1;
             }
-            else if(IsInTimeEvaluationByGroupId(3) == 0)
+            else if (IsInTimeEvaluationByGroupId(3) == 0)
             {
                 return 2;
             }
             else if (IsInTimeEvaluationByGroupId(4) == 0)
             {
                 return 3;
-            }else if (IsInTimeEvaluationByGroupId(5) == 0)
+            }
+            else if (IsInTimeEvaluationByGroupId(5) == 0)
             {
                 return 4;
-            }else
+            }
+            else
             {
                 return 0;
-            }    
-        }    
+            }
+        }
 
         // Tính điểm Form 1 Học kỳ của User
         public SemesterModel CalcSingleSemesterScore(int userId, int semesterId)
@@ -477,7 +506,7 @@ namespace StudentManage.BUS
                 }
                 // Trường hợp không có Detail => Có Phiếu nhưng chưa chấm => trả về null
                 return null;
-                
+
             }
             return null;
         }
@@ -486,7 +515,7 @@ namespace StudentManage.BUS
         {
             var detailforms = GetDetailFormsById(userId);
             var listEvaluationForms = dao.GetAllEvaluationFormsByUserId(userId);
-            
+
 
             // Trường hợp đã có Form đã chấm
             var listSemesters = GetSemesterById(userId);
@@ -547,7 +576,7 @@ namespace StudentManage.BUS
             }
             else
             {
-                if(listEvaluationForms.Count != 0)
+                if (listEvaluationForms.Count != 0)
                 {
                     var presentForm = listEvaluationForms.OrderByDescending(x => x.Create_At).FirstOrDefault();
                     // Trường hợp Tạo Form nhưng chưa chấm
@@ -560,7 +589,7 @@ namespace StudentManage.BUS
                         listSemesters.Add(nowSemester);
                         return listSemesters;
                     }
-                }    
+                }
             }
             return null;
         }
@@ -576,60 +605,97 @@ namespace StudentManage.BUS
             // Lấy tất cả các Form của SV 1 lớp, ở 1 Học kỳ
             foreach (var person in listClass)
             {
+                // Lấy Evaluation Form trong học kỳ của từng người
                 EvalutionFormModel model = GetPassedEvalutionFormsById(person.userID).Where(x => x.semesterId == semesterId && x.createBy == person.userID).FirstOrDefault();
-                if (model != null)
+                if (model != null) // Nếu có Form thì Add
                 {
+                    var detailSemester = CalcSingleSemesterScore((int)model.createBy, semesterId);
+                    if(detailSemester == null)
+                    {
+                        int totalCriteria = GetAllCriteriaByTemplateId(4).Count;// Phiếu chấm điểm đoàn viên (4)
+                        if(IsInTime()==1)
+                        {
+                            //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
+                            for (int i = 1; i <= totalCriteria; i++)
+                            {
+                                //EvaluationModel evaluationModel = new EvaluationModel();
+                                //evaluationModel.score = null;
+                                //evaluationModel.criteriaId = i;
+                                //listScore.Add(evaluationModel);
+                                DetailEvalution detailForm_Intime = new DetailEvalution()
+                                {
+                                    FormId = model.formId,
+                                    UserID = (int)model.createBy,
+                                    CriteriaID = i,
+                                    Level = 1,
+                                    //Score = null,
+                                    //Note = null,
+                                    //Image_proof = item.imageProof,
+                                };
+                                dao.InsertDetailEvaluation(detailForm_Intime);
+                            }
+                        }
+                    }
                     listForms.Add(model);
                 }
-                else
+                else // Không có thì tiến hành Thêm Evalution Form Nếu trong thời gian chấm 2 
                 {
-                    EvalutionFormModel form = new EvalutionFormModel()
+                    if (semesterId == GetPresentSemester().semesterId && IsInTime()==2)
                     {
-                        semesterId = semesterId,
-                        status = 1,
-                        createAt = DateTime.Now,
-                        createBy = person.userID,
-                    };
-                    // Insert Form
-                    form.formId = InsertEvaluationForm(form);
-                    listForms.Add(form);
+                        EvalutionFormModel form = new EvalutionFormModel()
+                        {
+                            semesterId = semesterId,
+                            status = 1,
+                            createAt = DateTime.Now,
+                            createBy = person.userID,
+                        };
+                        // Insert Form
+                        form.formId = InsertEvaluationForm(form);
+                        listForms.Add(form);
+                    }
                 }
             }
-            var test = listForms;
-
+            // Lấy Chi tiết điểm trong từng Evaluation Form
             foreach (var form in listForms)
             {
-                var person = new UserDAO().GetUserByID((int)form.createBy);
+                var person = new UserBUS().GetUserByID((int)form.createBy);
+                // Tính toán điểm của Form theo học kỳ đang xét
                 var detailSemester = CalcSingleSemesterScore((int)form.createBy, semesterId);
-                if (detailSemester == null)
+                if (detailSemester == null || detailSemester.score1 == null)
                 {
                     if (IsInTime() == 2)
                     {
-                        var listScore = new List<EvaluationModel>();
-
                         int totalCriteria = GetAllCriteriaByTemplateId(4).Count;// Phiếu chấm điểm đoàn viên (4)
 
                         //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
                         for (int i = 1; i <= totalCriteria; i++)
                         {
-                            EvaluationModel evaluationModel = new EvaluationModel();
-                            evaluationModel.score = 0;
-                            evaluationModel.criteriaId = i;
-                            listScore.Add(evaluationModel);
+                            //EvaluationModel evaluationModel = new EvaluationModel();
+                            //evaluationModel.score = 0;
+                            //evaluationModel.criteriaId = i;
+                            //listScore.Add(evaluationModel);
+                            DetailEvalution detailForm_Passed = new DetailEvalution()
+                            {
+                                FormId = form.formId,
+                                UserID = (int)form.createBy,
+                                CriteriaID = i,
+                                Level = 1,
+                                Score = 0,
+                                //Note = null,
+                                //Image_proof = item.imageProof,
+                            };
+                            dao.InsertDetailEvaluation(detailForm_Passed);
                         }
-                        // Insert Điểm mặc định
-                        InsertListDetailEvaluation(listScore, (int)form.createBy, form.formId);
                     }
                     // Ngược lại không làm gì
                 }
-
+                #region Xếp loại và trạng thái theo điểm
                 PersonalFormModel model = new PersonalFormModel();
-                model.StudentCode = person.StudentCode;
-                model.FullName = person.FullName;
-                model.BirthDate = person.Birthday;
+                model.StudentCode = person.studentCode;
+                model.FullName = person.fullname;
+                model.BirthDate = String.Format("{0:dd/MM/yyyy}", person.birthDay);
                 //Form id
                 model.formId = form.formId;
-                
 
                 if(detailSemester != null)
                 {
@@ -645,6 +711,9 @@ namespace StudentManage.BUS
                 {
                     model.Score1 = 0;
                 }
+
+               
+
                 // Xếp loại
                 if (model.Score4 > 90)
                 {
@@ -672,9 +741,23 @@ namespace StudentManage.BUS
                 else if (model.Score4 == null)
                     model.Situation = "Chờ Trường";
                 else model.Situation = "Hoàn Thành";
+
+                //Status Đã chấm/ Chưa chấm 
+                // 1: Đã chấm - BTCĐ
+                // 0: chưa chấm - BTCĐ
+                model.Status = (model.Score2 == null) ? 0 : 1;
+
+
                 list.Add(model);
+                #endregion
+
             }
             return list;
+        }
+        // Update Evaluation Form Note
+        public bool UpdateEvaluationFormNote(int formId, string updateNote)
+        {
+            return dao.UpdateEvaluationFormNote(formId, updateNote);
         }
     }
 

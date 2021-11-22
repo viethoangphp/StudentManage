@@ -53,7 +53,13 @@ namespace Models.DAO
         {
             return db.DetailEvalutions.Where(x => x.FormId == formId).OrderBy(x=>x.Level).ToList();
         }
-        // Get list semester till now - include present semester
+        // Get all passed semesters
+        public List<Semester> GetAllSemesters()
+        {
+            return db.Semesters.OrderByDescending(x=>x.Day_Start).ToList();
+        }
+
+        // Get list semesters till now - include present semester
         public List<Semester> GetSemesterById(int userId)
         {
             var result = db.DetailEvalutions.Where(x => x.UserID == userId).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
@@ -124,6 +130,25 @@ namespace Models.DAO
         public GroupUser GetGroupUserById(int groupId)
         {
             return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
+        }
+        // Update Evaluation Form Note
+        public bool UpdateEvaluationFormNote(int formId, string updateNote)
+        {
+            var evaluationForm = db.EvalutionForms.Where(x => x.FormId == formId).FirstOrDefault();
+            if (evaluationForm != null)
+            {
+                try
+                {
+                    evaluationForm.Note = updateNote;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace StudentManage.Controllers
                 if(isInTime == 1)
                 {
                     // Tạo Form khi chưa tạo
-                    var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
+                    var preSemes = modelBUS.GetPresentSemesterDetailByUserId(userSession.userID);
                     EvalutionFormModel form = new EvalutionFormModel()
                     {
                         semesterId = preSemes.semesterId,
@@ -66,22 +66,7 @@ namespace StudentManage.Controllers
                     formId = modelBUS.InsertEvaluationForm(form);
                     user = userSession;
                 }   
-                // Sau thời gian chấm cá nhân
-                //if(isInTime == 2)
-                //{
-                //    // Tạo Form khi chưa tạo
-                //    var preSemes = modelBUS.GetPresentSemesterByUserId(userSession.userID);
-                //    EvalutionFormModel form = new EvalutionFormModel()
-                //    {
-                //        semesterId = preSemes.semesterId,
-                //        status = 1,
-                //        createAt = DateTime.Now,
-                //        createBy = userSession.userID,
-                //    };
-                //    // Insert Form
-                //    formId = modelBUS.InsertEvaluationForm(form);
-                //    user = userSession;
-                //}    
+                //Ngược lại DO NOTHING
             }
             else
             {
@@ -105,7 +90,10 @@ namespace StudentManage.Controllers
                                     if (detail.critetiaId == critial.criteriaId && detail.level == 4)
                                     {
                                         critial.score4 = detail.score;
-                                        listTotal[3] += (int)detail.score;
+                                        if (detail.score != null)
+                                        {
+                                            listTotal[3] += (int)detail.score;
+                                        }
                                     }
                                     goto case 3;
                                 case 3:
@@ -119,14 +107,21 @@ namespace StudentManage.Controllers
                                     if (detail.critetiaId == critial.criteriaId && detail.level == 2)
                                     {
                                         critial.score2 = detail.score;
-                                        listTotal[1] += (int)detail.score;
+                                        if (detail.score != null)
+                                        {
+                                            listTotal[1] += (int)detail.score;
+                                        } 
                                     }
                                     goto case 1;
                                 case 1:
                                     if (detail.critetiaId == critial.criteriaId && detail.level == 1)
                                     {
                                         critial.score1 = detail.score;
-                                        listTotal[0] += (int)detail.score;
+                                        if(detail.score != null)
+                                        {
+                                            listTotal[0] += (int)detail.score;
+                                        }    
+                                        
                                     }
                                     break;
                             }
@@ -138,22 +133,25 @@ namespace StudentManage.Controllers
 
             #region Render hiển thị Input và Button chấm
             // Render Input và Button chấm
-            if ((turn == 0 || turn == 1) && isInTime == 1)
-            {
-                model.IsInTime = 1;  
-            }
-            if((turn == 0 || turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
-            {
-                model.IsInTime = 2;
-            }
-            if ((turn == 2 || turn == 3) && isInTime == 3 && userSession.groupID == 4)
-            {
-                model.IsInTime = 3;
-            }
-            if ((turn == 3 || turn == 4) && isInTime == 4 && userSession.groupID == 5)
-            {
-                model.IsInTime = 4;
-            }
+            //if(model.formId == modelBUS.GetPresentSemester().semesterId)// Xét học kỳ hiện tại/ không xét những học kỳ cũ
+            //{
+                if ((turn == 0 || turn == 1) && isInTime == 1)
+                {
+                    model.IsInTime = 1;
+                }
+                if ((turn == 0 || turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
+                {
+                    model.IsInTime = 2;
+                }
+                if ((turn == 2 || turn == 3) && isInTime == 3 && userSession.groupID == 4)
+                {
+                    model.IsInTime = 3;
+                }
+                if ((turn == 3 || turn == 4) && isInTime == 4 && userSession.groupID == 5)
+                {
+                    model.IsInTime = 4;
+                }
+            //}
             #endregion
 
             //=====================================================================
@@ -180,7 +178,7 @@ namespace StudentManage.Controllers
             var listError = new List<EvaluationModel>();
             for (int i = 0, length = listCriteria.Count; i < length; i++)
             {
-                int evaScore = listmodel[i].score;
+                int? evaScore = listmodel[i].score;
                 if(evaScore < 0 || evaScore>listCriteria[1].score)
                 {
                     ModelState.AddModelError("listmodel[" + i + "].score", "");
@@ -195,8 +193,11 @@ namespace StudentManage.Controllers
             #endregion
 
             #region Insert điểm và trả thông báo + trả về list Error
+            // Lấy thông tin Detail Evaluation - Chi tiết phiếu
             var detailForm = modelBUS.GetDetailEvalutionsByFormId(evaluationFormId);
-            if(ModelState.IsValid)
+            // Lấy Evaluation Form - Phiếu
+            var evaluationForm = modelBUS.GetEvaluationFormById(evaluationFormId);
+            if (ModelState.IsValid)
             {
                 // TH Tạo Form nhưng chưa chấm - Chấm điểm
                 if (detailForm.Count == 0)
@@ -204,7 +205,6 @@ namespace StudentManage.Controllers
                     // Insert Detail
                     modelBUS.InsertListDetailEvaluation(listmodel, user.userID, evaluationFormId);
                     TempData["MESSAGE"] = "Chấm điểm thành công!";
-                    return RedirectToAction("Union");
                 }
                 // TH Tạo Form và đã chấm - Cập nhật điểm
                 else
@@ -213,15 +213,24 @@ namespace StudentManage.Controllers
                     modelBUS.InsertListDetailEvaluation(listmodel, user.userID, evaluationFormId);
                     TempData["MESSAGE"] = "Cập nhật điểm thành công!";
                 }
-                return RedirectToAction("Union");
+                if(evaluationForm.createBy == user.userID)
+                {
+                    return RedirectToAction("Union");
+                }    
             }
-            TempData["ERROR"] = "Điểm không hợp lệ!";
-            TempData["listError"] = listError;// ListError từ Validation
+            if(listError.Count != 0)
+            {
+                TempData["ERROR"] = "Điểm không hợp lệ!";
+                TempData["listError"] = listError;// ListError từ Validation
+            }
             #endregion
 
             //===========================================================================
-            return RedirectToAction("EvaluationForm", new { formId = evaluationFormId});
+            TempData["MESSAGE"] = "Chấm điểm thành công!";
+            return RedirectToAction("EvaluationForm", new { formId = evaluationFormId });
         }
+
+        #region View Đoàn Viên
         // View đoàn viên
         public ActionResult Union()
         {
@@ -242,19 +251,107 @@ namespace StudentManage.Controllers
             ViewBag.semesters = listSemesters;
             return View();
         }
+        #endregion
+
+        #region View BT Chi đoàn
         // View bí thư chi đoàn 
-        public ActionResult ClassEvaluation()
+        public ActionResult ClassEvaluation(int classId)
         {
-            var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
-            var nowSemester = modelBUS.GetPresentSemester();
-            var test = modelBUS.GetClassFormByClassIdAndSemesterId(user.classID, nowSemester.semesterId);
+            return View(classId);
+        }
+        // Danh sách phiếu trong lớp - JSON
+        public JsonResult GetClassEvaluation(int classId)
+        {
+            var result = modelBUS.GetClassFormByClassIdAndSemesterId(classId, modelBUS.GetPresentSemester().semesterId);
+            return Json(new {data = result}, JsonRequestBehavior.AllowGet);
+        }
+        // Search và Filter Danh sách phiếu trong lớp
+        public JsonResult SearchClassEvaluation(int classId = 0, int semesterId = 0, int status = -1, string situation = "", string searchText = "")
+        {
+            // Thông tin user Session
+            var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            if (classId == 0)
+            {
+                classId = userSession.classID;
+            }
+            if (semesterId == 0)
+            {
+                semesterId = modelBUS.GetPresentSemester().semesterId;
+            }
             
-            //===========================================================================
-            return View(test);
-        }    
+            var result = modelBUS.GetClassFormByClassIdAndSemesterId(classId, semesterId).Where(x=> status == -1||x.Status == status);
+            result = result.Where(x => String.Compare(x.Situation, situation) == 0 || String.IsNullOrEmpty(situation));
+            result = result.Where(x => String.IsNullOrEmpty(searchText) || x.FullName.ToLower().Contains(searchText.ToLower()) || x.StudentCode.Contains(searchText));
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+        // Partial ListSemester
+        public ActionResult ListSemester()
+        {
+            var model = modelBUS.GetAllSemesters().ToList();
+            return PartialView(model);
+        }
+        
+
+        // Thêm hay cập nhật Note cho phiếu chấm
+        [HttpPost]
+        public JsonResult AddOrUpdateEvaluationFormNote(int formId, string updateNote)
+        {
+            string text = String.IsNullOrEmpty(updateNote) ? null : updateNote;
+            bool result = modelBUS.UpdateEvaluationFormNote(formId, text);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region View BT đoàn khoa
         // View Bí thư đoàn khoa
+        public ActionResult FacultyEvaluation(int facultyId)
+        {
+            var faculty = new FacultyBUS().GetFacultyByID(facultyId);
+            return View(faculty);
+        }
+        public JsonResult GetFacultyEvaluation(int facultyId)
+        {
+            var faculBUS = new FacultyBUS();
+            var listClasses = faculBUS.GetListClassByFaculty(facultyId);
+            
+            List<FacultyEvaluationModel> listFacultyEvaluation = new List<FacultyEvaluationModel>();
+            // Học kỳ hiện tại
+            var presentSemes = modelBUS.GetPresentSemester();
+
+            foreach (var classItem in listClasses)
+            {
+                var model = new FacultyEvaluationModel();
+                model.ClassName = classItem.className;
+                model.Total = classItem.totalStudent;
+                var listPresonalForms = modelBUS.GetClassFormByClassIdAndSemesterId(classItem.classID, presentSemes.semesterId);
+                foreach(var form in listPresonalForms)
+                {
+                    if(form.Score2!=null)
+                    {
+                        model.ClassDone++;
+                    }
+                    if(form.Score3!=null)
+                    {
+                        model.FacultyDone++;
+                    }    
+                }
+                model.ClassNotDone = model.Total - model.ClassDone;
+                model.FacultyNotDone = model.Total - model.FacultyDone;
+                model.ClassId = classItem.classID;
+                listFacultyEvaluation.Add(model);
+            }
+            return Json(listFacultyEvaluation, JsonRequestBehavior.AllowGet);
+
+        }
+        #endregion
+
+        #region View BT Đoàn trường
+        public ActionResult SchoolEvaluation()
+        {
+            return View();
+        }
         // View Bí thư đoàn trường
-        
-        
+        #endregion
+
     }
 }

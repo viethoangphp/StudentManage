@@ -1,0 +1,180 @@
+﻿@model StudentManage.Models.FacultyModel 
+@{
+    ViewBag.Title = "FacultyEvaluation";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Danh sách lớp</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
+                    <li class="breadcrumb-item active">Danh sách lớp (khoa)</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="text-right">
+                    <span class="badge bg-inverse-success text-xl">@Model.facultyName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    <div class="row filter-row">
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option> </option>
+                    <option> Đã đánh giá</option>
+                    <option> Chưa đánh giá </option>
+                </select>
+                <label class="focus-label">Tình trạng lớp</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option> </option>
+                    <option> Đã đánh giá</option>
+                    <option> Chưa đánh giá </option>
+                </select>
+                <label class="focus-label">Tình trạng khoa</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option> -- Tất cả -- </option>
+                    <option> 18DTHD1 </option>
+                    <option> 16DTHD1 </option>
+                    <option> 17DTHD1 </option>
+                    <option> 19DTHD2 </option>
+                    <option> 20DTHD1 </option>
+                </select>
+                <label class="focus-label">Lớp</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                       style="width:100%; font-size: 13px;">
+                    <thead>
+                        <tr style="box-shadow:none">
+                            <th rowspan="2">
+                                <span>
+                                    STT
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Tên lớp
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Sỉ số
+                                </span>
+                            </th>
+
+                            <th colspan="2">Lớp</th>
+                            <th colspan="2">Khoa</th>
+                            <th rowspan="2">
+                                <span>
+                                    Tác vụ
+                                </span>
+                            </th>
+                        </tr>
+                        <tr style="box-shadow:none">
+                            <th>Đã đánh giá</th>
+                            <th>Chưa đánh giá</th>
+                            <th>Đã đánh giá</th>
+                            <th>Chờ xác nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>1</strong>
+                            </td>
+                            <td>18DTHD1</td>
+                            <td>37</td>
+                            <td>37</td>
+                            <td>0</td>
+                            <td>30</td>
+                            <td>7</td>
+                            <td class="text-center">
+                                <a href="jugedment-class-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>2</strong>
+                            </td>
+                            <td>19DTHD1</td>
+                            <td>35</td>
+                            <td>35</td>
+                            <td>0</td>
+                            <td>32</td>
+                            <td>2</td>
+                            <td class="text-center">
+                                <a href="jugedment-class-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>3</strong>
+                            </td>
+                            <td>19DTHC6</td>
+                            <td>29</td>
+                            <td>29</td>
+                            <td>0</td>
+                            <td>29</td>
+                            <td>0</td>
+                            <td class="text-center">
+                                <a href="jugedment-class-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>4</strong>
+                            </td>
+                            <td>19DTHD2</td>
+                            <td>36</td>
+                            <td>36</td>
+                            <td>0</td>
+                            <td>35</td>
+                            <td>1</td>
+                            <td class="text-center">
+                                <a href="jugedment-class-list.html" title="Chấm điểm">
+                                    <i class="las la-pen text-xl text-success juged-icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->

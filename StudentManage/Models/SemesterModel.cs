@@ -19,6 +19,8 @@ namespace StudentManage.Models
 
         public int? status { set; get; }
 
+        public string displayName { get; set; }
+
         // Added Fields
         public int? FormId { set; get; }
         public int? score1 { set; get; }

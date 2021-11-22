@@ -8,7 +8,7 @@ namespace StudentManage.Models
     public class EvaluationModel
     {
         public int criteriaId { get; set; }
-        public int score {  get; set; }
+        public int? score {  get; set; }
         public string imageProof {  get; set; }
 
         public string note {  get; set; }

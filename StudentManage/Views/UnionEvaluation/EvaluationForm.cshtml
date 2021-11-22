@@ -132,6 +132,14 @@
                                                     <td>
                                                         @criteria.criteriaContent
                                                         <b>(0–@criteria.score điểm).</b>
+                                                        @if (criteria.criteriaRequirement == "1")
+                                                        {
+                                                            <br />
+                                                            <a data-target="#evident_modal_1"
+                                                               data-toggle="modal"
+                                                               class="badge bg-inverse-primary"
+                                                               style="cursor: pointer">Thêm minh chứng</a>
+                                                        }
                                                     </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
@@ -197,7 +205,7 @@
                                                         }
                                                         else
                                                         {
-                                                            @((criteria.score2 == null) ? Html.Raw("-") : Html.Raw(criteria.score4));
+                                                            @((criteria.score4 == null) ? Html.Raw("-") : Html.Raw(criteria.score4));
                                                         }
                                                     </td>
                                                     <!-- #endregion -->
@@ -308,10 +316,76 @@
     </div>
 </div>
 <!-- Delete Union notebook Modal -->
+<!-- Add evident Modal -->
+<div id="evident_modal_1"
+     class="modal custom-modal fade"
+     data-backdrop="static"
+     role="dialog">
+    <div class="modal-dialog modal-dialog-centered"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Thêm ảnh minh chứng
+                </h5>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-pic_container">
+                    <div class="upload-pic_wrapper">
+                        <div class="upload-pic_image">
+                            <img src="" alt="" />
+                        </div>
+                        <div class="upload-pic_content">
+                            <div class="upload-pic_icon">
+                                <i class="fa fa-file-image-o"></i>
+                            </div>
+                            <div class="upload-pic_text">
+                                Chưa có ảnh
+                            </div>
+                        </div>
+                        <div id="upload-pic_cancel-btn">
+                            <i class="las la-times-circle"></i>
+                        </div>
+                        <div class="upload-pic_file-name"></div>
+                    </div>
+                    <button onclick="defaultBtnActive()"
+                            id="upload-pic_custom-btn"
+                            class="btn btn-outline-primary"
+                            type="button">
+                        Thêm ảnh
+                    </button>
+                    <input id="upload-pic_default-btn"
+                           type="file"
+                           hidden />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add evident Modal -->
 @section js
 {
     <!--Import Image-->
     <script src="~/Assets/js/input-img.js"></script>
+
+    <!--Toast Success Evaluation-->
+    @if (TempData["MESSAGE"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                toastr.success("@TempData["MESSAGE"]", "Thông báo");
+                sound("/Assets/mp3/smallbox.mp3");
+            })
+        </script>
+    }
+
+    <!--Error Evalution-->
     @if (TempData["ERROR"] != null)
     {
         var list = TempData["listError"] as List<StudentManage.Models.EvaluationModel>;
@@ -347,7 +421,7 @@
         function onInput(input) {
             input.style.border = "1px solid gray";
             input.setCustomValidity("");
-    }
+        }
     </script>
 }
 

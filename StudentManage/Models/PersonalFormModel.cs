@@ -11,7 +11,7 @@ namespace StudentManage.Models
         public string FullName {  get; set; }
 
         public int formId {  get; set; }
-        public DateTime? BirthDate { get; set; }
+        public string BirthDate { get; set; }
         // Điểm
         public int? Score1 { get; set; }
         public int? Score2 { get; set; }
@@ -23,6 +23,8 @@ namespace StudentManage.Models
         public string Situation {  get; set; }
         // Ghi chú
         public string Note {  get; set; }
+        // Status => đã chấm chưa chấm cho BTCĐ
+        public int Status { get; set; }
 
     }
 }
