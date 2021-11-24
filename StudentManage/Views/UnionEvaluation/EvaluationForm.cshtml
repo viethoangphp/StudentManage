@@ -396,12 +396,13 @@
                 @foreach(var item in list)
                 {
                     // Clear Error Input
-                    @: $('input[name="listmodel[@(item.criteriaId-1)].score"]').val("");
+                    @: $('input[name="listmodel[@item.Order].score"]').val("");
                     // Change Input Border Color - Red
-                    @: $('input[name="listmodel[@(item.criteriaId-1)].score"]')[0].style.border = "1px solid #eb4034";
+                    @: $('input[name="listmodel[@item.Order].score"]')[0].style.border = "1px solid #eb4034";
                 }
+                //Scroll to first Error Input
                 $("html, body").animate({
-                    scrollTop: $('input[name="listmodel[@(list[0].criteriaId-1)].score').offset().top - $(window).height()/2
+                    scrollTop: $('input[name="listmodel[@(list[0].Order)].score').offset().top - $(window).height()/2
                 },4000)
             })
         </script>

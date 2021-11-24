@@ -185,7 +185,8 @@ namespace StudentManage.Controllers
                     var model = new EvaluationModel()
                     {
                         criteriaId = listmodel[i].criteriaId,
-                        score = evaScore
+                        score = evaScore,
+                        Order = i
                     };
                     listError.Add(model);
                 }    
@@ -226,7 +227,6 @@ namespace StudentManage.Controllers
             #endregion
 
             //===========================================================================
-            TempData["MESSAGE"] = "Chấm điểm thành công!";
             return RedirectToAction("EvaluationForm", new { formId = evaluationFormId });
         }
 
@@ -280,7 +280,7 @@ namespace StudentManage.Controllers
             }
             
             var result = modelBUS.GetClassFormByClassIdAndSemesterId(classId, semesterId).Where(x=> status == -1||x.Status == status);
-            result = result.Where(x => String.Compare(x.Situation, situation) == 0 || String.IsNullOrEmpty(situation));
+            result = result.Where(x => String.Equals(x.Situation, situation) || String.IsNullOrEmpty(situation));
             result = result.Where(x => String.IsNullOrEmpty(searchText) || x.FullName.ToLower().Contains(searchText.ToLower()) || x.StudentCode.Contains(searchText));
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -311,37 +311,8 @@ namespace StudentManage.Controllers
         }
         public JsonResult GetFacultyEvaluation(int facultyId)
         {
-            var faculBUS = new FacultyBUS();
-            var listClasses = faculBUS.GetListClassByFaculty(facultyId);
-            
-            List<FacultyEvaluationModel> listFacultyEvaluation = new List<FacultyEvaluationModel>();
-            // Học kỳ hiện tại
-            var presentSemes = modelBUS.GetPresentSemester();
-
-            foreach (var classItem in listClasses)
-            {
-                var model = new FacultyEvaluationModel();
-                model.ClassName = classItem.className;
-                model.Total = classItem.totalStudent;
-                var listPresonalForms = modelBUS.GetClassFormByClassIdAndSemesterId(classItem.classID, presentSemes.semesterId);
-                foreach(var form in listPresonalForms)
-                {
-                    if(form.Score2!=null)
-                    {
-                        model.ClassDone++;
-                    }
-                    if(form.Score3!=null)
-                    {
-                        model.FacultyDone++;
-                    }    
-                }
-                model.ClassNotDone = model.Total - model.ClassDone;
-                model.FacultyNotDone = model.Total - model.FacultyDone;
-                model.ClassId = classItem.classID;
-                listFacultyEvaluation.Add(model);
-            }
-            return Json(listFacultyEvaluation, JsonRequestBehavior.AllowGet);
-
+            List<FacultyEvaluationModel> list = modelBUS.GetListClassByFaculty(facultyId);
+            return Json(new { data = list }, JsonRequestBehavior.AllowGet);
         }
         #endregion
 

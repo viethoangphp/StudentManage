@@ -601,6 +601,8 @@ namespace StudentManage.BUS
             //Lấy tất cả các thành viên trong lớp
             var listClass = new UserBUS().GetListUserByClass(classId);
             var listForms = new List<EvalutionFormModel>();
+            var listCriteria = GetAllCriteriaByTemplateId(4);
+
             List<PersonalFormModel> list = new List<PersonalFormModel>();
             // Lấy tất cả các Form của SV 1 lớp, ở 1 Học kỳ
             foreach (var person in listClass)
@@ -616,21 +618,15 @@ namespace StudentManage.BUS
                         if(IsInTime()==1)
                         {
                             //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
-                            for (int i = 1; i <= totalCriteria; i++)
+                            foreach (var criteria in listCriteria)
                             {
-                                //EvaluationModel evaluationModel = new EvaluationModel();
-                                //evaluationModel.score = null;
-                                //evaluationModel.criteriaId = i;
-                                //listScore.Add(evaluationModel);
+                                // Tạo detail Phiếu có điểm = 0
                                 DetailEvalution detailForm_Intime = new DetailEvalution()
                                 {
                                     FormId = model.formId,
                                     UserID = (int)model.createBy,
-                                    CriteriaID = i,
+                                    CriteriaID = criteria.criteriaId,
                                     Level = 1,
-                                    //Score = null,
-                                    //Note = null,
-                                    //Image_proof = item.imageProof,
                                 };
                                 dao.InsertDetailEvaluation(detailForm_Intime);
                             }
@@ -653,6 +649,7 @@ namespace StudentManage.BUS
                         form.formId = InsertEvaluationForm(form);
                         listForms.Add(form);
                     }
+                    PersonalFormModel model_addition = new PersonalFormModel();
                 }
             }
             // Lấy Chi tiết điểm trong từng Evaluation Form
@@ -668,21 +665,15 @@ namespace StudentManage.BUS
                         int totalCriteria = GetAllCriteriaByTemplateId(4).Count;// Phiếu chấm điểm đoàn viên (4)
 
                         //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
-                        for (int i = 1; i <= totalCriteria; i++)
+                        foreach (var criteria in listCriteria)
                         {
-                            //EvaluationModel evaluationModel = new EvaluationModel();
-                            //evaluationModel.score = 0;
-                            //evaluationModel.criteriaId = i;
-                            //listScore.Add(evaluationModel);
                             DetailEvalution detailForm_Passed = new DetailEvalution()
                             {
                                 FormId = form.formId,
                                 UserID = (int)form.createBy,
-                                CriteriaID = i,
+                                CriteriaID = criteria.criteriaId,
                                 Level = 1,
                                 Score = 0,
-                                //Note = null,
-                                //Image_proof = item.imageProof,
                             };
                             dao.InsertDetailEvaluation(detailForm_Passed);
                         }
@@ -697,7 +688,7 @@ namespace StudentManage.BUS
                 //Form id
                 model.formId = form.formId;
 
-                if(detailSemester != null)
+                if (detailSemester != null)
                 {
                     //Note
                     model.Note = detailSemester.Note;
@@ -711,9 +702,7 @@ namespace StudentManage.BUS
                 {
                     model.Score1 = 0;
                 }
-
-               
-
+            
                 // Xếp loại
                 if (model.Score4 > 90)
                 {
@@ -739,7 +728,7 @@ namespace StudentManage.BUS
                 else if (model.Score3 == null)
                     model.Situation = "Chờ Khoa";
                 else if (model.Score4 == null)
-                    model.Situation = "Chờ Trường";
+                    model.Situation = "Chờ Duyệt";
                 else model.Situation = "Hoàn Thành";
 
                 //Status Đã chấm/ Chưa chấm 
@@ -748,8 +737,36 @@ namespace StudentManage.BUS
                 model.Status = (model.Score2 == null) ? 0 : 1;
 
 
-                list.Add(model);
+
+
                 #endregion
+              
+                list.Add(model);
+                //// Testing Paging
+                //PersonalFormModel model2 = new PersonalFormModel();
+                //model2.StudentCode = "1811063044";
+                //model2.FullName = "Nguyễn Quang Minh";
+                //model2.BirthDate = "11/02/2000";
+                ////Form id
+                //model2.formId = 5;
+
+
+                ////Note
+                //model2.Note = "DM hello";
+                //// Điểm
+                //model2.Score1 = 20;
+                //model2.Score2 = 20;
+                //model2.Score3 = 30;
+                //model2.Score4 = 30;
+
+                //model2.Ranking = "Xuất Sắc";
+
+                //model.Status = 1;
+
+                //for (int i = 0; i < 20; i++)
+                //{
+                //    list.Add(model2);
+                //}
 
             }
             return list;
@@ -758,6 +775,44 @@ namespace StudentManage.BUS
         public bool UpdateEvaluationFormNote(int formId, string updateNote)
         {
             return dao.UpdateEvaluationFormNote(formId, updateNote);
+        }
+
+        public List<FacultyEvaluationModel> GetListClassByFaculty(int id)
+        {
+
+            List<FacultyEvaluationModel> list = new List<FacultyEvaluationModel>();
+            // Học kỳ hiện tại
+            var presentSemes = GetPresentSemester();
+            // Get List User
+            var listUser = new UserDAO().GetListUser();
+            var listClass = new FacultyBUS().GetListClassByFaculty(id);
+            var faculty = new FacultyBUS().GetFacultyByID(id);
+            foreach (var item in listClass)
+            {
+                FacultyEvaluationModel model = new FacultyEvaluationModel();
+                model.ClassName = item.className;
+                model.ClassId = item.classID;
+                model.Total = listUser.Where(x=>x.ClassID==item.classID).Count();
+                var listPresonalForms = GetClassFormByClassIdAndSemesterId(item.classID, presentSemes.semesterId);
+                int classDone = 0, facultyDone = 0;
+                foreach (var form in listPresonalForms)
+                {
+                    if (form.Score2 != null)
+                    {
+                        classDone++;
+                    }
+                    if (form.Score3 != null)
+                    {
+                        facultyDone++;
+                    }
+                };
+                model.ClassDone = classDone;
+                model.FacultyDone = facultyDone;
+                model.ClassNotDone = model.Total - classDone;
+                model.FacultyNotDone = model.Total - facultyDone;
+                list.Add(model);
+            }
+            return list;
         }
     }
 

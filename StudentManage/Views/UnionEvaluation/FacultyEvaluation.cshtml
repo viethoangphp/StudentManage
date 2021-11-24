@@ -1,4 +1,4 @@
-﻿@model StudentManage.Models.FacultyModel 
+﻿@model StudentManage.Models.FacultyModel
 @{
     ViewBag.Title = "FacultyEvaluation";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
@@ -71,7 +71,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                <table id="myTable" class="table table-bordered table-striped custom-table mb-0 datatable text-center"
                        style="width:100%; font-size: 13px;">
                     <thead>
                         <tr style="box-shadow:none">
@@ -107,70 +107,70 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <strong>1</strong>
-                            </td>
-                            <td>18DTHD1</td>
-                            <td>37</td>
-                            <td>37</td>
-                            <td>0</td>
-                            <td>30</td>
-                            <td>7</td>
-                            <td class="text-center">
-                                <a href="jugedment-class-list.html" title="Chấm điểm">
-                                    <i class="las la-pen text-xl text-success juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>2</strong>
-                            </td>
-                            <td>19DTHD1</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>0</td>
-                            <td>32</td>
-                            <td>2</td>
-                            <td class="text-center">
-                                <a href="jugedment-class-list.html" title="Chấm điểm">
-                                    <i class="las la-pen text-xl text-success juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>3</strong>
-                            </td>
-                            <td>19DTHC6</td>
-                            <td>29</td>
-                            <td>29</td>
-                            <td>0</td>
-                            <td>29</td>
-                            <td>0</td>
-                            <td class="text-center">
-                                <a href="jugedment-class-list.html" title="Chấm điểm">
-                                    <i class="las la-pen text-xl text-success juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>4</strong>
-                            </td>
-                            <td>19DTHD2</td>
-                            <td>36</td>
-                            <td>36</td>
-                            <td>0</td>
-                            <td>35</td>
-                            <td>1</td>
-                            <td class="text-center">
-                                <a href="jugedment-class-list.html" title="Chấm điểm">
-                                    <i class="las la-pen text-xl text-success juged-icon"></i>
-                                </a>
-                            </td>
-                        </tr>
+                        @*<tr>
+                                <td>
+                                    <strong>1</strong>
+                                </td>
+                                <td>18DTHD1</td>
+                                <td>37</td>
+                                <td>37</td>
+                                <td>0</td>
+                                <td>30</td>
+                                <td>7</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>2</strong>
+                                </td>
+                                <td>19DTHD1</td>
+                                <td>35</td>
+                                <td>35</td>
+                                <td>0</td>
+                                <td>32</td>
+                                <td>2</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>3</strong>
+                                </td>
+                                <td>19DTHC6</td>
+                                <td>29</td>
+                                <td>29</td>
+                                <td>0</td>
+                                <td>29</td>
+                                <td>0</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>4</strong>
+                                </td>
+                                <td>19DTHD2</td>
+                                <td>36</td>
+                                <td>36</td>
+                                <td>0</td>
+                                <td>35</td>
+                                <td>1</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -178,3 +178,30 @@
     </div>
 </div>
 <!-- /Page Content -->
+@section js{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable({
+                searching: false,
+                ordering: false,
+                responsive: true,
+                processing: true,
+                columns: [
+                    {
+                        "render": function (data, type, full, meta) {
+                            return meta.row + 1;
+                        },
+                        "class": "text-center"
+                    }
+
+                ],
+                ajax: {
+                    url: "/UnionEvaluation/GetClassEvaluation/?classId=3" 
+                }
+            })
+        })
+
+    </script>
+}

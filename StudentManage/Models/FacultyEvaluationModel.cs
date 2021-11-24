@@ -7,7 +7,6 @@ namespace StudentManage.Models
 {
     public class FacultyEvaluationModel
     {
-        public string FacultyName { get; set; }
         public string ClassName { get; set; }
         public int? Total { get; set; }
         public int? ClassDone { get; set; }

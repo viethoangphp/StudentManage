@@ -10,7 +10,8 @@ namespace StudentManage.Models
         public int criteriaId { get; set; }
         public int? score {  get; set; }
         public string imageProof {  get; set; }
-
         public string note {  get; set; }
+
+        public int? Order { get; set; }
     }
 }
