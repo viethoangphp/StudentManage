@@ -314,6 +314,11 @@ namespace StudentManage.Controllers
             List<FacultyEvaluationModel> list = modelBUS.GetListClassByFaculty(facultyId);
             return Json(new { data = list }, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetListClassByFacultyId(int facultyId)
+        {
+            var result = new FacultyBUS().GetListClassByFaculty(facultyId).ToList();
+            return PartialView(result);
+        }
         #endregion
 
         #region View BT Đoàn trường

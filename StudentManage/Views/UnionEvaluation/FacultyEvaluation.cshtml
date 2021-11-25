@@ -49,19 +49,7 @@
                 <label class="focus-label">Tình trạng khoa</label>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
-            <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option> 18DTHD1 </option>
-                    <option> 16DTHD1 </option>
-                    <option> 17DTHD1 </option>
-                    <option> 19DTHD2 </option>
-                    <option> 20DTHD1 </option>
-                </select>
-                <label class="focus-label">Lớp</label>
-            </div>
-        </div>
+        @Html.Action("GetListClassByFacultyId", "UnionEvaluation", new { facultyId = Model.facultyID})
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
             <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
         </div>
@@ -194,11 +182,35 @@
                             return meta.row + 1;
                         },
                         "class": "text-center"
+                    },
+                    {
+                        "data": "ClassName"
+                    },
+                    {
+                        "data": "Total"
+                    },
+                    {
+                        "data": "ClassDone"
+                    },
+                    {
+                        "data": "ClassNotDone"
+                    },
+                    {
+                        "data": "FacultyDone"
+                    },
+                    {
+                        "data": "FacultyNotDone"
+                    },
+                    {
+                        "data": "ClassId",
+                        "render": function (data) {
+                            return '<a href="/UnionEvaluation/ClassEvaluation/?classId=' + data + '" title="Chấm điểm"> <i class="las la-pen text-xl text-success juged-icon"></i> </a>';
+                        }
                     }
 
                 ],
                 ajax: {
-                    url: "/UnionEvaluation/GetClassEvaluation/?classId=3" 
+                    url: "/UnionEvaluation/GetFacultyEvaluation/?FacultyId=" + @Model.facultyID
                 }
             })
         })
