@@ -309,15 +309,31 @@ namespace StudentManage.Controllers
             var faculty = new FacultyBUS().GetFacultyByID(facultyId);
             return View(faculty);
         }
+        // Json Faculty Mặc định
         public JsonResult GetFacultyEvaluation(int facultyId)
         {
             List<FacultyEvaluationModel> list = modelBUS.GetListClassByFaculty(facultyId);
             return Json(new { data = list }, JsonRequestBehavior.AllowGet);
         }
+        // Partial View DS lớp
         public ActionResult GetListClassByFacultyId(int facultyId)
         {
             var result = new FacultyBUS().GetListClassByFaculty(facultyId).ToList();
             return PartialView(result);
+        }
+        // Tìm kiếm 
+        public JsonResult SearchFacultyEvaluation(int facultyId = 0, int classCondition = -1, int facultyCondition = -1, int classId = 0)
+        {
+            // Thông tin user Session
+            var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            if (facultyId == 0)
+            {
+                facultyId = userSession.facultyID;
+            }
+            var list = modelBUS.GetListClassByFaculty(facultyId).Where(x => classCondition == -1 || x.ClassCondition == classCondition);
+            list = list.Where(x => facultyCondition == -1 || x.FacultyCondition == facultyCondition);
+            list = list.Where(x => classId == 0 || x.ClassId == classId);
+            return Json(new { data = list }, JsonRequestBehavior.AllowGet);
         }
         #endregion
 

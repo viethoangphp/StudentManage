@@ -29,29 +29,27 @@
     <div class="row filter-row">
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
             <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option> </option>
-                    <option> Đã đánh giá</option>
-                    <option> Chưa đánh giá </option>
+                <select class="select floating" id="classCondition">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1"> Đã đánh giá</option>
+                    <option value="0"> Chưa đánh giá </option>
                 </select>
                 <label class="focus-label">Tình trạng lớp</label>
             </div>
         </div>
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
             <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option> </option>
-                    <option> Đã đánh giá</option>
-                    <option> Chưa đánh giá </option>
+                <select class="select floating" id="facultyCondition">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1"> Đã đánh giá</option>
+                    <option value="0"> Chưa đánh giá </option>
                 </select>
                 <label class="focus-label">Tình trạng khoa</label>
             </div>
         </div>
         @Html.Action("GetListClassByFacultyId", "UnionEvaluation", new { facultyId = Model.facultyID})
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
-            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+            <a href="#" id="btn-search" class="btn btn-secondary btn-block"> Tìm kiếm </a>
         </div>
     </div>
     <!-- /Search Filter -->
@@ -210,9 +208,20 @@
 
                 ],
                 ajax: {
-                    url: "/UnionEvaluation/GetFacultyEvaluation/?FacultyId=" + @Model.facultyID
+                    url: "/UnionEvaluation/GetFacultyEvaluation/?facultyId=" + @Model.facultyID
                 }
             })
+           
+            var btn = $("#btn-search");
+            btn.on('click', function () {
+                var classCondition = $("#classCondition").val();
+                var facultyCondition = $("#facultyCondition").val();
+                var classId = $("#classId").val();
+                console.log(classCondition + '/' + facultyCondition + '/' + classId);
+                table.ajax.url("/UnionEvaluation/SearchFacultyEvaluation?facultyId=" +@Model.facultyID+"&classCondition=" + classCondition + "&facultyCondition=" + facultyCondition + "&classId=" + classId).load();
+                
+            })
+
         })
 
     </script>

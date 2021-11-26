@@ -810,6 +810,8 @@ namespace StudentManage.BUS
                 model.FacultyDone = facultyDone;
                 model.ClassNotDone = model.Total - classDone;
                 model.FacultyNotDone = model.Total - facultyDone;
+                model.ClassCondition = (classDone == model.Total) ? 1 : 0; 
+                model.FacultyCondition = (facultyDone == model.Total) ? 1 : 0; 
                 list.Add(model);
             }
             return list;
