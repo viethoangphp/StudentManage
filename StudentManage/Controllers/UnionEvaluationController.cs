@@ -338,11 +338,17 @@ namespace StudentManage.Controllers
         #endregion
 
         #region View BT Đoàn trường
+        // View Bí thư đoàn trường
         public ActionResult SchoolEvaluation()
         {
             return View();
         }
-        // View Bí thư đoàn trường
+        
+        public ActionResult GetListFaculty()
+        {
+            var result = new FacultyBUS().GetListFaculty();
+            return PartialView(result);
+        }
         #endregion
 
     }

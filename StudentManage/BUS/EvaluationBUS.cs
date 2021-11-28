@@ -649,7 +649,52 @@ namespace StudentManage.BUS
                         form.formId = InsertEvaluationForm(form);
                         listForms.Add(form);
                     }
+                    // Xứ lý trường hợp thêm các Form thử - Form chưa tạo => trong thời gian
+                    #region Form_NoReal detail
                     PersonalFormModel model_addition = new PersonalFormModel();
+                    model_addition.StudentCode = person.studentCode;
+                    model_addition.FullName = person.fullname;
+                    model_addition.BirthDate = String.Format("{0:dd/MM/yyyy}", person.birthDay);
+                    model_addition.formId = null;
+                    model_addition.Score1 = null;
+                    model_addition.Score2 = null;
+                    model_addition.Score3 = null;
+                    model_addition.Score4 = null;
+                    // Xếp loại
+                    if (model_addition.Score4 > 90)
+                    {
+                        model_addition.Ranking = "Xuất Sắc";
+                    }
+                    else if (model_addition.Score4 > 70)
+                    {
+                        model_addition.Ranking = "Khá";
+                    }
+                    else if (model_addition.Score4 >= 50)
+                    {
+                        model_addition.Ranking = "Trung Bình";
+                    }
+                    else if (model_addition.Score4 != null)
+                    {
+                        model_addition.Ranking = "Yếu";
+                    };
+                    // Tình trạng
+                    if (model_addition.Score1 == null)
+                        model_addition.Situation = "Chờ Chấm";
+                    else if (model_addition.Score2 == null)
+                        model_addition.Situation = "Chờ Lớp";
+                    else if (model_addition.Score3 == null)
+                        model_addition.Situation = "Chờ Khoa";
+                    else if (model_addition.Score4 == null)
+                        model_addition.Situation = "Chờ Duyệt";
+                    else model_addition.Situation = "Hoàn Thành";
+
+                    //Status Đã chấm/ Chưa chấm 
+                    // 1: Đã chấm - BTCĐ
+                    // 0: chưa chấm - BTCĐ
+                    model_addition.Status = 0;
+                    #endregion
+                    list.Add(model_addition);
+
                 }
             }
             // Lấy Chi tiết điểm trong từng Evaluation Form

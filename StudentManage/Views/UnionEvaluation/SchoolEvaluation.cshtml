@@ -28,17 +28,7 @@
                 <label class="focus-label">Mã khoa</label>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
-            <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option>Công nghệ thông tin</option>
-                    <option>Quản trị kinh doanh</option>
-                    <option>Ngôn ngữ anh</option>
-                </select>
-                <label class="focus-label">Khoa</label>
-            </div>
-        </div>
+        @Html.Action("GetListFaculty", "UnionEvaluation")
 
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
             <div class="form-group form-focus select-focus">
@@ -194,3 +184,11 @@
     </div>
 </div>
 <!-- /Page Content -->
+@section js
+{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+    </script>
+}

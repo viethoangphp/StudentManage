@@ -10,7 +10,7 @@ namespace StudentManage.Models
         public string StudentCode {  get; set; }
         public string FullName {  get; set; }
 
-        public int formId {  get; set; }
+        public int? formId {  get; set; }
         public string BirthDate { get; set; }
         // Điểm
         public int? Score1 { get; set; }

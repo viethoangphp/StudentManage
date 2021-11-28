@@ -379,6 +379,7 @@
     <Content Include="Views\UnionEvaluation\FacultyEvaluation.cshtml" />
     <Content Include="Views\UnionEvaluation\SchoolEvaluation.cshtml" />
     <Content Include="Views\UnionEvaluation\GetListClassByFacultyId.cshtml" />
+    <Content Include="Views\UnionEvaluation\GetListFaculty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
