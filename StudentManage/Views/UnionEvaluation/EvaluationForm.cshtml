@@ -135,7 +135,7 @@
                                                         @if (criteria.criteriaRequirement == "1")
                                                         {
                                                             <br />
-                                                            <a data-target="#evident_modal_1"
+                                                            <a data-target="#viewpic_modal"
                                                                data-toggle="modal"
                                                                class="badge bg-inverse-primary"
                                                                style="cursor: pointer">Thêm minh chứng</a>
@@ -251,83 +251,15 @@
     </div>
     <!-- /Jugedment table -->
 </div>
-<!-- Add evident Modal -->
-<div id="evident_modal" class="modal custom-modal fade" data-backdrop="static" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm ảnh minh chứng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="upload-pic_container">
-                    <div class="upload-pic_wrapper">
-                        <div class="upload-pic_image">
-                            <img src="" alt="">
-                        </div>
-                        <div class="upload-pic_content">
-                            <div class="upload-pic_icon">
-                                <i class="fa fa-file-image-o"></i>
-                            </div>
-                            <div class="upload-pic_text">
-                                Chưa có ảnh
-                            </div>
-                        </div>
-                        <div id="upload-pic_cancel-btn">
-                            <i class="las la-times-circle"></i>
-                        </div>
-                        <div class="upload-pic_file-name"></div>
-                    </div>
-                    <button onclick="defaultBtnActive()" id="upload-pic_custom-btn" type="button"
-                            class="btn btn-outline-primary">
-                        Thêm ảnh
-                    </button>
-                    <input id="upload-pic_default-btn" type="file" hidden>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add evident Modal -->
-<!-- Delete Union notebook Modal -->
-<div class="modal custom-modal fade" id="delete_waring" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="form-header">
-                    <h3>Xóa tất cả điểm bạn đã nhập</h3>
-                    <p>Bạn có chắc chắn muốn xóa?</p>
-                </div>
-                <div class="modal-btn delete-action">
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="#" onclick="deleteAllInput()" class="btn continue-btn">Xóa</a>
-                        </div>
-                        <div class="col-6">
-                            <a href="javascript:void(0);" data-dismiss="modal"
-                               class="btn cancel-btn">Hủy</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Delete Union notebook Modal -->
-<!-- Add evident Modal -->
-<div id="evident_modal_1"
+<!-- Add Proof Modal -->
+<div id="viewpic_modal"
      class="modal custom-modal fade"
      data-backdrop="static"
      role="dialog">
-    <div class="modal-dialog modal-dialog-centered"
-         role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">
-                    Thêm ảnh minh chứng
-                </h5>
+                <h5 class="modal-title text-bold">Ảnh minh chứng</h5>
                 <button type="button"
                         class="close"
                         data-dismiss="modal"
@@ -336,44 +268,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="upload-pic_container">
-                    <div class="upload-pic_wrapper">
-                        <div class="upload-pic_image">
-                            <img src="" alt="" />
-                        </div>
-                        <div class="upload-pic_content">
-                            <div class="upload-pic_icon">
-                                <i class="fa fa-file-image-o"></i>
-                            </div>
-                            <div class="upload-pic_text">
-                                Chưa có ảnh
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="upload-pic_container">
+                            <div class="file-loading">
+                                <input id="input-1" type="file" />
                             </div>
                         </div>
-                        <div id="upload-pic_cancel-btn">
-                            <i class="las la-times-circle"></i>
-                        </div>
-                        <div class="upload-pic_file-name"></div>
                     </div>
-                    <button onclick="defaultBtnActive()"
-                            id="upload-pic_custom-btn"
-                            class="btn btn-outline-primary"
-                            type="button">
-                        Thêm ảnh
-                    </button>
-                    <input id="upload-pic_default-btn"
-                           type="file"
-                           hidden />
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- /Add evident Modal -->
+<!-- /Add Proof Modal -->
+
 @section js
 {
-    <!--Import Image-->
-    <script src="~/Assets/js/input-img.js"></script>
-
     <!--Toast Success Evaluation-->
     @if (TempData["MESSAGE"] != null)
     {
@@ -384,7 +295,6 @@
             })
         </script>
     }
-
     <!--Error Evalution-->
     @if (TempData["ERROR"] != null)
     {
@@ -423,6 +333,19 @@
             input.style.border = "1px solid gray";
             input.setCustomValidity("");
         }
+
+        $(document).ready(function () {
+            // For Bootstrap 5.x
+            $("#input-1,#input-2,#input-3").fileinput({
+                browseClass: "btn btn-primary",
+                mainClass: "d-grid",
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                indicatorNew: false,
+            });
+        });
     </script>
+
 }
 

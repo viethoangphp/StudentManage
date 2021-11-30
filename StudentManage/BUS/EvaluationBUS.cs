@@ -839,7 +839,7 @@ namespace StudentManage.BUS
                 model.ClassId = item.classID;
                 model.Total = listUser.Where(x=>x.ClassID==item.classID).Count();
                 var listPresonalForms = GetClassFormByClassIdAndSemesterId(item.classID, presentSemes.semesterId);
-                int classDone = 0, facultyDone = 0;
+                int classDone = 0, facultyDone = 0, schoolDone = 0;
                 foreach (var form in listPresonalForms)
                 {
                     if (form.Score2 != null)
@@ -850,16 +850,40 @@ namespace StudentManage.BUS
                     {
                         facultyDone++;
                     }
+                    if(form.Score4 !=null)
+                    {
+                        schoolDone++;
+                    }    
                 };
                 model.ClassDone = classDone;
                 model.FacultyDone = facultyDone;
                 model.ClassNotDone = model.Total - classDone;
                 model.FacultyNotDone = model.Total - facultyDone;
+                model.SchoolDone = schoolDone;
                 model.ClassCondition = (classDone == model.Total) ? 1 : 0; 
                 model.FacultyCondition = (facultyDone == model.Total) ? 1 : 0; 
                 list.Add(model);
             }
             return list;
+        }
+        public List<SchoolEvaluationModel> GetListFacultyEvalution()
+        {
+            // Lấy danh sách khoa
+            var listFaculty = new FacultyBUS().GetListFaculty();
+            var list = new List<SchoolEvaluationModel>();
+            foreach(var item in listFaculty)
+            {
+                var model = new SchoolEvaluationModel();
+                var listClassModel = GetListClassByFaculty(item.facultyID);
+
+                model.FacultyId = item.facultyID;
+                model.FacultyName = item.facultyName;
+                foreach(var classEva in listClassModel)
+                {
+                    model.FacultyDone += classEva.FacultyDone;
+                    model.SchoolDone += classEva.SchoolDone;
+                }    
+            }    
         }
     }
 
