@@ -15,8 +15,8 @@ namespace StudentManage.Models
         public int? FacultyNotDone { get; set; }
         public int ClassId { get; set; }
         public int? SchoolDone { get; set; }
-        public int? ClassCondition {get; set; }
-        public int? FacultyCondition { get; set; }
+        public int? ClassSituation {get; set; }
+        public int? FacultySituation { get; set; }
         
     }
 }

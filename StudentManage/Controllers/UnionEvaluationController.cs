@@ -330,8 +330,8 @@ namespace StudentManage.Controllers
             {
                 facultyId = userSession.facultyID;
             }
-            var list = modelBUS.GetListClassByFaculty(facultyId).Where(x => classCondition == -1 || x.ClassCondition == classCondition);
-            list = list.Where(x => facultyCondition == -1 || x.FacultyCondition == facultyCondition);
+            var list = modelBUS.GetListClassByFaculty(facultyId).Where(x => classCondition == -1 || x.ClassSituation == classCondition);
+            list = list.Where(x => facultyCondition == -1 || x.FacultySituation == facultyCondition);
             list = list.Where(x => classId == 0 || x.ClassId == classId);
             return Json(new { data = list }, JsonRequestBehavior.AllowGet);
         }
@@ -343,12 +343,25 @@ namespace StudentManage.Controllers
         {
             return View();
         }
-        
+        public JsonResult GetListFacultyEvaluation()
+        {
+            var result = modelBUS.GetListFacultyEvalution();
+            return Json(new { data = result}, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult GetListFaculty()
         {
             var result = new FacultyBUS().GetListFaculty();
             return PartialView(result);
         }
+        public JsonResult SearchSchoolEvaluation(int FacultyId = 0, int FacultySituation = -1, int SchoolSituation = -1)
+        {
+            // Thông tin user Session
+            var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]); 
+            var result = modelBUS.GetListFacultyEvalution().Where(x=>FacultyId == 0 ||x.FacultyId == FacultyId);
+            result = result.Where(x => FacultySituation == -1 || x.FacultySituation == FacultySituation);
+            result = result.Where(x => SchoolSituation == -1 || x.SchoolSituation == SchoolSituation);
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }    
         #endregion
 
     }

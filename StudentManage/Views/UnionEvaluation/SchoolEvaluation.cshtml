@@ -22,26 +22,34 @@
     <!-- /Page Header -->
     <!-- Search Filter -->
     <div class="row filter-row justify-content-end">
-        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
-            <div class="form-group form-focus">
-                <input type="text" class="form-control floating">
-                <label class="focus-label">Mã khoa</label>
-            </div>
-        </div>
+
+        <!--List Faculty-->
         @Html.Action("GetListFaculty", "UnionEvaluation")
 
+        <!--FacultyCondition-->
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div  class="form-group form-focus select-focus">
+                <select id="FacultySituation" class="select floating">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1">Đã đánh giá</option>
+                    <option value="0">Chờ xác nhận</option>
+                </select>
+                <label class="focus-label">Tình trạng Khoa</label>
+            </div>
+        </div>
+        <!--FacultyCondition-->
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
             <div class="form-group form-focus select-focus">
-                <select class="select floating">
-                    <option> -- Tất cả -- </option>
-                    <option>Chưa đánh giá</option>
-                    <option>Chờ xác nhận</option>
+                <select id="SchoolSituation" class="select floating">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1">Đã đánh giá</option>
+                    <option value="0">Chờ xác nhận</option>
                 </select>
-                <label class="focus-label">Trạng thái</label>
+                <label class="focus-label">Tình trạng Trường</label>
             </div>
         </div>
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
-            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+            <a href="#" id="btn-search" class="btn btn-secondary btn-block"> Tìm kiếm </a>
         </div>
     </div>
     <!-- /Search Filter -->
@@ -49,7 +57,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                <table id="myTable" class="table table-bordered table-striped custom-table mb-0 datatable text-center"
                        style="width:100%; font-size: 13px;">
                     <thead>
                         <tr style="box-shadow:none">
@@ -66,11 +74,6 @@
                             <th rowspan="2">
                                 <span>
                                     Số điện thoại
-                                </span>
-                            </th>
-                            <th rowspan="2">
-                                <span>
-                                    Email
                                 </span>
                             </th>
                             <th colspan="2" class="text-center">Khoa</th>
@@ -90,7 +93,7 @@
 
                     </thead>
                     <tbody>
-                        <tr>
+                        @*<tr>
                             <td class="text-center">
                                 <strong>1</strong>
                             </td>
@@ -102,12 +105,12 @@
                             <td class="text-center">19</td>
                             <td class="text-center">20</td>
                             <td class="text-center">
-                                <a href="jugedment-major-list.html" title="Chấm điểm">
+                                <a href="" title="Chấm điểm">
                                     <i class="las la-pen text-xl text-success juged-icon"></i>
                                 </a>
                             </td>
-                        </tr>
-                        <tr>
+                        </tr>*@
+                        @*<tr>
                             <td class="text-center">
                                 <strong>2</strong>
                             </td>
@@ -191,7 +194,7 @@
                                     <i class="las la-pen text-xl text-success juged-icon"></i>
                                 </a>
                             </td>
-                        </tr>
+                        </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -204,6 +207,65 @@
     <script src="~/Assets/js/jquery.dataTables.min.js"></script>
     <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
     <script>
-
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable({
+                searching: false,
+                ordering: false,
+                responsive: true,
+                processing: true,
+                columns: [
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<strong>' + (meta.row + 1) + '</strong>';
+                        },
+                        "class": "text-center"
+                    },
+                    {
+                        "data": "FacultyName"
+                    },
+                    {
+                        "data": "Phone",
+                        "render": function (data) {
+                            if (data == null) {
+                                return "Chưa cập nhật"
+                            }
+                            else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        "data":"FacultyDone"
+                    },
+                    {
+                        "data":"FacultyNotDone"
+                    },
+                    {
+                        "data": "SchoolDone"
+                    },
+                    {
+                        "data": "SchoolNotDone"
+                    },
+                    {
+                        "data": "FacultyId",
+                        "render": (data) => {
+                            return '<a href="/UnionEvaluation/FacultyEvaluation/?FacultyId=' + data + '" title="Chấm điểm"> <i class="las la-pen text-xl text-success juged-icon"></i> </a>';
+                           
+                        }
+                    }
+                   
+                ],
+                ajax: {
+                    url: "/UnionEvaluation/GetListFacultyEvaluation"
+                }
+            })
+            $('#btn-search').on('click', () => {
+                var FacultyId = $('#FacultyId').val();
+                var FacultySituation = $('#FacultySituation').val();
+                var SchoolSituation = $('#SchoolSituation').val();
+                console.log(FacultyId + "/" + FacultySituation + "/" + SchoolSituation);
+                table.ajax.url("/UnionEvaluation/SearchSchoolEvaluation/?FacultyId=" + FacultyId + "&FacultySituation=" + FacultySituation + "&SchoolSituation=" + SchoolSituation).load();
+            })
+        })
     </script>
 }

@@ -860,8 +860,8 @@ namespace StudentManage.BUS
                 model.ClassNotDone = model.Total - classDone;
                 model.FacultyNotDone = model.Total - facultyDone;
                 model.SchoolDone = schoolDone;
-                model.ClassCondition = (classDone == model.Total) ? 1 : 0; 
-                model.FacultyCondition = (facultyDone == model.Total) ? 1 : 0; 
+                model.ClassSituation = (classDone == model.Total) ? 1 : 0; 
+                model.FacultySituation = (facultyDone == model.Total) ? 1 : 0; 
                 list.Add(model);
             }
             return list;
@@ -878,12 +878,23 @@ namespace StudentManage.BUS
 
                 model.FacultyId = item.facultyID;
                 model.FacultyName = item.facultyName;
+                model.Phone = item.phone;
+                int FacultyDone = 0, SchoolDone = 0, Total = 0;
                 foreach(var classEva in listClassModel)
                 {
-                    model.FacultyDone += classEva.FacultyDone;
-                    model.SchoolDone += classEva.SchoolDone;
-                }    
-            }    
+                    FacultyDone += (int)classEva.FacultyDone;
+                    SchoolDone += (int)classEva.SchoolDone;
+                    Total += (int)classEva.Total;
+                }
+                model.FacultyDone = FacultyDone;
+                model.SchoolDone = SchoolDone;
+                model.FacultyNotDone = Total - FacultyDone;
+                model.SchoolNotDone = Total - SchoolDone;
+                model.FacultySituation = (FacultyDone == Total) ? 1 : 0;
+                model.SchoolSituation = (SchoolDone == Total) ? 1 : 0;
+                list.Add(model);
+            }
+            return list;
         }
     }
 
