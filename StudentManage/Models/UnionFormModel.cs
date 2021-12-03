@@ -14,5 +14,7 @@ namespace StudentManage.Models
         public int IsInTime {  get; set; }
         public int formId {  get; set; }
         public int semesterId { get; set; }
+        public int Assessor { get; set; }
+        public int Assessee { get; set; }
     }
 }

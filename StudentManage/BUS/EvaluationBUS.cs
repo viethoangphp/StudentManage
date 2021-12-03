@@ -55,6 +55,42 @@ namespace StudentManage.BUS
         }
         #endregion
         //==============================================================================
+        // Lấy thông tin GroupId cho User với UserID
+        /* Input => UserId
+         * return 1 - Nếu là Group Đoàn viên
+         * return 2 - Nếu là Group Đoàn viên
+         * return 3 - Nếu là Group Đoàn viên
+         * return 4 - Nếu là Group Đoàn viên         
+         */
+        public int GetGroupInfoByUserId(int userId)
+        {
+            var user = new UserDAO().GetUserByID(userId);
+            int position = user.Position.PositionID;
+            int dv = dao.FindPositionByName("Đoàn Viên");
+            int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
+            int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
+            int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
+            if(position==dv)
+            {
+                return 1;
+            }    
+            else if(position==btcd)
+            {
+                return 2;
+            }    
+            else if(position==btdk)
+            {
+                return 3;
+            }    
+            else if(position==btdt)
+            {
+                return 4;
+            }
+            else
+            {
+                return 0;
+            }
+        }
         /*
          * Phần Chấm điểm đoàn viên
          */
@@ -830,6 +866,7 @@ namespace StudentManage.BUS
             var presentSemes = GetPresentSemester();
             // Get List User
             var listUser = new UserDAO().GetListUser();
+            // Get list Class
             var listClass = new FacultyBUS().GetListClassByFaculty(id);
             var faculty = new FacultyBUS().GetFacultyByID(id);
             foreach (var item in listClass)

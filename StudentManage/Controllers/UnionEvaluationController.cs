@@ -66,7 +66,7 @@ namespace StudentManage.Controllers
                     formId = modelBUS.InsertEvaluationForm(form);
                     user = userSession;
                 }   
-                //Ngược lại DO NOTHING
+                //Bạn thấy rối đúng không :)) Tôi cũng vậy !! I dont know what I am coding now
             }
             else
             {
@@ -159,6 +159,9 @@ namespace StudentManage.Controllers
             model.ListMain = listMain;
             model.ListCriteria = listCriteria;
             model.formId =  (int)formId;
+            // Check User Group Profile
+            model.Assessor = modelBUS.GetGroupInfoByUserId(userSession.userID);
+            model.Assessee = modelBUS.GetGroupInfoByUserId(user.userID);
             ViewBag.user = user;
 
             return View(model);
