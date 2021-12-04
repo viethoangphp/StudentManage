@@ -33,11 +33,13 @@ namespace StudentManage.BUS
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender: 1;
                 user.studentCode = model.StudentCode;
+                //---------------------------------------
                 if(model.ClassID !=null)
                 {
                     user.facultyName = model.Class.Faculty.Name;
                     user.className = model.Class.Name;
-                }    
+                }  
+                //---------------------------------------
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
                 user.cityID =(model.CityID != null)? (int)model.CityID:0;
@@ -197,6 +199,7 @@ namespace StudentManage.BUS
                     studentCode = item.StudentCode,
                     email = item.Email,
                     phone = item.Phone,
+                    groupID = item.GroupId,
                     address = item.Address,
                     birthDay = item.Birthday,
                     cityID = item.CityID != null ? (int)item.CityID : 0,

@@ -23,14 +23,15 @@ namespace StudentManage.Controllers
         public ActionResult EvaluationForm(int? formId)
         {
             EvaluationBUS modelBUS = new EvaluationBUS();
-            
-            // Render Form chấm điểm
-            //int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
-            var listMain = modelBUS.GetAllMainByTemplateId(4);
-            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(4);
 
             // Thông tin user Session
             var userSession = new UserBUS().GetUserByID((int)Session["USER_ID"]);
+            // Render Form chấm điểm
+            int templateId = modelBUS.GetGroupUserById(userSession.groupID).templateId;
+            var listMain = modelBUS.GetAllMainByTemplateId(templateId);
+            var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
+
+           
             // Thông tin User được chấm
             var user = new UserModel();
 
@@ -133,25 +134,23 @@ namespace StudentManage.Controllers
 
             #region Render hiển thị Input và Button chấm
             // Render Input và Button chấm
-            //if(model.formId == modelBUS.GetPresentSemester().semesterId)// Xét học kỳ hiện tại/ không xét những học kỳ cũ
-            //{
-                if ((turn == 0 || turn == 1) && isInTime == 1)
-                {
-                    model.IsInTime = 1;
-                }
-                if ((turn == 0 || turn == 1 || turn == 2) && isInTime == 2 && userSession.groupID == 3)
-                {
-                    model.IsInTime = 2;
-                }
-                if ((turn == 2 || turn == 3) && isInTime == 3 && userSession.groupID == 4)
-                {
-                    model.IsInTime = 3;
-                }
-                if ((turn == 3 || turn == 4) && isInTime == 4 && userSession.groupID == 5)
-                {
-                    model.IsInTime = 4;
-                }
-            //}
+            int groupId = modelBUS.GetGroupInfoByUserId(userSession.userID);
+            if ((turn == 0 || turn == 1) && isInTime == 1)
+            {
+                model.IsInTime = 1;
+            }
+            if ((turn == 0 || turn == 1 || turn == 2) && isInTime == 2 && groupId == 2)
+            {
+                model.IsInTime = 2;
+            }
+            if ((turn == 2 || turn == 3) && isInTime == 3 && groupId == 3)
+            {
+                model.IsInTime = 3;
+            }
+            if ((turn == 3 || turn == 4) && isInTime == 4 && groupId == 4)
+            {
+                model.IsInTime = 4;
+            }
             #endregion
 
             //=====================================================================

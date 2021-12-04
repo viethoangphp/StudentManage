@@ -121,6 +121,16 @@ namespace Models.DAO
         {
             return db.Positions.Where(x=>x.Name==name && x.Status == 1).FirstOrDefault().PositionID;
         }
+        // Find Group ID by Name
+        public int FindGroupIdByName(string name)
+        {
+            return db.GroupUsers.Where(x => x.Name == name && x.Status == 1).FirstOrDefault().GroupId;
+        }
+        // Find Template Id by Name
+        public int FindTemplateIdByName(string name)
+        {
+            return db.TemplateForms.Where(x => x.Name == name && x.Status == 1).FirstOrDefault().TemplateID;
+        }
         // Get TimeEvaluation by Id
         public TimeEvalution GetTimeEvaluationByTimeId(int timeId)
         {

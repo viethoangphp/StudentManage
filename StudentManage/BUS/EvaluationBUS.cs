@@ -58,31 +58,31 @@ namespace StudentManage.BUS
         // Lấy thông tin GroupId cho User với UserID
         /* Input => UserId
          * return 1 - Nếu là Group Đoàn viên
-         * return 2 - Nếu là Group Đoàn viên
-         * return 3 - Nếu là Group Đoàn viên
-         * return 4 - Nếu là Group Đoàn viên         
+         * return 2 - Nếu là Group Bí thư chi đoàn
+         * return 3 - Nếu là Group Bí thư đoàn khoa
+         * return 4 - Nếu là Group Bí thư đoàn trường  
          */
         public int GetGroupInfoByUserId(int userId)
         {
             var user = new UserDAO().GetUserByID(userId);
-            int position = user.Position.PositionID;
-            int dv = dao.FindPositionByName("Đoàn Viên");
-            int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
-            int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
-            int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
-            if(position==dv)
+            int groupId = user.GroupId;
+            int dv = dao.FindGroupIdByName("ĐOÀN VIÊN");
+            int btcd = dao.FindGroupIdByName("Bí Thư Chi Đoàn");
+            int btdk = dao.FindGroupIdByName("Bí Thư Đoàn Khoa");
+            int btdt = dao.FindGroupIdByName("Bí Thư Đoàn Trường");
+            if(groupId == dv)
             {
                 return 1;
             }    
-            else if(position==btcd)
+            else if(groupId == btcd)
             {
                 return 2;
             }    
-            else if(position==btdk)
+            else if(groupId == btdk)
             {
                 return 3;
             }    
-            else if(position==btdt)
+            else if(groupId == btdt)
             {
                 return 4;
             }
@@ -351,11 +351,11 @@ namespace StudentManage.BUS
             var user = new UserDAO().GetUserByID(userid);
             // Tìm Position
             int position = user.Position.PositionID;
-            int dv = dao.FindPositionByName("Đoàn Viên");
+            int dv = dao.FindPositionByName("ĐOÀN VIÊN");
             int btcd = dao.FindPositionByName("Bí Thư Chi Đoàn");
             int btdk = dao.FindPositionByName("Bí Thư Đoàn Khoa");
             int btdt = dao.FindPositionByName("Bí Thư Đoàn Trường");
-            //
+
             int positionTurn;
             EvalutionFormModel evaluationForm = GetEvaluationFormById(evaluationFormId);
             int turn = GetTurnNow(GetPresentSemesterDetailByUserId(userid).semesterId, (int)evaluationForm.createBy);
@@ -459,19 +459,23 @@ namespace StudentManage.BUS
             */
         public int IsInTime()
         {
-            if (IsInTimeEvaluationByGroupId(2) == 0)
+            int dv =   dao.FindGroupIdByName("ĐOÀN VIÊN");
+            int btcd = dao.FindGroupIdByName("Bí Thư Chi Đoàn");
+            int btdk = dao.FindGroupIdByName("Bí Thư Đoàn Khoa");
+            int btdt = dao.FindGroupIdByName("Bí Thư Đoàn Trường");
+            if (IsInTimeEvaluationByGroupId(dv) == 0)
             {
                 return 1;
             }
-            else if (IsInTimeEvaluationByGroupId(3) == 0)
+            else if (IsInTimeEvaluationByGroupId(btcd) == 0)
             {
                 return 2;
             }
-            else if (IsInTimeEvaluationByGroupId(4) == 0)
+            else if (IsInTimeEvaluationByGroupId(btdk) == 0)
             {
                 return 3;
             }
-            else if (IsInTimeEvaluationByGroupId(5) == 0)
+            else if (IsInTimeEvaluationByGroupId(btdt) == 0)
             {
                 return 4;
             }
@@ -637,7 +641,10 @@ namespace StudentManage.BUS
             //Lấy tất cả các thành viên trong lớp
             var listClass = new UserBUS().GetListUserByClass(classId);
             var listForms = new List<EvalutionFormModel>();
-            var listCriteria = GetAllCriteriaByTemplateId(4);
+
+            //Lấy Template Id của phiếu => Lấy các tiêu chí của phiếu
+            var templateId = dao.FindTemplateIdByName("ĐOÀN VIÊN");
+            var listCriteria = GetAllCriteriaByTemplateId(templateId);
 
             List<PersonalFormModel> list = new List<PersonalFormModel>();
             // Lấy tất cả các Form của SV 1 lớp, ở 1 Học kỳ
@@ -672,6 +679,7 @@ namespace StudentManage.BUS
                 }
                 else // Không có thì tiến hành Thêm Evalution Form Nếu trong thời gian chấm 2 
                 {
+                    var test = GetPresentSemester().semesterId;
                     if (semesterId == GetPresentSemester().semesterId && IsInTime()==2)
                     {
                         EvalutionFormModel form = new EvalutionFormModel()
@@ -685,51 +693,55 @@ namespace StudentManage.BUS
                         form.formId = InsertEvaluationForm(form);
                         listForms.Add(form);
                     }
-                    // Xứ lý trường hợp thêm các Form thử - Form chưa tạo => trong thời gian
-                    #region Form_NoReal detail
-                    PersonalFormModel model_addition = new PersonalFormModel();
-                    model_addition.StudentCode = person.studentCode;
-                    model_addition.FullName = person.fullname;
-                    model_addition.BirthDate = String.Format("{0:dd/MM/yyyy}", person.birthDay);
-                    model_addition.formId = null;
-                    model_addition.Score1 = null;
-                    model_addition.Score2 = null;
-                    model_addition.Score3 = null;
-                    model_addition.Score4 = null;
-                    // Xếp loại
-                    if (model_addition.Score4 > 90)
+                    else
                     {
-                        model_addition.Ranking = "Xuất Sắc";
-                    }
-                    else if (model_addition.Score4 > 70)
-                    {
-                        model_addition.Ranking = "Khá";
-                    }
-                    else if (model_addition.Score4 >= 50)
-                    {
-                        model_addition.Ranking = "Trung Bình";
-                    }
-                    else if (model_addition.Score4 != null)
-                    {
-                        model_addition.Ranking = "Yếu";
-                    };
-                    // Tình trạng
-                    if (model_addition.Score1 == null)
-                        model_addition.Situation = "Chờ Chấm";
-                    else if (model_addition.Score2 == null)
-                        model_addition.Situation = "Chờ Lớp";
-                    else if (model_addition.Score3 == null)
-                        model_addition.Situation = "Chờ Khoa";
-                    else if (model_addition.Score4 == null)
-                        model_addition.Situation = "Chờ Duyệt";
-                    else model_addition.Situation = "Hoàn Thành";
+                        // Xứ lý trường hợp thêm các Form thử - Form chưa tạo => trong thời gian
+                        #region Form_NoReal detail
+                        PersonalFormModel model_addition = new PersonalFormModel();
+                        model_addition.StudentCode = person.studentCode;
+                        model_addition.FullName = person.fullname;
+                        model_addition.BirthDate = String.Format("{0:dd/MM/yyyy}", person.birthDay);
+                        model_addition.formId = null;
+                        model_addition.Score1 = null;
+                        model_addition.Score2 = null;
+                        model_addition.Score3 = null;
+                        model_addition.Score4 = null;
+                        // Xếp loại
+                        if (model_addition.Score4 > 90)
+                        {
+                            model_addition.Ranking = "Xuất Sắc";
+                        }
+                        else if (model_addition.Score4 > 70)
+                        {
+                            model_addition.Ranking = "Khá";
+                        }
+                        else if (model_addition.Score4 >= 50)
+                        {
+                            model_addition.Ranking = "Trung Bình";
+                        }
+                        else if (model_addition.Score4 != null)
+                        {
+                            model_addition.Ranking = "Yếu";
+                        };
+                        // Tình trạng
+                        if (model_addition.Score1 == null)
+                            model_addition.Situation = "Chờ Chấm";
+                        else if (model_addition.Score2 == null)
+                            model_addition.Situation = "Chờ Lớp";
+                        else if (model_addition.Score3 == null)
+                            model_addition.Situation = "Chờ Khoa";
+                        else if (model_addition.Score4 == null)
+                            model_addition.Situation = "Chờ Duyệt";
+                        else model_addition.Situation = "Hoàn Thành";
 
-                    //Status Đã chấm/ Chưa chấm 
-                    // 1: Đã chấm - BTCĐ
-                    // 0: chưa chấm - BTCĐ
-                    model_addition.Status = 0;
-                    #endregion
-                    list.Add(model_addition);
+                        //Status Đã chấm/ Chưa chấm 
+                        // 1: Đã chấm - BTCĐ
+                        // 0: chưa chấm - BTCĐ
+                        model_addition.Status = 0;
+                        #endregion
+                        list.Add(model_addition);
+
+                    }
 
                 }
             }
