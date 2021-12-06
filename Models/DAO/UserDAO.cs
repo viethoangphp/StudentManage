@@ -142,9 +142,20 @@ namespace Models.DAO
             }
            
         }
+        //Get user list
         public List<User> GetListUser()
         {
             return db.Users.ToList();
+        }
+        //Get position list
+        public List<Position> GetListPosition()
+        {
+            return db.Positions.ToList();
+        }
+        //Get group list
+        public List<GroupUser> GetListGroup()
+        {
+            return db.GroupUsers.ToList();
         }
     }
 }

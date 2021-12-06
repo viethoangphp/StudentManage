@@ -164,6 +164,7 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\UnionController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -182,9 +183,11 @@
     <Compile Include="Models\EvalutionFormModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
     <Compile Include="Models\FormModel.cs" />
+    <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PersonalScore.cs" />
     <Compile Include="Models\PesonalEvalationModel.cs" />
+    <Compile Include="Models\PositionModel.cs" />
     <Compile Include="Models\SearchUnionModel.cs" />
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
@@ -267,6 +270,7 @@
     <Content Include="Assets\js\ajax\Union.js" />
     <Content Include="Assets\js\ajax\UnionCollaborator.js" />
     <Content Include="Assets\js\ajax\User.js" />
+    <Content Include="Assets\js\ajax\UserManage.js" />
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="Assets\js\bootstrap.min.js" />
@@ -409,6 +413,10 @@
     <Content Include="Views\UnionEvaluation\Union.cshtml" />
     <Content Include="Views\UnionEvaluation\EvaluationForm.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\ShowUserList.cshtml" />
+    <Content Include="Views\User\GetListPosition.cshtml" />
+    <Content Include="Views\User\GetListGroup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

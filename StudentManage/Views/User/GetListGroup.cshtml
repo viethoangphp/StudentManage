@@ -1,0 +1,9 @@
+﻿@using StudentManage.Models
+@model List<GroupModel>
+
+@foreach (GroupModel model in Model)
+{
+    <option value="@(model.GroupID))">@(model.GroupName)</option>
+}
+
+
