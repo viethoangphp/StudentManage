@@ -11,6 +11,7 @@ namespace StudentManage.Models
         public int userID { set; get; }
         public int groupID { set; get; }
         public int positionID { set; get; }
+        public string positionName { set; get; }
         public int classID { set; get;}
         [Required]
         public string fullname { set; get; }

@@ -1,0 +1,726 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Danh sách user</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh sách user</li>
+                </ul>
+            </div>
+            <div class="col-auto float-right ml-auto">
+                <a href="#" class="btn content-btn" data-toggle="modal" data-target="#add_employee">
+                    <i class="fa fa-plus"></i>Thêm user
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    <div class="row filter-row">
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group form-focus">
+                <input type="text" class="form-control floating">
+                <label class="focus-label">Tên đăng nhập</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group form-focus">
+                <input type="text" class="form-control floating">
+                <label class="focus-label">Họ tên</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating">
+                    <option value="0">-- Tất cả --</option>
+                    @Html.Action("GetListPosition")
+                </select>
+                <label class="focus-label">Chức vụ</label>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a href="#" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>
+    <!-- Search Filter -->
+
+    <div class="row staff-grid-row">
+        @Html.Action("ShowUserList")
+    </div>
+</div>
+<!-- /Page Content -->
+<!-- Add Employee Modal -->
+<div id="add_employee" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm người dùng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addUser">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Tên đăng nhập <span class="text-danger">*</span>
+                                </label>
+                                <input name="username" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Mã sinh viên <span class="text-danger">*</span>
+                                </label>
+                                <input name="studentCode" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập MSSV')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Họ tên <span class="text-danger">*</span>
+                                </label>
+                                <input name="fullname" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập họ tên')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Mật khẩu <span class="text-danger">*</span>
+                                </label>
+                                <input name="password" class="form-control" type="password" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập mật khẩu')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Xác thực mật khẩu <span class="text-danger">*</span>
+                                </label>
+                                <input name="confirmPassword" class="form-control" type="password" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập xác thực mật khẩu')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Ngày sinh <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input name="birthDayString" class="form-control datetimepicker"
+                                           type="text" required
+                                           oninvalid="this.setCustomValidity('Vui lòng nhập ngày sinh')"
+                                           oninput="this.setCustomValidity('')">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Email <span class="text-danger">*</span>
+                                </label>
+                                <input name="email" class="form-control" type="email" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập email')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Giới tính</label>
+                                <select name="gender" class="select">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Chức vụ</label>
+                                <select name="positionID" class="select">
+                                    @Html.Action("GetListPosition")
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Nhóm</label>
+                                <select name="groupID" class="select">
+                                    @Html.Action("GetListGroup")
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="table-responsive m-t-15">
+                        <table class="table table-striped custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Module Permission</th>
+                                    <th class="text-center">Read</th>
+                                    <th class="text-center">Write</th>
+                                    <th class="text-center">Create</th>
+                                    <th class="text-center">Delete</th>
+                                    <th class="text-center">Import</th>
+                                    <th class="text-center">Export</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Holidays</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Leaves</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Clients</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Projects</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tasks</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Chats</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Assets</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Timing Sheets</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>*@
+                    <div class="submit-section">
+                        <button type="submit" class="btn btn-primary submit-btn">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Employee Modal -->
+<!-- Edit Employee Modal -->
+<div id="edit_employee" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật người dùng</h5>
+                <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUser">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Mã người dùng <span class="text-danger">*</span>
+                                </label>
+                                <input id="user-id" name="userID" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Tên đăng nhập <span class="text-danger">*</span>
+                                </label>
+                                <input id="user-name" name="username" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Mã sinh viên <span class="text-danger">*</span>
+                                </label>
+                                <input id="student-code" name="studentCode" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập MSSV')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Họ tên <span class="text-danger">*</span>
+                                </label>
+                                <input id="full-name" name="fullname" class="form-control" type="text" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập họ tên')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Mật khẩu
+                                </label>
+                                <input id="password" name="password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Xác thực mật khẩu
+                                </label>
+                                <input id="confirm-password" name="confirmPassword" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Ngày sinh <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input id="birthday" name="birthDayString" class="form-control datetimepicker"
+                                           type="text" required
+                                           oninvalid="this.setCustomValidity('Vui lòng nhập ngày sinh')"
+                                           oninput="this.setCustomValidity('')">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Email <span class="text-danger">*</span>
+                                </label>
+                                <input id="email" name="email" class="form-control" type="email" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập email')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">
+                                    Ngày tham gia <span class="text-danger">*</span>
+                                </label>
+                                <div class="cal-icon">
+                                    <input id="join-date" name="joinDate" class="form-control datetimepicker"
+                                           type="text" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Giới tính</label>
+                                <select id="gender" name="gender" class="select">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Chức vụ</label>
+                                <select id="position" name="positionID" class="select">
+                                    @Html.Action("GetListPosition")
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Nhóm</label>
+                                <select id="group" name="groupID" class="select">
+                                    @Html.Action("GetListGroup")
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Trạng thái</label>
+                                <select id="status" name="status" class="select">
+                                    <option value="1">Hoạt động</option>
+                                    <option value="0">Tạm ngưng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="table-responsive m-t-15">
+                        <table class="table table-striped custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Module Permission</th>
+                                    <th class="text-center">Read</th>
+                                    <th class="text-center">Write</th>
+                                    <th class="text-center">Create</th>
+                                    <th class="text-center">Delete</th>
+                                    <th class="text-center">Import</th>
+                                    <th class="text-center">Export</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Holidays</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Leaves</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Clients</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Projects</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tasks</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Chats</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Assets</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Timing Sheets</td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input checked="" type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>*@
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Employee Modal -->
+<!-- Delete Employee Modal -->
+<div class="modal custom-modal fade" id="delete_employee" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Xoá người dùng</h3>
+                    <p>Bạn có chắc chắn muốn xóa người dùng này?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="javascript:void(0);" class="btn btn-primary delete-btn">Xóa</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:void(0);" data-dismiss="modal"
+                               class="btn btn-primary cancel-btn">Hủy bỏ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Employee Modal -->
+
+@section js{
+    <script src="~/Assets/js/ajax/UserManage.js"></script>
+}

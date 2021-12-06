@@ -1,0 +1,8 @@
+﻿@using StudentManage.Models
+@model List<PositionModel>
+
+@foreach (PositionModel model in Model)
+{
+    <option value="@(model.PositionID))">@(model.PositionName)</option>
+}
+

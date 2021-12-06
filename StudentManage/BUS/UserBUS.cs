@@ -206,5 +206,68 @@ namespace StudentManage.BUS
             }
             return list;
         }
+
+        #region Get list user
+        //Get list user
+        public List<UserModel> GetListUser()
+        {
+            List<User> listUser = new UserDAO().GetListUser();
+            List<UserModel> list = new List<UserModel>();
+            foreach (var item in listUser)
+            {
+                UserModel model = new UserModel()
+                {
+                    userID = item.UserID,
+                    className = item.Class.Name,
+                    positionName = item.Position.Name,
+                    facultyName = item.Class.Faculty.Name,
+                    fullname = item.FullName,
+                    studentCode = item.StudentCode,
+                    email = item.Email,
+                    phone = item.Phone,
+                    address = item.Address,
+                    birthDayString = item.Birthday != null ? ((DateTime)item.Birthday).ToString("dd/MM/yyyy") : null,
+                    cityID = item.CityID != null ? (int)item.CityID : 0,
+                    districtID = item.DistrictID != null ? (int)item.DistrictID : 0,
+                    wardID = item.WardID != null ? (int)item.WardID : 0,
+                    gender = item.Gender != null ? (int)item.Gender : 1
+                };
+                list.Add(model);
+            }
+            return list;
+        }
+        //List position name
+        public List<PositionModel> GetListPosition()
+        {
+            List<Position> listPosition = new UserDAO().GetListPosition();
+            List<PositionModel> list = new List<PositionModel>();
+            foreach (var item in listPosition)
+            {
+                PositionModel model = new PositionModel()
+                {
+                    PositionID = item.PositionID,
+                    PositionName = item.Name
+                };
+                list.Add(model);
+            }
+            return list;
+        }
+        //List group name
+        public List<GroupModel> GetListGroup()
+        {
+            List<GroupUser> listGroup = new UserDAO().GetListGroup();
+            List<GroupModel> list = new List<GroupModel>();
+            foreach (var item in listGroup)
+            {
+                GroupModel model = new GroupModel()
+                {
+                    GroupID = item.GroupId,
+                    GroupName = item.Name
+                };
+                list.Add(model);
+            }
+            return list;
+        }
+        #endregion
     }
 }
