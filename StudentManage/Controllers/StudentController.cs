@@ -10,6 +10,10 @@ namespace StudentManage.Controllers
     public class StudentController : BaseController
     {
         // GET: Student
+        public ActionResult Index()
+        {
+            return View();
+        }
         [HttpPost]
         public JsonResult Insert(UserModel model)
         {

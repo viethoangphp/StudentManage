@@ -20,7 +20,7 @@ namespace StudentManage.BUS
                 FacultyModel model = new FacultyModel();
                 model.facultyID = item.FacutyID;
                 model.facultyName = item.Name;
-                model.phone = item.Phone;
+                model.phone = item.Phone != null ? item.Phone.Trim() : null;
                 model.status = (int)item.Status;
                 model.totalClass = GetListClassByFaculty(item.FacutyID).Count();
                 list.Add(model);
@@ -176,7 +176,7 @@ namespace StudentManage.BUS
                 {
                     facultyID = fac.FacutyID,
                     facultyName = fac.Name,
-                    phone = fac.Phone,
+                    phone = fac.Phone != null ? fac.Phone.Trim() : null,
                 };
                 return model;
             }

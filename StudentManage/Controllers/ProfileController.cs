@@ -31,6 +31,7 @@ namespace StudentManage.Controllers
                 {
                     var userID = (int)Session["USER_ID"];
                     model.passwordOld = HashPassword.HashSHA256(model.passwordOld, new SHA256CryptoServiceProvider());
+                    model.passwordNew = HashPassword.HashSHA256(model.passwordNew, new SHA256CryptoServiceProvider());
                     var isChange = modelBUS.ChangePassword(userID, model.passwordOld, model.passwordNew);
                     if (isChange)
                         return Json("true", JsonRequestBehavior.AllowGet);

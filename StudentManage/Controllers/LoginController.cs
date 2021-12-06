@@ -16,12 +16,16 @@ namespace StudentManage.Controllers
         [HttpPost]
         public JsonResult Index(LoginModel model)
         {
-            var isLogin = new LoginModel().CheckLogin(model.username, model.password);
-            if(isLogin != -1)
+            if (ModelState.IsValid)
             {
-                Session.Add("USER_ID", isLogin);
-                return Json("true", JsonRequestBehavior.AllowGet);
-            }    
+                var isLogin = new LoginModel().CheckLogin(model.username, model.password);
+                if (isLogin != -1)
+                {
+                    Session.Add("USER_ID", isLogin);
+                    return Json("true", JsonRequestBehavior.AllowGet);
+                }
+                return Json("false", JsonRequestBehavior.AllowGet);
+            }
             return Json("false", JsonRequestBehavior.AllowGet);
         }
         public ActionResult Logout()

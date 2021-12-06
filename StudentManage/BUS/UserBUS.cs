@@ -27,18 +27,15 @@ namespace StudentManage.BUS
                 user.email = model.Email;
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender: 1;
-                user.studentCode = model.StudentCode;
-                if(model.ClassID !=null)
-                {
-                    user.facultyName = model.Class.Faculty.Name;
-                    user.className = model.Class.Name;
-                }    
+                user.studentCode = model.StudentCode.Trim();
+                user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
+                user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
                 user.cityID =(model.CityID != null)? (int)model.CityID:0;
                 user.districtID = (model.DistrictID != null) ? (int)model.DistrictID:0;
                 user.wardID = (model.WardID != null) ? (int)model.WardID:0;
-
+                user.templateId = model.GroupUser.TemplateID;
                 return user;
             }
             return null;
@@ -174,7 +171,7 @@ namespace StudentManage.BUS
             item.WardID = user.wardID;
             item.Address = user.address;
             item.Status = 1;
-            return UserDAO.Update(item);
+            return new UserDAO().Update(item);
         }
         public List<UserModel> GetListUserByClass(int id)
         {
