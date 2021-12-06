@@ -34,8 +34,12 @@ namespace Models.EntityModel
         [StringLength(255)]
         public string Note { get; set; }
 
-        [StringLength(50)]
+        public int? Level { get; set; }
+
+        [StringLength(255)]
         public string Image_proof { get; set; }
+        public string Comment { get; set; }
+        public int Status { get; set; }
 
         public virtual EvaluativeCriteria EvaluativeCriteria { get; set; }
 

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace StudentManage.Models
 {
-    public class UnionModel
+    public class UnionModel 
     {
         public int id { set; get;}
         public string unionID { set; get; }

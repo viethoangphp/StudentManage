@@ -1,4 +1,5 @@
-﻿$("#ChangePassword").on("submit", function () {
+﻿
+$("#ChangePassword").on("submit", function () {
     var passwordOld = $("#passwordOld").val();
     var passwordNew = $("#passwordNew").val();
     var confirmPassword = $("#confirmPassword").val();
@@ -56,8 +57,8 @@ $("#UpdateProfile").on("submit", function () {
         timeout: 600000,
         success: function (data) {
             if (data == "true") {
-                sound("/Assets/mp3/smallbox.mp3");
-                toastr.success("Cập Nhật Dữ Liệu Thành Công", "Success !");
+                sound('/Assets/mp3/smallbox.mp3')
+                toastr.success(MESSAGE.updatetSucess.content, MESSAGE.updatetSucess.title);
                 setTimeout(function () {
                     window.location = "/Profile";
                 }, 2000)

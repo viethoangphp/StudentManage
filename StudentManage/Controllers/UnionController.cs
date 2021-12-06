@@ -41,7 +41,7 @@ namespace StudentManage.Controllers
             if(ModelState.IsValid)
             {
                 // tạo 1 user bên bảng user
-               if(model.studentCode.Length <= 10)
+               if(model.studentCode.Length <= 15)
                {
                     EmailService checkMail = new EmailService();
                     if(checkMail.IsValid(model.email))
@@ -139,7 +139,7 @@ namespace StudentManage.Controllers
                 recordsTotal =total,
                 recordsFiltered = total,
                 data = list
-            }, JsonRequestBehavior.AllowGet) ;
+            }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult ChangeStatus(int id)
         {
@@ -159,32 +159,28 @@ namespace StudentManage.Controllers
             {
                 EmailService emailService = new EmailService();
                 // Check validate data
-                if (string.IsNullOrEmpty(item.fullname) || string.IsNullOrEmpty(item.email) || string.IsNullOrEmpty(item.studentCode) ||
-                    string.IsNullOrEmpty(item.phone) || string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className) ||
-                    string.IsNullOrEmpty(item.unionID))
+                if (string.IsNullOrEmpty(item.fullname)  || string.IsNullOrEmpty(item.studentCode) ||
+                    string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className))
                 {
                     item.ErrorMsg = "Thiếu thông tin";
                     listError.Add(item);
                     error++;
                     continue;
                 }
+                if(string.IsNullOrEmpty(item.email))
+                {
+                    item.email = "abc@gmail.com";
+                }    
                 if(!emailService.IsValid(item.email))
                 {
-                    item.ErrorMsg = "Email Không Đúng Định Dạng";
-                    listError.Add(item);
-                    error++;
-                    continue;
+                    item.email = "abc@gmail.com";
                 }    
                 // Check union number id
                 int num = -1;
                 if (!int.TryParse(item.unionID, out num))
                 {
-                    item.ErrorMsg = "Mã sổ đoàn không đúng định dạng";
-                    listError.Add(item);
-                    error++;
-                    continue;
+                    item.unionID = null;
                 }
-
                 // Convert to UnionModel
                 var isInsert = new UserBUS().InsertFromExcel(item);
                 if (isInsert <= 0)

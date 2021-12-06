@@ -33,10 +33,10 @@ namespace Models.EntityModel
         [StringLength(10)]
         public string StudentCode { get; set; }
 
-        [StringLength(50)]
+        [StringLength(255)]
         public string Email { get; set; }
 
-        [StringLength(11)]
+        [StringLength(15)]
         public string Phone { get; set; }
 
         [StringLength(255)]
@@ -78,7 +78,7 @@ namespace Models.EntityModel
         public virtual ICollection<DetailEvalution> DetailEvalutions { get; set; }
 
         public virtual GroupUser GroupUser { get; set; }
-
+      
         public virtual Position Position { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

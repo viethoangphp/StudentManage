@@ -11,7 +11,6 @@ namespace StudentManage.Models
         public int userID { set; get; }
         public int groupID { set; get; }
         public int positionID { set; get; }
-     
         public int classID { set; get;}
         [Required]
         public string fullname { set; get; }
@@ -41,5 +40,6 @@ namespace StudentManage.Models
         public int districtID { set; get; }
         public int wardID { set; get;}
         public string avatar { set; get;}
+        public int templateId { set; get;}
     }
 }

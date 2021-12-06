@@ -58,8 +58,8 @@ namespace StudentManage.BUS
                 union.districtId = (item.User1.DistrictID == null) ? 0 : Convert.ToInt32(item.User1.DistrictID);
                 union.wardId = (item.User1.DistrictID == null) ? 0 : Convert.ToInt32(item.User1.WardID);
                 union.unionID = item.User1.StudentCode.Substring(0, 2) + "-" + item.NumID.ToString().PadLeft(5, '0');
-                union.fullname = item.User1.FullName;
-                union.studentCode = item.User1.StudentCode;
+                union.fullname = item.User1.FullName.Trim();
+                union.studentCode = item.User1.StudentCode.Trim();
                 union.className = item.User1.Class.Name;
                 union.facultyName = item.User1.Class.Faculty.Name;
                 union.create_At = item.Create_At;
@@ -77,7 +77,6 @@ namespace StudentManage.BUS
                 return union;
             }
             return null;
-
         }
         public bool ChangeStatus(int id)
         {
