@@ -139,7 +139,7 @@ namespace StudentManage.Controllers
                 recordsTotal =total,
                 recordsFiltered = total,
                 data = list
-            }, JsonRequestBehavior.AllowGet) ;
+            }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult ChangeStatus(int id)
         {

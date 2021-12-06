@@ -11,6 +11,8 @@ namespace StudentManage.Models
         public string Proof { set; get; }
         public string Image { set; get; }
         public string Note { set; get; }
+        public int Status { set; get;}
+        public string Comment { set; get; }
         
     }
 }
