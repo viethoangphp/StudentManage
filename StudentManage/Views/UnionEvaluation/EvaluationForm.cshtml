@@ -159,7 +159,7 @@
                                                     </td>
                                                     <!-- #endregion -->
                                                     <!-- #region Level 2 - Bí thư chi đoàn -->
-                                                    <td class="text-center" name="classScore-@count">
+                                                    <td class="text-center" name="classScore-@(count-2)">
                                                         @if (Model.IsInTime == 2)
                                                         {
                                                             // Input Score
@@ -230,18 +230,24 @@
                         <!--Button Form-->
                         @if (Model.IsInTime != 0)
                         {
-                            <div class="d-flex justify-content-end">
-                                <div class="btn btn-danger" data-toggle="modal" data-target="#delete_warning">
-                                    Xóa tất cả
-                                </div>
-                                @if (Model.Assessor == 3 || Model.Assessor == 4)
-                                {
-                                    <div id="btn-auto" class="btn btn-info ml-2" data-toggle="modal">
-                                        Duyệt Phiếu
-                                    </div>
-                                }
-                                <button type="submit" class="btn btn-success ml-2">Nộp</button>
+                    <div class="d-flex justify-content-end">
+                        @if (Model.Assessor == 3 || Model.Assessor == 4)
+                        {
+                            <div id="btn-back" class="btn btn-secondary ml-2">
+                                Quay lại
                             </div>
+                        }
+                        <div class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_warning">
+                            Xóa tất cả
+                        </div>
+                        @if (Model.Assessor == 3 || Model.Assessor == 4)
+                        {
+                            <div onclick="AutoFillInput()" id="btn-auto" class="btn btn-info ml-2" data-toggle="modal">
+                                Duyệt Phiếu
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-success ml-2">Nộp</button>
+                    </div>
                         }
                         <!--/Button Form-->
                     </form>
@@ -355,6 +361,9 @@
             $("#btn-cancel-modal").click();
         }
         // Auto Fill Input
+        function AutoFillInput() {
+
+        }
 
         // Input Score Validation
         function onInvalid(input, max) {

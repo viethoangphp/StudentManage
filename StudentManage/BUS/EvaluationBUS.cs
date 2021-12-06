@@ -835,6 +835,8 @@ namespace StudentManage.BUS
                 #endregion
               
                 list.Add(model);
+
+                #region this region for testing purpose
                 //// Testing Paging
                 //PersonalFormModel model2 = new PersonalFormModel();
                 //model2.StudentCode = "1811063044";
@@ -860,6 +862,7 @@ namespace StudentManage.BUS
                 //{
                 //    list.Add(model2);
                 //}
+                #endregion
 
             }
             return list;
