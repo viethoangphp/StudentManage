@@ -1,0 +1,232 @@
+﻿@model StudentManage.Models.FacultyModel
+@{
+    ViewBag.Title = "FacultyEvaluation";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+<!-- Page Content -->
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="page-title">Danh sách lớp</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý khoa & lớp</li>
+                    <li class="breadcrumb-item active">Danh sách lớp (khoa)</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="text-right">
+                    <span class="badge bg-inverse-success text-xl">@Model.facultyName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <!-- Search Filter -->
+    <div class="row filter-row">
+        <!--List Classes-->
+        @Html.Action("GetListClassByFacultyId", "UnionEvaluation", new { facultyId = Model.facultyID })
+        <!--ClassSituation-->
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating" id="classCondition">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1"> Đã đánh giá</option>
+                    <option value="0"> Chưa đánh giá </option>
+                </select>
+                <label class="focus-label">Tình trạng lớp</label>
+            </div>
+        </div>
+        <!--FacultySituation-->
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <div class="form-group form-focus select-focus">
+                <select class="select floating" id="facultyCondition">
+                    <option value="-1"> -- Tất cả -- </option>
+                    <option value="1"> Đã đánh giá</option>
+                    <option value="0"> Chưa đánh giá </option>
+                </select>
+                <label class="focus-label">Tình trạng khoa</label>
+            </div>
+        </div>
+        <!--Button-->
+        <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-12">
+            <a href="#" id="btn-search" class="btn btn-secondary btn-block"> Tìm kiếm </a>
+        </div>
+    </div>
+    <!-- /Search Filter -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered table-striped custom-table mb-0 datatable text-center"
+                       style="width:100%; font-size: 13px;">
+                    <thead>
+                        <tr style="box-shadow:none">
+                            <th rowspan="2">
+                                <span>
+                                    STT
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Tên lớp
+                                </span>
+                            </th>
+                            <th rowspan="2">
+                                <span>
+                                    Sỉ số
+                                </span>
+                            </th>
+
+                            <th colspan="2">Lớp</th>
+                            <th colspan="2">Khoa</th>
+                            <th rowspan="2">
+                                <span>
+                                    Tác vụ
+                                </span>
+                            </th>
+                        </tr>
+                        <tr style="box-shadow:none">
+                            <th>Đã đánh giá</th>
+                            <th>Chưa đánh giá</th>
+                            <th>Đã đánh giá</th>
+                            <th>Chờ xác nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*<tr>
+                                <td>
+                                    <strong>1</strong>
+                                </td>
+                                <td>18DTHD1</td>
+                                <td>37</td>
+                                <td>37</td>
+                                <td>0</td>
+                                <td>30</td>
+                                <td>7</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>2</strong>
+                                </td>
+                                <td>19DTHD1</td>
+                                <td>35</td>
+                                <td>35</td>
+                                <td>0</td>
+                                <td>32</td>
+                                <td>2</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>3</strong>
+                                </td>
+                                <td>19DTHC6</td>
+                                <td>29</td>
+                                <td>29</td>
+                                <td>0</td>
+                                <td>29</td>
+                                <td>0</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>4</strong>
+                                </td>
+                                <td>19DTHD2</td>
+                                <td>36</td>
+                                <td>36</td>
+                                <td>0</td>
+                                <td>35</td>
+                                <td>1</td>
+                                <td class="text-center">
+                                    <a href="jugedment-class-list.html" title="Chấm điểm">
+                                        <i class="las la-pen text-xl text-success juged-icon"></i>
+                                    </a>
+                                </td>
+                            </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Content -->
+@section js{
+    <script src="~/Assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable({
+                searching: false,
+                ordering: false,
+                responsive: true,
+                processing: true,
+                columns: [
+                    {
+                        "render": function (data, type, full, meta) {
+                            return meta.row + 1;
+                        },
+                        "class": "text-center"
+                    },
+                    {
+                        "data": "ClassName"
+                    },
+                    {
+                        "data": "Total"
+                    },
+                    {
+                        "data": "ClassDone"
+                    },
+                    {
+                        "data": "ClassNotDone"
+                    },
+                    {
+                        "data": "FacultyDone"
+                    },
+                    {
+                        "data": "FacultyNotDone"
+                    },
+                    {
+                        "data": "ClassId",
+                        "render": function (data) {
+                            return '<a href="/UnionEvaluation/ClassEvaluation/?classId=' + data + '" title="Chấm điểm"> <i class="las la-pen text-xl text-success juged-icon"></i> </a>';
+                        }
+                    }
+
+                ],
+                ajax: {
+                    url: "/UnionEvaluation/GetFacultyEvaluation/?facultyId=" + @Model.facultyID
+                }
+            })
+           
+            var btn = $("#btn-search");
+            btn.on('click', function () {
+                var classCondition = $("#classCondition").val();
+                var facultyCondition = $("#facultyCondition").val();
+                var classId = $("#classId").val();
+                console.log(classCondition + '/' + facultyCondition + '/' + classId);
+                table.ajax.url("/UnionEvaluation/SearchFacultyEvaluation?facultyId=" +@Model.facultyID+"&classCondition=" + classCondition + "&facultyCondition=" + facultyCondition + "&classId=" + classId).load();
+                
+            })
+
+        })
+
+    </script>
+}

@@ -19,12 +19,16 @@ namespace StudentManage.Models
 
         public int? status { set; get; }
 
+        public string displayName { get; set; }
+
+        // Added Fields
         public int? FormId { set; get; }
         public int? score1 { set; get; }
         public int? score2 { set; get; }
         public int? score3 { set; get; }
         public int? score4 { set; get; }
         public bool? inProcess { set; get; }
+        public string Note {  set; get; }
 
 
     }

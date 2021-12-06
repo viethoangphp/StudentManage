@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Union";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
-    //var detail = (List<Models.EntityModel.DetailEvalution>)ViewBag.detail;
     var semesters = (List<StudentManage.Models.SemesterModel>)ViewBag.semesters;
 }
 
@@ -118,7 +117,7 @@
                                         @if (item.inProcess == true)
                                         {
                                             <td>
-                                                <a href="~/UnionEvaluation/EvaluationForm">
+                                                <a href="~/UnionEvaluation/FormDetail/@item.FormId">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             </td>
@@ -126,7 +125,7 @@
                                         else
                                         {
                                             <td>
-                                                <a href="#" data-toggle="modal" data-target="#vỉewdetail_modal">
+                                                <a href="~/UnionEvaluation/FormDetail/@item.FormId">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             </td>
@@ -160,329 +159,16 @@
     </div>
 </div>
 <!-- /Page Content -->
-<!-- View detail point Modal -->
-<div id="vỉewdetail_modal" class="modal custom-modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content" style="background-color: #f5f4f4;">
-            <div class="modal-header">
-                <h5 class="modal-title m-t-5 m-b-5">Điểm rèn luyện học kỳ 2 ( 2020 - 2021 )</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Jugedment table -->
-                <div class="card m-b-30">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">Đánh giá rèn luyện</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+@section js
+{
+    @if (TempData["MESSAGE"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                toastr.success("@TempData["MESSAGE"]", "Thông báo");
+                sound("/Assets/mp3/smallbox.mp3");
+            })
+        </script>
+    }
+}
 
-                                <form action="">
-                                    <div class="table-responsive" style="white-space:unset">
-                                        <table class="table table-bordered table-hover mb-0 juged-table">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th rowspan="2">
-                                                        <span style="font-size: 20px;">
-                                                            STT
-                                                        </span>
-                                                    </th>
-                                                    <th rowspan="2" style="width: 570px; min-width: 570px;">
-                                                        <span style="font-size: 26px;">
-                                                            Nội dung
-                                                        </span>
-                                                    </th>
-                                                    <th colspan="4">Điểm</th>
-                                                </tr>
-                                                <tr class="text-center">
-                                                    <th style="width:120px; min-width:100px">ĐV</th>
-                                                    <th style="width:120px; min-width:100px">Lớp</th>
-                                                    <th style="width:120px; min-width:100px">Khoa</th>
-                                                    <th style="width:120px; min-width:100px">Trường</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!--  section A -->
-                                                <tr>
-                                                    <td colspan="6">
-                                                        <b style="font-size: 18px;">
-                                                            A. Nội dung
-                                                            đoàn viên
-                                                            đăng ký thực hiện theo yêu cầu chung của Đoàn
-                                                            trường:
-                                                        </b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">1</td>
-                                                    <td>
-                                                        Có tinh thần yêu nước, yêu trường lớp, tích cực
-                                                        trong hoạt động
-                                                        sinh hoạt lớp, sinh hoạt Đoàn. <b>(0–10 điểm)</b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2</td>
-                                                    <td>
-                                                        Chấp hành pháp luật, đồng thời vận động gia đình,
-                                                        bạn bè cùng
-                                                        thực hiện tốt; thực hiện tốt nội quy Nhà trường,
-                                                        điều lệ
-                                                        Đoàn. <b>(0–10 điểm)</b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">3</td>
-                                                    <td>
-                                                        Có thái độ học tập tích cực, đi học đúng giờ, đóng
-                                                        góp xây dựng
-                                                        bài, không vi phạm quy chế học tập, quy chế thi cử.
-                                                        <b>
-                                                            (0–10
-                                                            điểm)
-                                                        </b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">4</td>
-                                                    <td>
-                                                        Tích cực tham gia các hoạt động văn hóa, văn nghệ,
-                                                        thể dục thể
-                                                        thao. <b>(0–10 điểm)</b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">5</td>
-                                                    <td>
-                                                        Tích cực tham gia các hoạt động tình nguyện (Mùa hè
-                                                        xanh, Xuân
-                                                        tình nguyện, Hiến máu tình nguyện, các hoạt động bảo
-                                                        vệ môi
-                                                        trường…); Không xả rác bừa bãi và tự nguyện nhặt rác
-                                                        <b>
-                                                            (0–10
-                                                            điểm)
-                                                        </b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">6</td>
-                                                    <td>
-                                                        Tích cực chủ động trang bị những kỹ năng, nâng cao
-                                                        trình độ
-                                                        ngoại ngữ, tin học; đăng ký tham gia phong trào
-                                                        “sinh viên 5
-                                                        tốt”. <b>(0–10 điểm)</b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">7</td>
-                                                    <td>
-                                                        Tham dự đầy đủ, tích cực và tham gia đóng góp ý kiến
-                                                        trong sinh
-                                                        hoạt chi đoàn và các hoạt động do tổ chức Đoàn các
-                                                        cấp tổ chức,
-                                                        đóng đoàn phí đầy đủ. Chấp hành sự phân công của Ban
-                                                        chấp hành
-                                                        chi đoàn và Đoàn cấp trên. <b>(0–10 điểm)</b>
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <!--  section A -->
-                                                <!-- Section B -->
-                                                <tr>
-                                                    <td colspan="6">
-                                                        <b style="font-size: 18px;">
-                                                            B. Nội dung
-                                                            đoàn viên tự
-                                                            đăng ký thực hiện:
-                                                        </b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">8</td>
-                                                    <td>
-                                                        Rèn luyện về nhận thức về chính trị, đạo đức lối
-                                                        sống: <b>
-                                                            (0–10
-                                                            điểm)
-                                                        </b>
-                                                        <br>
-                                                        <div class="dropdown dropdown-action d-inline-block">
-                                                            <a href="#" class="action-icon dropdown-toggle"
-                                                               data-toggle="dropdown"
-                                                               aria-expanded="false">
-                                                                <span class="badge bg-inverse-success">
-                                                                    Xem
-                                                                    minh chứng
-                                                                </span>
-                                                            </a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <div class="dropdown-item"
-                                                                     data-toggle="modal"
-                                                                     data-target="#edit_user">
-                                                                    <!-- <img src="assets/img/logo-hutech.png"
-                                                                        alt="" width="300px"> -->
-                                                                    <span class="text-sm">
-                                                                        Không có ảnh minh
-                                                                        chứng
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">9</td>
-                                                    <td>
-                                                        Rèn luyện về chuyên môn, nghiệp vụ, tinh thần tình
-                                                        nguyện:
-                                                        <b>(0–10 điểm)</b>
-                                                        <br>
-                                                        <div class="dropdown dropdown-action d-inline-block">
-                                                            <a href="#" class="action-icon dropdown-toggle"
-                                                               data-toggle="dropdown"
-                                                               aria-expanded="false">
-                                                                <span class="badge bg-inverse-success">
-                                                                    Xem
-                                                                    minh chứng
-                                                                </span>
-                                                            </a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <div class="dropdown-item"
-                                                                     data-toggle="modal"
-                                                                     data-target="#edit_user">
-                                                                    <!-- <img src="assets/img/logo-hutech.png"
-                                                                        alt="" width="300px"> -->
-                                                                    <span class="text-sm">
-                                                                        Không có ảnh minh
-                                                                        chứng
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">10</td>
-                                                    <td>
-                                                        Rèn luyện về sức khỏe, kỹ năng thực hành xã hội:
-                                                        <b>
-                                                            (0–10
-                                                            điểm)
-                                                        </b>
-                                                        <br>
-                                                        <div class="dropdown dropdown-action d-inline-block">
-                                                            <a href="#" class="action-icon dropdown-toggle"
-                                                               data-toggle="dropdown"
-                                                               aria-expanded="false">
-                                                                <span class="badge bg-inverse-success">
-                                                                    Xem
-                                                                    minh chứng
-                                                                </span>
-                                                            </a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <div class="dropdown-item"
-                                                                     data-toggle="modal"
-                                                                     data-target="#edit_user">
-                                                                    <img src="assets/img/logo-hutech.png"
-                                                                         alt="" width="300px">
-                                                                    <!-- <span class="text-sm">Không có ảnh minh
-                                                                        chứng</span> -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        7
-                                                    </td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center"></td>
-                                                </tr>
-
-                                                <!-- /Section B -->
-
-
-
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-
-
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Jugedment table -->
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Union notebook Modal -->
