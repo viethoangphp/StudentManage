@@ -17,13 +17,15 @@ namespace Models.EntityModel
 
         public int? Create_By { get; set; }
 
+        public DateTime? Update_At { get; set; }
+
         public int? UserID { get; set; }
+
+        public int? Status { get; set; }
 
         public DateTime? ReturnDate { get; set; }
 
-        public int? Status { get; set; }
-        public int? isEmail { set; get; }
-        public DateTime? Update_At { get; set; }
+        public int? isEmail { get; set; }
 
         public virtual User User { get; set; }
 

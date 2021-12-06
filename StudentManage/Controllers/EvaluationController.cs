@@ -39,11 +39,10 @@ namespace StudentManage.Controllers
             var userId = (int)Session["USER_ID"];
             // Get TemplateId to User Login 
             var templateId = new UserBUS().GetUserByID(userId).templateId;
-
             var listCriteriaId = TemplateBUS.GetListCriteria(templateId);
             // create formModel 
             FormModel formModel = new FormModel();
-
+            var request = Request.Files[0].FileName;
             formModel.Create_At = DateTime.Now;
             formModel.Create_By = userId;
             formModel.Status = 0;
@@ -52,6 +51,7 @@ namespace StudentManage.Controllers
             if(formId != -1)
             {
                 List<DetailFormModel> detailFormModels = new List<DetailFormModel>();
+                int index = 0;
                 foreach (var item in listCriteriaId)
                 {
                     DetailFormModel detailFormModel = new DetailFormModel();
@@ -65,9 +65,20 @@ namespace StudentManage.Controllers
                     }
                     detailFormModel.Score = score;
                     detailFormModel.Note = formCollection["proof[" + item.CriteriaID + "]"];
-                    detailFormModel.Image = "";
+                    // Lưu ảnh minh chứng 
+                    if(Request.Files[index].FileName != null && Request.Files[index].FileName != "")
+                    {
+                        HttpPostedFileBase fileTemp = Request.Files[index];
+                        detailFormModel.Image = fileTemp.FileName.Trim();
+                        fileTemp.SaveAs(Server.MapPath("~/Assets/img/Images_Proof/") + fileTemp.FileName);
+                    }
+                    else
+                    {
+                        detailFormModel.Image = null;
+                    }
                     detailFormModel.Level = 1;
                     detailFormModels.Add(detailFormModel);
+                    index++;
                 }
                 if(TemplateBUS.InsertListEvaluationDetail(detailFormModels) != -1)
                 {
@@ -94,8 +105,13 @@ namespace StudentManage.Controllers
             ViewData["ID"] = id;
             return View(model);
         }
+        public ActionResult ViewAdmin(int id)
+        {
+            var model = TemplateBUS.GetTemplateFormDetail(id);
+            return View(model);
+        }
         #endregion
-
+        
         #region Xuất file excel
         public ActionResult ExportExcel(int id)
         {

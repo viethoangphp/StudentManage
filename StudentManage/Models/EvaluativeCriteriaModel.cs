@@ -12,5 +12,15 @@ namespace StudentManage.Models
         public string criteriaRequirement { get; set; }
         public int? score {  get; set; }
         public int mainId {  get; set; }
+
+        // Added Fields=================
+        // Đoàn viên
+        public int? score1 {  get; set; }
+        // Bí thư chi đoàn
+        public int? score2 { get; set; }
+        // Bí thư đoàn khoa
+        public int? score3 { get; set; }
+        // Bí thư đoàn trường 
+        public int? score4 {  get; set; }
     }
 }

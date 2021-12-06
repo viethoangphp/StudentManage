@@ -15,6 +15,17 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/Assets/css/bootstrap.min.css">
 
+    <!-- default icons used in the plugin are from Bootstrap 5.x icon library (which can be enabled by loading CSS below) -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
+          crossorigin="anonymous" />
+
+    <!-- the fileinput plugin styling CSS file -->
+    <link href="~/Assets/css/fileinput.css"
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
+
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="~/Assets/css/font-awesome.min.css">
 
@@ -23,7 +34,7 @@
 
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="~/Assets/css/select2.min.css">
-
+    <link rel="stylesheet" href="~/Assets/css/fileinput.css">
     <!-- Datatable CSS -->
     <link rel="stylesheet" href="~/Assets/css/dataTables.bootstrap4.min.css">
 
@@ -34,30 +45,29 @@
     <link rel="stylesheet" href="~/Assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="~/Assets/css/style.css">
+    <link rel="stylesheet" href="~/Assets/css/style.css"/>
 
 
 </head>
 
 <body>
     <!-- Main Wrapper -->
-   	<!-- Main Wrapper -->
-	<div class="main-wrapper">
-		<!-- Loader -->
-		<div id="loader-wrapper">
-			<div id="loader">
-				<div class="loader-hutech">
-					<svg class="spinner" width="100%" height="100%" viewBox="0 0 66 66"
-						xmlns="http://www.w3.org/2000/svg">
-						<circle class="path" fill="none" stroke-width="2" stroke-linecap="round" cx="33" cy="33" r="30">
-						</circle>
-					</svg>
-					<img class="logo-hutech-gif" width="50%" src="~/Assets/img/logo.gif" alt="Vui lòng chờ">
-				</div>
-			</div>
-		</div>
-		<!-- /Loader -->
-
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Loader -->
+        <div id="loader-wrapper">
+            <div id="loader">
+                <div class="loader-hutech">
+                    <svg class="spinner" width="100%" height="100%" viewBox="0 0 66 66"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="2" stroke-linecap="round" cx="33" cy="33" r="30">
+                        </circle>
+                    </svg>
+                    <img class="logo-hutech-gif" width="50%" src="~/Assets/img/logo.gif" alt="Vui lòng chờ">
+                </div>
+            </div>
+        </div>
+        <!-- /Loader -->
         <!-- Header -->
         <div class="header">
             <!-- Logo -->
@@ -89,16 +99,16 @@
             <ul class="nav user-menu">
                 <!-- Search -->
                 @*<li class="nav-item">
-                    <div class="top-nav-search">
-                        <a href="javascript:void(0);" class="responsive-search">
-                            <i class="fa fa-search"></i>
-                        </a>
-                        <form action="search.html">
-                            <input class="form-control" type="text" placeholder="Search here">
-                            <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                        </form>
-                    </div>
-                </li>*@
+                        <div class="top-nav-search">
+                            <a href="javascript:void(0);" class="responsive-search">
+                                <i class="fa fa-search"></i>
+                            </a>
+                            <form action="search.html">
+                                <input class="form-control" type="text" placeholder="Search here">
+                                <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </li>*@
                 <!-- /Search -->
                 <!-- Notifications -->
                 <!-- /Notifications -->
@@ -121,10 +131,10 @@
                             <i class="la la-user"></i>
                             Thông tin cá nhân
                         </a>
-                        <a class="dropdown-item" href="/Settings">
-                            <i class="las la-cog"></i>
-                            Cài đặt
-                        </a>
+                        @*<a class="dropdown-item" href="/Settings">
+                                <i class="las la-cog"></i>
+                                Cài đặt
+                            </a>*@
                         <a class="dropdown-item text-danger" href="#" data-target="#logout" data-toggle="modal">
                             <i class="las la-sign-out-alt"></i>
                             Đăng xuất
@@ -144,10 +154,10 @@
                         <i class="la la-user"></i>
                         Thông tin cá nhân
                     </a>
-                    <a class="dropdown-item" href="/Settings">
-                        <i class="las la-cog"></i>
-                        Cài đặt
-                    </a>
+                    @*<a class="dropdown-item" href="/Settings">
+                            <i class="las la-cog"></i>
+                            Cài đặt
+                        </a>*@
                     <a class="dropdown-item text-danger" href="/Login/Logout">
                         <i class="las la-sign-out-alt"></i>
                         Đăng xuất
@@ -278,7 +288,9 @@
     <script src="~/Assets/js/app.js"></script>
     <script src="~/Assets/js/lib/sound.js"></script>
     <script src="~/Assets/js/lib/Notification.js"></script>
-    <script src="~/Assets/js/input-img.js"></script>
+    <script src="~/Assets/js/fileinput.js"></script>
+    <script src="~/Assets/js/fileinput2.js"></script>
+  
     @RenderSection("js", false)
 </body>
 

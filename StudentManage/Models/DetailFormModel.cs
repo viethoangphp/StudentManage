@@ -14,5 +14,6 @@ namespace StudentManage.Models
         public string Note { set; get; }
         public int Level { set; get; }
         public string Image { set; get; }
+        public HttpPostedFileBase file { set; get; }
     }
 }

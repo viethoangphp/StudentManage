@@ -23,6 +23,11 @@ namespace StudentManage.BUS
                 var user = new UserModel();
                 user.userID = model.UserID;
                 user.fullname = model.FullName;
+                user.groupID = model.GroupId;
+                if (model.ClassID != null)
+                {
+                    user.classID = (int)model.ClassID;
+                }
                 user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;
@@ -171,7 +176,7 @@ namespace StudentManage.BUS
             item.WardID = user.wardID;
             item.Address = user.address;
             item.Status = 1;
-            return UserDAO.Update(item);
+            return new UserDAO().Update(item);
         }
         public List<UserModel> GetListUserByClass(int id)
         {
@@ -181,12 +186,15 @@ namespace StudentManage.BUS
             {
                 UserModel model = new UserModel()
                 {
+                    userID = item.UserID,
                     className = item.Class.Name,
+                    classID = (int)item.ClassID,
                     facultyName = item.Class.Faculty.Name,
                     fullname = item.FullName,
                     studentCode = item.StudentCode,
                     email = item.Email,
                     phone = item.Phone,
+                    groupID = item.GroupId,
                     address = item.Address,
                     birthDay = item.Birthday,
                     cityID = item.CityID != null ? (int)item.CityID : 0,

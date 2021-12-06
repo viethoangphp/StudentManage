@@ -105,7 +105,7 @@ namespace StudentManage.BUS
             {
                 PersonalScore personalScore = new PersonalScore();
                 personalScore.FormId = item.FormId;
-                personalScore.FullName = item.DetailEvalutions.First().User.FullName;
+                personalScore.FullName = item.DetailEvalutions.Last().User.FullName;
                 personalScore.Semester = item.Semester.Name;
                 personalScore.Year = item.Semester.Year;
                 personalScore.Score = Int32.Parse(item.Total.ToString());
@@ -159,11 +159,13 @@ namespace StudentManage.BUS
                     evaluation.CriteriaID = subItem.CriteriaID;
                     evaluation.Content = subItem.EvaluativeCriteria.CriteriaContent;
                     evaluation.Requirement = subItem.EvaluativeCriteria.CriteriaRequirement;
-                    evaluation.MaxScore = (int)subItem.Score;
+                    evaluation.MaxScore = (int)subItem.EvaluativeCriteria.Score;
                     evaluation.Score = (int)subItem.Score;
                     evaluation.Proof = subItem.Note;
-                    evaluation.Image = "";
-                    evaluation.Note = "";
+                    evaluation.Image = (subItem.Image_proof != null) ? subItem.Image_proof : "";
+                    evaluation.Note = subItem.Note;
+                    evaluation.Status = subItem.Status;
+                    evaluation.Comment = subItem.Comment;
                     evaluationMain.ListRequriement.Add(evaluation);
                 }
                 template.TotalScore = (int)listDetail.First().EvalutionForm.Total;
