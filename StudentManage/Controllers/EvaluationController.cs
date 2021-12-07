@@ -108,6 +108,27 @@ namespace StudentManage.Controllers
             return View(model);
         }
         #endregion
-        
+        #region Duyệt phiếu điểm cá nhân
+        [HttpPost]
+        public ActionResult ConfirmEvalution(int id)
+        {
+            List<PesonalEvalationModel> list = new List<PesonalEvalationModel>();
+            var templateId = TemplateBUS.GetTemplateFormDetail(id).TemplateID;
+            var listCriteriaId = TemplateBUS.GetListCriteria(templateId);
+            foreach (var item in listCriteriaId)
+            {
+                PesonalEvalationModel detailFormModel = new PesonalEvalationModel();
+                detailFormModel.CriteriaID = item.CriteriaID;
+                detailFormModel.FormID = id;
+                detailFormModel.Status = Int32.Parse(Request.Form["Status[" + item.CriteriaID + "]"]);
+                detailFormModel.Comment = Request.Form["Comment[" + item.CriteriaID + "]"];
+                list.Add(detailFormModel);
+            }
+
+            var result = TemplateBUS.UpdateEvaluationForm(list);
+            var status = TemplateBUS.UpdateStatusForm(id, 1);
+            return RedirectToAction("List");
+        }
+        #endregion
     }
 }

@@ -51,7 +51,6 @@ namespace StudentManage.Controllers
             ModelState.Remove("className");
             if(ModelState.IsValid)
             {
-
                 EmailService email = new EmailService();
                 if (email.IsValid(user.email))
                 {
