@@ -30,7 +30,7 @@ namespace Models.EntityModel
         [StringLength(255)]
         public string FullName { get; set; }
 
-        [StringLength(10)]
+        [StringLength(50)]
         public string StudentCode { get; set; }
 
         [StringLength(255)]
@@ -47,8 +47,6 @@ namespace Models.EntityModel
         public DateTime? Date_Start { get; set; }
 
         public DateTime? Date_End { get; set; }
-
-        public DateTime? JoinDate { get; set; }
 
         [StringLength(256)]
         public string Password { get; set; }
@@ -71,6 +69,8 @@ namespace Models.EntityModel
 
         [StringLength(50)]
         public string Avatar { get; set; }
+
+        public DateTime? JoinDate { get; set; }
 
         public virtual Class Class { get; set; }
 

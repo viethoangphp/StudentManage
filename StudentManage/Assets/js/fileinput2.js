@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * FileInput <_LANG_> Translations
  *
  * This file must be loaded after 'fileinput.js'. Patterns in braces '{}', or

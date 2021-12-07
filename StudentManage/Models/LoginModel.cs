@@ -21,7 +21,7 @@ namespace StudentManage.Models
             password = HashPassword.HashSHA256(password, new SHA256CryptoServiceProvider());
             if (user != null)
             {
-                if(user.Password.Trim() == password.Trim())
+                if(user.Password.Trim() == password)
                 {
                     return user.UserID;
                 }    

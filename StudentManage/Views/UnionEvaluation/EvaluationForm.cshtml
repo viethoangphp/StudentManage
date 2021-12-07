@@ -1,10 +1,11 @@
-﻿@model StudentManage.Models.UnionFormModel
+﻿@model List<StudentManage.Models.EvaluationModel>
 @{
     ViewBag.Title = "EvaluationForm";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
-    //var listMain = (List<StudentManage.Models.EvaluativeMainModel>)ViewBag.listMain;
-    //var listCriteria = (List<StudentManage.Models.EvaluativeCriteriaModel>)ViewBag.listCriteria;
+    var listMain = (List<StudentManage.Models.EvaluativeMainModel>)ViewBag.listMain;
+    var listCriteria = (List<StudentManage.Models.EvaluativeCriteriaModel>)ViewBag.listCriteria;
     var user = (StudentManage.Models.UserModel)ViewBag.user;
+
 }
 <!-- Page Content -->
 <div class="content container-fluid">
@@ -45,15 +46,9 @@
                                 </div>
                                 <div class="small text-muted">Lớp: @user.className</div>
                                 @{
-                                    int studenCode;
-                                    bool isNumber = int.TryParse(user.studentCode, out studenCode);
-                                    if (isNumber)
-                                    {
-                                        int year = int.Parse(user.studentCode.Substring(0, 2)) + 2000;
-                                        <div class="small text-muted">Khóa : @year - @(year + 4)</div>
-                                    }
+                                    int year = Int32.Parse(@user.studentCode.Substring(0, 2)) + 2000;
                                 }
-
+                                <div class="small text-muted">Khóa : @year - @(year+4)</div>
                             </div>
                         </div>
                         <div class="col-md-7">
@@ -84,7 +79,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form action="~/UnionEvaluation/Evaluation" method="post">
+                    <form action="~/UnionEvaluation/evaluation" method="post">
                         <div class="table-responsive" style="white-space:unset">
                             <table class="table table-bordered table-hover mb-0 juged-table">
                                 <thead>
@@ -109,11 +104,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{
-                                        int count = 1;
-                                        int turn = (Model.Turn == null) ? 0 : (int)Model.Turn;
-                                    }
-                                    @foreach (var item in Model.ListMain)
+                                    @{ int count = 1;}
+                                    @foreach (var item in listMain)
                                     {
                                         <tr>
                                             <td colspan="6">
@@ -122,7 +114,7 @@
                                                 </b>
                                             </td>
                                         </tr>
-                                        foreach (var criteria in Model.ListCriteria)
+                                        foreach (var criteria in listCriteria)
                                         {
                                             if (criteria.mainId == item.mainId)
                                             {
@@ -131,84 +123,15 @@
                                                     @{count++; }
                                                     <td>
                                                         @criteria.criteriaContent
-                                                        <b>(0–@criteria.score điểm).</b>
-                                                        @if (criteria.criteriaRequirement == "1")
-                                                        {
-                                                            <br />
-                                                            <a data-target="#viewpic_modal"
-                                                               data-toggle="modal"
-                                                               class="badge bg-inverse-primary"
-                                                               style="cursor: pointer">Thêm minh chứng</a>
-                                                        }
+                                                        <b>(0–@criteria.score điểm)</b>
                                                     </td>
-                                                    <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
-                                                        @if (Model.IsInTime == 1)
-                                                        {
-                                                            // Input Score
-                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score1" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="onInvalid(this, @criteria.score)"
-                                                                   oninput="onInput(this)" />
-                                                            // Criteria Id
-                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
-                                                        }
-                                                        else
-                                                        {
-                                                            @((criteria.score1 == null) ? Html.Raw("-") : Html.Raw(criteria.score1));
-                                                        }
+                                                        <input type="number" name="@("listmodel["+(count-2)+"].score")" value="" class="juged-input" min="0" max="@criteria.score" required />
+                                                        <input type="hidden" name="@("listmodel["+(count-2)+"].criteriaId")" value="@criteria.criteriaId"/>
                                                     </td>
-                                                    <!-- #endregion -->
-                                                    <!-- #region Level 2 - Bí thư chi đoàn -->
-                                                    <td class="text-center" name="classScore-@(count-2)">
-                                                        @if (Model.IsInTime == 2)
-                                                        {
-                                                            // Input Score
-                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score2" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="onInvalid(this, @criteria.score)"
-                                                                   oninput="onInput(this)" />
-                                                            // Criteria Id
-                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
-                                                        }
-                                                        else
-                                                        {
-                                                            @((criteria.score2 == null) ? Html.Raw("-") : Html.Raw(criteria.score2));
-                                                        }
-                                                    </td>
-                                                    <!-- #endregion -->
-                                                    <!-- #region Level 3 - Bí thư Đoàn khoa -->
-                                                    <td class="text-center" name="FacultyScore-@count">
-                                                        @if (Model.IsInTime == 3)
-                                                        {
-                                                            // Input Score
-                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score3" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="onInvalid(this, @criteria.score)"
-                                                                   oninput="onInput(this)" />
-                                                            // Criteria Id
-                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
-                                                        }
-                                                        else
-                                                        {
-                                                            @((criteria.score3 == null) ? Html.Raw("-") : Html.Raw(criteria.score3));
-                                                        }
-                                                    </td>
-                                                    <!-- #endregion -->
-                                                    <!-- #region Level 4 - Bí thư Đoàn trường -->
-                                                    <td class="text-center">
-                                                        @if (Model.IsInTime == 4)
-                                                        {
-                                                            // Input Score
-                                                            <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score4" class="juged-input" required min="0" max="@criteria.score"
-                                                                   oninvalid="onInvalid(this, @criteria.score)"
-                                                                   oninput="onInput(this)" />
-                                                            // Criteria Id
-                                                            <input type="hidden" name="@("listmodel[" + (count - 2) + "].criteriaId")" value="@criteria.criteriaId" />
-                                                        }
-                                                        else
-                                                        {
-                                                            @((criteria.score4 == null) ? Html.Raw("-") : Html.Raw(criteria.score4));
-                                                        }
-                                                    </td>
-                                                    <!-- #endregion -->
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
                                                 </tr>
                                             }
                                         }
@@ -216,177 +139,30 @@
                                     <!-- sum -->
                                     <tr style="background-color:#eee ;">
                                         <td colspan="2" class="text-center"> <b>Tổng điểm</b> </td>
-                                        @for (int i = 0; i < Model.Total.Length; i++)
-                                        {
-                                            <td class="text-center font-weight-bold">@Model.Total[i]</td>
-                                        }
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
+                                        <td class="text-center font-weight-bold">90</td>
                                     </tr>
                                     <!-- /sum -->
                                 </tbody>
                             </table>
+                            
                         </div>
-                        <!--Form Id Hidden Field-->
-                        <input type="hidden" name="evaluationFormId" value="@Model.formId" />
-                        <!--Button Form-->
-                        @if (Model.IsInTime != 0)
-                        {
-                    <div class="d-flex justify-content-end">
-                        @if (Model.Assessor == 3 || Model.Assessor == 4)
-                        {
-                            <div id="btn-back" class="btn btn-secondary ml-2">
-                                Quay lại
-                            </div>
-                        }
-                        <div class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_warning">
-                            Xóa tất cả
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Nộp</button>
+                            <button onclick="" class="btn btn-warning">Xóa tất cả</button>
                         </div>
-                        @if (Model.Assessor == 3 || Model.Assessor == 4)
-                        {
-                            <div onclick="AutoFillInput()" id="btn-auto" class="btn btn-info ml-2" data-toggle="modal">
-                                Duyệt Phiếu
-                            </div>
-                        }
-                        <button type="submit" class="btn btn-success ml-2">Nộp</button>
-                    </div>
-                        }
-                        <!--/Button Form-->
                     </form>
                     <!-- when done jugedment -->
                     <!-- <div class="d-flex justify-content-center">
                         <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
                                 class="las la-thumbs-up font-35 text-info"></i></p>
                     </div> -->
-
+                    
                 </div>
             </div>
         </div>
     </div>
     <!-- /Jugedment table -->
 </div>
-<!-- Delete Evaluation Input Warning Modal -->
-<div class="modal custom-modal fade" id="delete_warning" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="form-header">
-                    <h3>Xóa tất cả điểm bạn đã nhập</h3>
-                    <p>Bạn có chắc chắn muốn xóa?</p>
-                </div>
-                <div class="modal-btn delete-action">
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="#" onclick="deleteAllInput()" class="btn continue-btn">Xóa</a>
-                        </div>
-                        <div class="col-6">
-                            <a id="btn-cancel-modal" href="javascript:void(0);" data-dismiss="modal"
-                               class="btn cancel-btn">Hủy</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Delete Evaluation Input Warning Modal -->
-<!-- Add Proof Modal -->
-<div id="viewpic_modal"
-     class="modal custom-modal fade"
-     data-backdrop="static"
-     role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-bold">Ảnh minh chứng</h5>
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="upload-pic_container">
-                            <div class="file-loading">
-                                <input id="input-1" type="file" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Proof Modal -->
-
-@section js
-{
-    <!--Toast Success Evaluation-->
-    @if (TempData["MESSAGE"] != null)
-    {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                toastr.success("@TempData["MESSAGE"]", "Thông báo");
-                sound("/Assets/mp3/smallbox.mp3");
-            })
-        </script>
-    }
-    <!--Error Evalution-->
-    @if (TempData["ERROR"] != null)
-    {
-        var list = TempData["listError"] as List<StudentManage.Models.EvaluationModel>;
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                toastr.error("@TempData["ERROR"]", "Lỗi");
-                sound("/Assets/mp3/smallbox.mp3");
-                @foreach(var item in list)
-                {
-                    // Clear Error Input
-                    @: $('input[name="listmodel[@item.Order].score"]').val("");
-                    // Change Input Border Color - Red
-                    @: $('input[name="listmodel[@item.Order].score"]')[0].style.border = "1px solid #eb4034";
-                }
-                //Scroll to first Error Input
-                $("html, body").animate({
-                    scrollTop: $('input[name="listmodel[@(list[0].Order)].score').offset().top - $(window).height()/2
-                },4000)
-            })
-        </script>
-    }
-    <script>
-        // Clear All Input
-        function deleteAllInput() {
-            $(".juged-input").val('');
-            $("#btn-cancel-modal").click();
-        }
-        // Auto Fill Input
-        function AutoFillInput() {
-
-        }
-
-        // Input Score Validation
-        function onInvalid(input, max) {
-            input.setCustomValidity('Điểm phải trong khoảng từ 0 đến ' + max);
-            input.style.border = "2px solid #eb4034";
-        }
-        // Oninput Score
-        function onInput(input) {
-            input.style.border = "1px solid gray";
-            input.setCustomValidity("");
-        }
-
-        $(document).ready(function () {
-            // For Bootstrap 5.x
-            $("#input-1,#input-2,#input-3").fileinput({
-                browseClass: "btn btn-primary",
-                mainClass: "d-grid",
-                showCaption: false,
-                showRemove: false,
-                showUpload: false,
-                indicatorNew: false,
-            });
-        });
-    </script>
-}
-

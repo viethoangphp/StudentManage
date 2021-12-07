@@ -102,7 +102,6 @@ namespace Models.EntityModel
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Email)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<User>()
@@ -132,12 +131,12 @@ namespace Models.EntityModel
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Tickets)
                 .WithOptional(e => e.User)
-                .HasForeignKey(e => e.Create_by);
+                .HasForeignKey(e => e.Response_by);
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Tickets1)
                 .WithOptional(e => e.User1)
-                .HasForeignKey(e => e.Response_by);
+                .HasForeignKey(e => e.Create_by);
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.UnionBooks)

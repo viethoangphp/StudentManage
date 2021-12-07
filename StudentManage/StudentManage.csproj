@@ -181,16 +181,7 @@
     <Compile Include="Models\DetailEvalutionModel.cs" />
     <Compile Include="Models\EvaluativeCriteriaModel.cs" />
     <Compile Include="Models\EvalutionFormModel.cs" />
-    <Compile Include="Models\FacultyEvaluationModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
-    <!--QuangMinh-->
-    <Compile Include="Models\GroupUserModel.cs" />
-    <Compile Include="Models\PersonalFormModel.cs" />
-    <Compile Include="Models\SchoolEvaluationModel.cs" />
-    <Compile Include="Models\TimeEvaluationModel.cs" />
-    <Compile Include="Models\UnionFormModel.cs" />
-    <!--/QuangMinh-->
-<!--Hoang-->
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -201,7 +192,6 @@
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
     <Compile Include="Models\TemplateModel.cs" />
-<!--/Hoang-->
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -424,12 +414,6 @@
     <Content Include="Views\Evaluation\View.cshtml" />
     <Content Include="Views\UnionEvaluation\Union.cshtml" />
     <Content Include="Views\UnionEvaluation\EvaluationForm.cshtml" />
-    <Content Include="Views\UnionEvaluation\ClassEvaluation.cshtml" />
-    <Content Include="Views\UnionEvaluation\ListSemester.cshtml" />
-    <Content Include="Views\UnionEvaluation\FacultyEvaluation.cshtml" />
-    <Content Include="Views\UnionEvaluation\SchoolEvaluation.cshtml" />
-    <Content Include="Views\UnionEvaluation\GetListClassByFacultyId.cshtml" />
-    <Content Include="Views\UnionEvaluation\GetListFaculty.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\ShowUserList.cshtml" />

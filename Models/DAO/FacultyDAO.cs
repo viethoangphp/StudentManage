@@ -11,25 +11,20 @@ namespace Models.DAO
     public class FacultyDAO
     {
         DBContext db = new DBContext();
-        
-        // Insert faculty
         public int Insert(Faculty faculty)
         {
             db.Faculties.Add(faculty);
             db.SaveChanges();
             return faculty.FacutyID;
         }
-        // Get all Faculty
         public List<Faculty> GetListFaculty()
         {
             return db.Faculties.Where(m => m.Status == 1).ToList();
         }
-        // Get faculty by Id
         public Faculty GetFacultyByID(int id)
         {
             return db.Faculties.FirstOrDefault(m => m.FacutyID == id && m.Status == 1);
         }
-        // Get Faculty by name
         public Faculty GetFacultyByName(string facultyName)
         {
             var result = db.Faculties.AsNoTracking().Where(m => m.Name.Trim().Equals(facultyName.Trim())).FirstOrDefault();
@@ -37,7 +32,6 @@ namespace Models.DAO
                 return result;
             return null;
         }
-        // Get list Class  by conditions
         public ListClassByConditionModel GetListClass(int start,int length)
         {
             List<Class> list = db.Classes.Where(m=>m.Status == 1).OrderBy(m => m.ClassID).Skip(start).Take(length).ToList();
@@ -48,17 +42,14 @@ namespace Models.DAO
                 TotalRecords = count
             };
         }
-        // Get list class by Faculty ID
         public List<Class> GetListClassByFaculty(int id)
         {
             return db.Classes.Where(m => m.FacutyID == id && m.Status == 1).ToList();
         }
-        // Get class by Id
         public Class GetClassByID(int id)
         {
             return db.Classes.FirstOrDefault(m => m.ClassID == id && (m.Faculty.Status == 1 && m.Status == 1));
         }
-        // Insert Class Model
         public int InsertClass(Class model)
         {
             try
@@ -77,7 +68,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        // Get class by Class Name
         public Class GetClassByClassName(string className)
         {
             //Regex.Replace(name.Trim(), @"\s+", " ")
@@ -86,7 +76,6 @@ namespace Models.DAO
                 return result;
             return null;
         }
-        // Insert Faculty
         public int InsertFaculty(Faculty faculty)
         {
             try
@@ -101,7 +90,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        // Update Faculty
         public int UpdateFaculty(Faculty faculty)
         {
             try
@@ -120,7 +108,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        // Delete Faculty
         public int DeleteFaculty(int id)
         {
             try
@@ -139,7 +126,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        // Update class
         public int UpdateClass(Class cls)
         {
             try
@@ -161,7 +147,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        //Delete class
         public int DeleteClass(int id)
         {
             try
@@ -180,7 +165,6 @@ namespace Models.DAO
                 return 0;
             }
         }
-        // Get class by conditions
         public ListClassByConditionModel GetListClassByCondition(int start, int length, int facultyID, string className)
         {
             var listResult = db.Classes.Where(m => string.IsNullOrEmpty(className) || m.Name == className);

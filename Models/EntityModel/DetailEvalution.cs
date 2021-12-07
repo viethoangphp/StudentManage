@@ -24,11 +24,6 @@ namespace Models.EntityModel
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CriteriaID { get; set; }
 
-        [Key]
-        [Column(Order = 3)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Level { get; set; }
-
         public int? Score { get; set; }
 
         [StringLength(255)]
