@@ -166,8 +166,8 @@ namespace StudentManage.Controllers
             return View(model);
         }
         
-        [HttpPost]
-        public ActionResult Evaluation(List<EvaluationModel> listmodel, int evaluationFormId)
+        //[HttpPost]
+        public ActionResult Evaluation(List<EvaluationModelM> listmodel, int evaluationFormId)
         {
             // Thông tin user Session
             var user = new UserBUS().GetUserByID((int)Session["USER_ID"]);
@@ -177,14 +177,14 @@ namespace StudentManage.Controllers
             int templateId = modelBUS.GetGroupUserById(user.groupID).templateId;
             var listMain = modelBUS.GetAllMainByTemplateId(templateId);
             var listCriteria = modelBUS.GetAllCriteriaByTemplateId(templateId);
-            var listError = new List<EvaluationModel>();
+            var listError = new List<EvaluationModelM>();
             for (int i = 0, length = listCriteria.Count; i < length; i++)
             {
                 int? evaScore = listmodel[i].score;
                 if(evaScore < 0 || evaScore>listCriteria[1].score)
                 {
                     ModelState.AddModelError("listmodel[" + i + "].score", "");
-                    var model = new EvaluationModel()
+                    var model = new EvaluationModelM()
                     {
                         criteriaId = listmodel[i].criteriaId,
                         score = evaScore,
