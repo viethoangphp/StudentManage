@@ -25,7 +25,7 @@ namespace StudentManage.BUS
             template.ListMain = new List<EvaluationMainModel>();
             foreach (var item in model.EvaluativeMains)
             {
-                EvaluationMainModel evaluationMain = new EvaluationMainModel(); 
+                EvaluationMainModel evaluationMain = new EvaluationMainModel();
                 evaluationMain.MainID = item.MainID;
                 evaluationMain.Title = item.Content;
                 evaluationMain.ListRequriement = new List<PesonalEvalationModel>();
@@ -40,6 +40,7 @@ namespace StudentManage.BUS
                 }
                 template.ListMain.Add(evaluationMain);
             }
+           
             return template;
         }
         public static int InsertEvaluationForm(FormModel form)
@@ -52,6 +53,7 @@ namespace StudentManage.BUS
             evalutionForm.Status = form.Status; ;
             return new EvaluationDAO().InsertEvaluationForm(evalutionForm);
         }
+     
         public static int GetSemesterActive()
         {
             return new EvaluationDAO().GetSemesterActive();
@@ -59,7 +61,7 @@ namespace StudentManage.BUS
         public static List<DetailEvalution> ParseDetailFormModel(List<DetailFormModel> listData)
         {
             List<DetailEvalution> result = new List<DetailEvalution>();
-            foreach(var item in listData)
+            foreach (var item in listData)
             {
                 DetailEvalution model = new DetailEvalution();
                 model.FormId = item.FormId;
@@ -82,7 +84,7 @@ namespace StudentManage.BUS
         {
             List<EvaluationModel> result = new List<EvaluationModel>();
             var listData = new EvaluationDAO().GetListCriteriaIdByTemplateId(templateId);
-            foreach(var item in listData)
+            foreach (var item in listData)
             {
                 EvaluationModel model = new EvaluationModel();
                 model.CriteriaID = item.CriteriaID;
@@ -97,11 +99,11 @@ namespace StudentManage.BUS
         {
             return new EvaluationDAO().UpdateTotal(formId);
         }
-        public static List<PersonalScore> GetPersonalScores(int userId = 0 )
+        public static List<PersonalScore> GetPersonalScores(int userId = 0)
         {
             List<PersonalScore> list = new List<PersonalScore>();
             var model = new EvaluationDAO().GetEvaluationPersonal(userId);
-            foreach(var item in model)
+            foreach (var item in model)
             {
                 PersonalScore personalScore = new PersonalScore();
                 personalScore.FormId = item.FormId;
@@ -109,7 +111,7 @@ namespace StudentManage.BUS
                 personalScore.Semester = item.Semester.Name;
                 personalScore.Year = item.Semester.Year;
                 personalScore.Score = Int32.Parse(item.Total.ToString());
-                if(item.Total >= 90)
+                if (item.Total >= 90)
                 {
                     personalScore.Rank = "A";
                 }
@@ -153,7 +155,7 @@ namespace StudentManage.BUS
                 evaluationMain.MainID = item.MainID;
                 evaluationMain.Title = item.Content;
                 evaluationMain.ListRequriement = new List<PesonalEvalationModel>();
-                foreach (var subItem in listDetail.Where(m=>m.EvaluativeCriteria.MainID == item.MainID))
+                foreach (var subItem in listDetail.Where(m => m.EvaluativeCriteria.MainID == item.MainID))
                 {
                     PesonalEvalationModel evaluation = new PesonalEvalationModel();
                     evaluation.CriteriaID = subItem.CriteriaID;
@@ -165,6 +167,7 @@ namespace StudentManage.BUS
                     evaluation.Image = (subItem.Image_proof != null) ? subItem.Image_proof : "";
                     evaluation.Note = subItem.Note;
                     evaluation.Status = subItem.Status;
+                    template.FormID = subItem.FormId;
                     evaluation.Comment = subItem.Comment;
                     evaluationMain.ListRequriement.Add(evaluation);
                 }
@@ -406,6 +409,23 @@ namespace StudentManage.BUS
             MemoryStream stream = new MemoryStream();
             pkg.SaveAs(stream);
             return stream;
+		}
+        public static int UpdateEvaluationForm(List<PesonalEvalationModel> list)
+        {
+            foreach(var item in list)
+            {
+                DetailEvalution detail = new DetailEvalution();
+                detail.FormId = item.FormID;
+                detail.CriteriaID = item.CriteriaID;
+                detail.Status = item.Status;
+                detail.Comment = item.Comment;
+                var result = new EvaluationDAO().UpdateEvaluationForm(detail);
+            }
+            return 1;
+        }
+        public static int UpdateStatusForm(int formId , int status)
+        {
+            return new EvaluationDAO().UpdateStatusForm(formId, status);
         }
     }
 }

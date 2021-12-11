@@ -83,5 +83,36 @@ namespace Models.DAO
         {
             return db.DetailEvalutions.Where(m => m.FormId == formId).ToList();
         }
+       
+        public int UpdateEvaluationForm(DetailEvalution detail)
+        {
+            DetailEvalution form = db.DetailEvalutions.Where(m => m.FormId == detail.FormId && m.CriteriaID == detail.CriteriaID).FirstOrDefault();
+            try
+            {
+                form.Status = detail.Status;
+                form.Comment = detail.Comment;
+                db.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+            
+        }
+        public int UpdateStatusForm(int formId,int status)
+        {
+            var form = db.EvalutionForms.Where(m => m.FormId == formId).FirstOrDefault();
+            try
+            {
+                form.Status = status;
+                db.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
     }
 }
