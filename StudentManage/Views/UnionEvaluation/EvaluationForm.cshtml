@@ -135,11 +135,11 @@
                                                         <b>(0–@criteria.score điểm).</b>
                                                         @if (criteria.criteriaRequirement == "1")
                                                         {
-                                                            <br />
+                                                            @*<br />
                                                             <a data-target="#viewpic_modal"
                                                                data-toggle="modal"
                                                                class="badge bg-inverse-primary"
-                                                               style="cursor: pointer">Thêm minh chứng</a>
+                                                               style="cursor: pointer">Thêm minh chứng</a>*@
                                                         }
                                                     </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
@@ -234,9 +234,12 @@
                             <div class="d-flex justify-content-end">
                                 @if (Model.Assessor == 3 || Model.Assessor == 4)
                                 {
-                                    <div id="btn-back" class="btn btn-secondary ml-2">
-                                        Quay lại
-                                    </div>
+                                    <a href="~/UnionEvaluation/ClassEvaluation/?ClassId=@user.classID">
+                                        <div id="btn-back" class="btn btn-secondary ml-2">
+                                            Quay lại
+                                        </div>
+                                    </a>
+
                                 }
                                 <div class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_warning">
                                     Xóa tất cả
@@ -355,7 +358,7 @@
             })
         </script>
     }
-<script>
+    <script>
         // Clear All Input
         function deleteAllInput() {
             $(".juged-input").val('');
@@ -408,6 +411,6 @@
         //        indicatorNew: false,
         //    });
         //});
-</script>
+    </script>
 }
 
