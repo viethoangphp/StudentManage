@@ -71,6 +71,7 @@ namespace StudentManage.BUS
                 model.Level = item.Level;
                 model.Image_proof = item.Image;
                 model.Note = item.Note;
+                model.Type = 1;
                 result.Add(model);
             }
             return result;
@@ -110,7 +111,7 @@ namespace StudentManage.BUS
                 personalScore.FullName = item.DetailEvalutions.Last().User.FullName;
                 personalScore.Semester = item.Semester.Name;
                 personalScore.Year = item.Semester.Year;
-                personalScore.Score = Int32.Parse(item.Total.ToString());
+                personalScore.Score = (item.Total != null) ? Int32.Parse(item.Total.ToString()): 0;
                 if (item.Total >= 90)
                 {
                     personalScore.Rank = "A";

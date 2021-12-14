@@ -75,13 +75,13 @@ namespace Models.DAO
         {
             if(userId != 0)
             {
-                return db.EvalutionForms.Where(m => m.Create_by == userId).ToList();
+                return db.EvalutionForms.Where(m => m.Create_by == userId && m.Type == 1).ToList();
             }
-            return db.EvalutionForms.Where(m => m.Semester.Status == 1).ToList();
+            return db.EvalutionForms.Where(m => m.Semester.Status == 1 && m.Type == 1).ToList();
         }
         public List<DetailEvalution> GetDetailEvalutions(int formId)
         {
-            return db.DetailEvalutions.Where(m => m.FormId == formId).ToList();
+            return db.DetailEvalutions.Where(m => m.FormId == formId && m.Type == 1).ToList();
         }
        
         public int UpdateEvaluationForm(DetailEvalution detail)
