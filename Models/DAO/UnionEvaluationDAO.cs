@@ -46,7 +46,7 @@ namespace Models.DAO
         // Get all detailForm by userId
         public List<DetailEvalution> GetDetailFormsById(int userId)
         {
-            return db.DetailEvalutions.Where(x => x.EvalutionForm.Create_by == userId).ToList();
+            return db.DetailEvalutions.Where(x => x.EvalutionForm.Create_by == userId && x.Type == 2).ToList();
         }
         // Get all detail By FormID
         public List<DetailEvalution> GetDetailEvalutionsByFormId(int formId)
