@@ -135,11 +135,11 @@
                                                         <b>(0–@criteria.score điểm).</b>
                                                         @if (criteria.criteriaRequirement == "1")
                                                         {
-                                                            @*<br />
+                                                            <br />
                                                             <a data-target="#viewpic_modal"
-                                                               data-toggle="modal"
-                                                               class="badge bg-inverse-primary"
-                                                               style="cursor: pointer">Thêm minh chứng</a>*@
+                                                                data-toggle="modal"
+                                                                class="badge bg-inverse-primary"
+                                                                style="cursor: pointer">Thêm minh chứng</a>
                                                         }
                                                     </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
@@ -400,17 +400,17 @@
             input.setCustomValidity("");
         }
 
-        //$(document).ready(function () {
-        //    // For Bootstrap 5.x
-        //    $("#input-1,#input-2,#input-3").fileinput({
-        //        browseClass: "btn btn-primary",
-        //        mainClass: "d-grid",
-        //        showCaption: false,
-        //        showRemove: false,
-        //        showUpload: false,
-        //        indicatorNew: false,
-        //    });
-        //});
+        $(document).ready(function () {
+            // For Bootstrap 5.x
+            $("#input-1,#input-2,#input-3").fileinput({
+                browseClass: "btn btn-primary",
+                mainClass: "d-grid",
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                indicatorNew: false,
+            });
+        });
     </script>
 }
 

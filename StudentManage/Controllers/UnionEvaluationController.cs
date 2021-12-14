@@ -85,6 +85,10 @@ namespace StudentManage.Controllers
                     {
                         foreach (var detail in details)
                         {
+                            if(critial.criteriaRequirement == "1")
+                            {
+                                critial.ImageProof = detail.imageProof;
+                            }    
                             switch (turn)
                             {
                                 case 4:
