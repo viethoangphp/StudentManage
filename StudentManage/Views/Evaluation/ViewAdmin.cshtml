@@ -161,7 +161,7 @@
                                                 </td>
                                                 <td class="text-center view-op">
                                                     <div class="file-loading" data-admin="true">
-                                                        <input id="input-24" type="file">
+                                                        <input id="@subItem.CriteriaID" type="file" data-imgurl="/Assets/img/Images_Proof/@subItem.Image">
                                                     </div>
                                                 </td>
                                                 <td class="text-center">
@@ -329,28 +329,33 @@
     </script>
     <script>
         $(document).ready(function () {
-            var url1 = 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/631px-FullMoon2010.jpg';
 
-            $("#input-24").fileinput({
-                initialPreview: [url1],
-                initialPreviewAsData: true,
-                initialPreviewConfig: [
-                    {
-                        caption: "Ảnh minh chứng",
-                        downloadUrl: url1,
-                        size: 930321,
-                        width: "120px",
-                    }
-                ],
-                overwriteInitial: false,
-                browseClass: "btn btn-primary",
-                mainClass: "d-grid",
-                showCaption: false,
-                showDownload: false,
-                showRemove: false,
-                showUpload: false,
-                showDownload: false,
-            });
+            function handeller() {
+                const listImg = document.querySelectorAll('.file-loading input')
+                let listImgObj = []
+
+                listImg.forEach(item => {
+                    listImgObj.push({ id: item.id, urlimg: item.dataset.imgurl })
+                });
+
+                listImgObj.forEach(item => {
+                    $("#" + item.id).fileinput({
+                        initialPreview: [item.urlimg],
+                        initialPreviewAsData: true,
+                        initialPreviewConfig: [
+                            {
+                                caption: "Ảnh minh chứng",
+                                downloadUrl: item.urlimg,
+                                size: 930321,
+                                width: "120px",
+                            }
+                        ],
+                        overwriteInitial: false,
+                        mainClass: "d-grid",
+                    });
+                });
+            }
+            handeller()
 
         });
 

@@ -286,6 +286,7 @@
     <Content Include="Assets\js\jquery.maskedinput.min.js" />
     <Content Include="Assets\js\jquery.slimscroll.min.js" />
     <Content Include="Assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="Assets\js\lib\noel.js" />
     <Content Include="Assets\js\lib\Notification.js" />
     <Content Include="Assets\js\lib\sound.js" />
     <Content Include="Assets\js\line-chart.js" />
