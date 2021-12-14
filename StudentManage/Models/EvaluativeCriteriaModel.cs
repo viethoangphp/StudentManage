@@ -22,5 +22,7 @@ namespace StudentManage.Models
         public int? score3 { get; set; }
         // Bí thư đoàn trường 
         public int? score4 {  get; set; }
+        //Image Proof
+        public string ImageProof {get; set; }  
     }
 }

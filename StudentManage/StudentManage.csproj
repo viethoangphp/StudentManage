@@ -181,6 +181,7 @@
     <Compile Include="Models\EvaluationMainModel.cs" />
     <Compile Include="Models\EvaluationModel.cs" />
     <Compile Include="Models\DetailEvalutionModel.cs" />
+    <Compile Include="Models\EvaluationModelM.cs" />
     <Compile Include="Models\EvaluativeCriteriaModel.cs" />
     <Compile Include="Models\EvaluativeMainModel.cs" />
     <Compile Include="Models\EvalutionFormModel.cs" />
