@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <div class="d-flex justify-content-md-end justify-content-sm-center p-t-10 p-b-10">
-                    <a href="#" class="btn content-btn excel-btn">
+                    <a href="#" class="btn content-btn excel-btn" data-id="@Model.TemplateID">
                         <i class="fa fa-download"></i>Xuất
                         Excel
                     </a>
@@ -35,7 +35,7 @@
     <!-- Student info -->
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title mb-0">Thông tin sinh viên</h4>
+            <h4 class="card-title mb-0">Thông Tin Đoàn Viên</h4>
         </div>
         <div class="card-body">
             <div class="profile-view">
@@ -87,7 +87,7 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <form action="">
+                    <form action="/Evaluation/ConfirmEvalution/@Model.FormID" method="post">
                         <div class="table-responsive" style="white-space:unset">
                             <table class="table table-bordered table-hover mb-0 juged-table">
                                 <thead>
@@ -177,17 +177,40 @@
                                                 <td>
                                                     <div class="aceept-denied-wp">
                                                         <label>
-                                                            <input type="radio" name="approve-box-1" checked />
-                                                            <div class="aceept-option box">
-                                                                <span>Duyệt qua</span>
-                                                            </div>
+                                                            @if (subItem.Status == 1)
+                                                            {
+                                                                <input type="radio" name="Status[@subItem.CriteriaID]" checked value="1" />
+                                                                <div class="aceept-option box">
+                                                                    <span>Duyệt qua</span>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <input type="radio" name="Status[@subItem.CriteriaID]" value="1" />
+                                                                <div class="aceept-option box">
+                                                                    <span>Duyệt qua</span>
+                                                                </div>
+                                                            }
+
                                                         </label>
 
                                                         <label>
-                                                            <input type="radio" name="approve-box-1" />
-                                                            <div class="denied-option box">
-                                                                <span>Từ chối</span>
-                                                            </div>
+                                                            @if (subItem.Status == 0)
+                                                            {
+                                                                <input type="radio" name="Status[@subItem.CriteriaID]" checked value="0" />
+                                                                <div class="denied-option box">
+                                                                    <span>Từ chối</span>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="radio" name="Status[@subItem.CriteriaID]" value="0" />
+                                                                <div class="denied-option box">
+                                                                    <span>Từ chối</span>
+                                                                </div>
+                                                            }
+
                                                         </label>
                                                     </div>
                                                 </td>
@@ -214,13 +237,13 @@
                                                                             <div class="form-group">
                                                                                 <p class="m-t-30 text-lg">Bình luận</p>
                                                                                 <textarea class="form-control"
-                                                                                          rows="3">@subItem</textarea>
+                                                                                          rows="3" name="Comment[@subItem.CriteriaID]">@subItem.Comment</textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="submit-section m-t-15 d-flex justify-content-end">
-                                                                        <button class="btn btn-danger mr-2">Xóa</button>
-                                                                        <button class="btn btn-primary">Lưu</button>
+                                                                        @*<button class="btn btn-danger mr-2">Xóa</button>
+                                                                            <button class="btn btn-primary">Lưu</button>*@
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -262,16 +285,12 @@
                         </div>
 
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">Nộp</button>
+                            <button type="submit" class="btn btn-primary">Duyệt Ngay</button>
                         </div>
 
                     </form>
 
-                    <!-- when done jugedment -->
-                    <!-- <div class="d-flex justify-content-center">
-                        <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
-                                class="las la-thumbs-up font-35 text-info"></i></p>
-                    </div> -->
+
 
                 </div>
             </div>
@@ -337,4 +356,5 @@
 
     </script>
     <script src="~/Assets/js/ajax/Evaluation.js"></script>
+    <script src="~/Assets/js/ExportExcel.js"></script>
 }

@@ -13,6 +13,7 @@ namespace StudentManage.Models
         public string Note { set; get; }
         public int? Status { set; get;}
         public string Comment { set; get; }
+        public int FormID { set; get; }
         
     }
 }
