@@ -150,6 +150,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BUS\ConfigBUS.cs" />
+    <Compile Include="BUS\EvaluationBUS.cs" />
     <Compile Include="BUS\FacultyBUS.cs" />
     <Compile Include="BUS\TemplateBUS.cs" />
     <Compile Include="BUS\UnionBUS.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\UnionController.cs" />
+    <Compile Include="Controllers\UnionEvaluationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -180,6 +182,7 @@
     <Compile Include="Models\EvaluationModel.cs" />
     <Compile Include="Models\DetailEvalutionModel.cs" />
     <Compile Include="Models\EvaluativeCriteriaModel.cs" />
+    <Compile Include="Models\EvaluativeMainModel.cs" />
     <Compile Include="Models\EvalutionFormModel.cs" />
     <Compile Include="Models\FacultyEvaluationModel.cs" />
     <Compile Include="Models\FacultyModel.cs" />
@@ -190,7 +193,7 @@
     <Compile Include="Models\TimeEvaluationModel.cs" />
     <Compile Include="Models\UnionFormModel.cs" />
     <!--/QuangMinh-->
-<!--Hoang-->
+    <!--Hoang-->
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -201,7 +204,7 @@
     <Compile Include="Models\SemesterModel.cs" />
     <Compile Include="Models\TemplateFormModel.cs" />
     <Compile Include="Models\TemplateModel.cs" />
-<!--/Hoang-->
+    <!--/Hoang-->
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
     <Compile Include="Models\UserModel.cs" />

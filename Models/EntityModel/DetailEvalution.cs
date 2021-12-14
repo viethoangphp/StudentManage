@@ -34,7 +34,7 @@ namespace Models.EntityModel
         [StringLength(255)]
         public string Note { get; set; }
 
-        public int? Level { get; set; }
+        //public int? Level { get; set; }
 
         [StringLength(255)]
         public string Image_proof { get; set; }
