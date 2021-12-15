@@ -161,7 +161,10 @@ namespace StudentManage.Controllers
             model.Total = listTotal;
             model.ListMain = listMain;
             model.ListCriteria = listCriteria;
-            model.formId =  (int)formId;
+            if(formId != null)
+            {
+                model.formId = (int)formId;
+            }    
             // Check User Group Profile
             model.Assessor = modelBUS.GetGroupInfoByUserId(userSession.userID);
             model.Assessee = modelBUS.GetGroupInfoByUserId(user.userID);
@@ -251,6 +254,10 @@ namespace StudentManage.Controllers
                 listSemesters = new List<SemesterModel>();
                 SemesterModel nowSemester = new SemesterModel();
                 nowSemester = modelBUS.GetPresentSemester();
+                nowSemester.inProcess = true;
+                int inTime = modelBUS.IsInTime();
+                // Kiểm tra thời gian chấm có đang trong hk hiện tại
+                nowSemester.Available = (inTime != 0)?true:false;
                 listSemesters.Add(nowSemester);
             }
             //=========================================================================

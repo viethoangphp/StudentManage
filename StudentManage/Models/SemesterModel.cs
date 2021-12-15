@@ -30,6 +30,8 @@ namespace StudentManage.Models
         public bool? inProcess { set; get; }
         public string Note {  set; get; }
 
+        public bool Available { set; get; }
+
 
     }
 }

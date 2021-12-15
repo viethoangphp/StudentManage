@@ -411,6 +411,7 @@ namespace StudentManage.BUS
                     Score = item.score,
                     Note = item.note,
                     Image_proof = item.imageProof,
+                    Type = 2
                 };
                 dao.InsertDetailEvaluation(model);
             }
@@ -612,6 +613,9 @@ namespace StudentManage.BUS
                     }
                 }
                 listSemesters[0].inProcess = true;
+                int inTime = IsInTime();
+                // Kiểm tra thời gian chấm có đang trong hk hiện tại
+                listSemesters[0].Available = true;
                 return listSemesters;
             }
             else
@@ -670,6 +674,7 @@ namespace StudentManage.BUS
                                     UserID = (int)model.createBy,
                                     CriteriaID = criteria.criteriaId,
                                     Level = 1,
+                                    Type = 2,
                                 };
                                 dao.InsertDetailEvaluation(detailForm_Intime);
                             }
@@ -767,6 +772,7 @@ namespace StudentManage.BUS
                                 CriteriaID = criteria.criteriaId,
                                 Level = 1,
                                 Score = 0,
+                                Type = 2,
                             };
                             dao.InsertDetailEvaluation(detailForm_Passed);
                         }

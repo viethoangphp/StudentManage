@@ -116,11 +116,21 @@
                                         @*Tác vụ*@
                                         @if (item.inProcess == true)
                                         {
-                                            <td>
-                                                <a href="~/UnionEvaluation/FormDetail/@item.FormId">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </td>
+                                            if (item.Available == true)
+                                            {
+                                                <td>
+                                                    <a href="~/UnionEvaluation/FormDetail/@item.FormId">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <i class="fa fa-eye-slash"></i>
+                                                </td>
+                                            }
+
                                         }
                                         else
                                         {

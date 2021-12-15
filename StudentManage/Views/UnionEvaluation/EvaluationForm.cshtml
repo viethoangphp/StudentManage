@@ -130,18 +130,36 @@
                                                 <tr>
                                                     <td class="text-center">@count</td>
                                                     @{count++; }
-                                                    <td>
-                                                        @criteria.criteriaContent
-                                                        <b>(0–@criteria.score điểm).</b>
-                                                        @if (criteria.criteriaRequirement == "1")
+                                                <td>
+                                                    @criteria.criteriaContent
+                                                    <b>(0–@criteria.score điểm).</b>
+                                                    <!--Image proof-->
+                                                    @if (criteria.criteriaRequirement == "1")
+                                                    {
+                                                        if (Model.IsInTime == 1)
                                                         {
                                                             <br />
                                                             <a data-target="#viewpic_modal"
-                                                                data-toggle="modal"
-                                                                class="badge bg-inverse-primary"
-                                                                style="cursor: pointer">Thêm minh chứng</a>
+                                                               data-toggle="modal"
+                                                               class="badge bg-inverse-primary"
+                                                               style="cursor: pointer">Thêm minh chứng</a>
                                                         }
-                                                    </td>
+                                                        else
+                                                        {
+                                                            <div class="dropdown dropdown-action d-inline-block">
+                                                                <a data-target="#viewpic_modal" data-toggle="modal"
+                                                                   class="badge bg-inverse-success"
+                                                                   style="cursor:pointer;">
+                                                                    Xem
+                                                                    minh chứng
+                                                                </a>
+                                                            </div>
+                                                        }
+
+                                                    }
+                                                    <!--/Image proof-->
+
+                                                </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 1)
@@ -255,12 +273,6 @@
                         }
                         <!--/Button Form-->
                     </form>
-                    <!-- when done jugedment -->
-                    <!-- <div class="d-flex justify-content-center">
-                        <p class="text-xl d-inline-flex align-items-center">Bạn đã chấm điểm rèn luyện<i
-                                class="las la-thumbs-up font-35 text-info"></i></p>
-                    </div> -->
-
                 </div>
             </div>
         </div>
@@ -339,7 +351,7 @@
     <!--Error Evalution-->
     @if (TempData["ERROR"] != null)
     {
-        var list = TempData["listError"] as List<StudentManage.Models.EvaluationModel>;
+        var list = TempData["listError"] as List<StudentManage.Models.EvaluationModelM>;
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 toastr.error("@TempData["ERROR"]", "Lỗi");
