@@ -8,6 +8,7 @@ namespace StudentManage.Models
     public class TemplateModel
     {
         public int TemplateID { set; get;}
+        public int FormID   { set; get;}
         public string TemplateName { set; get;}
         public List<EvaluationMainModel> ListMain { set; get;}
         public string FullName { set; get; }

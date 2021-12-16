@@ -346,7 +346,7 @@ namespace StudentManage.BUS
             return dao.InsertEvaluationForm(model);
         }
         //Insert chi tiết phiếu
-        public int InsertListDetailEvaluation(List<EvaluationModel> listDetail, int userid, int evaluationFormId)
+        public int InsertListDetailEvaluation(List<EvaluationModelM> listDetail, int userid, int evaluationFormId)
         {
             var user = new UserDAO().GetUserByID(userid);
             // Tìm Position
@@ -400,7 +400,7 @@ namespace StudentManage.BUS
             var preSemes = GetPresentSemesterDetailByUserId(userid);
 
             // Insert Detail Evaluation
-            foreach (EvaluationModel item in listDetail)
+            foreach (EvaluationModelM item in listDetail)
             {
                 DetailEvalution model = new DetailEvalution()
                 {
