@@ -162,5 +162,50 @@ namespace Models.DAO
         {
             return db.GroupUsers.ToList();
         }
+        //Update user infomation
+        public int UpdateUser(User user)
+        {
+            try
+            {
+                User changeUser = db.Users.FirstOrDefault(m => m.UserID == user.UserID);
+                changeUser.FullName = user.FullName;
+                changeUser.Email = user.Email;
+                changeUser.Phone = user.Phone;
+                changeUser.Gender = user.Gender;
+                changeUser.Birthday = user.Birthday;
+                changeUser.CityID = user.CityID;
+                changeUser.DistrictID = user.DistrictID;
+                changeUser.WardID = user.WardID;
+                changeUser.Address = user.Address;
+                changeUser.JoinDate = user.JoinDate;
+                changeUser.PositionID = user.PositionID;
+#warning Change group base on position
+                changeUser.GroupId = user.PositionID;
+                //THIS DOESN'T RELATE BUT HAVE TO SET IT TO AVOID PROBLEM
+                changeUser.StudentCode = changeUser.StudentCode.Trim();
+                db.SaveChanges();
+                return 1;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+        //Delete user
+        public int DeleteUser(int id)
+        {
+            User user = db.Users.FirstOrDefault(m=>m.UserID == id);
+            if (user == null) return 0;
+            try
+            {
+                user.Status = 0;
+                db.SaveChanges();
+                return 1;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
     }
 }

@@ -30,8 +30,7 @@ namespace StudentManage.Controllers
         //Get user by id
         public JsonResult GetUserByID(int id)
         {
-            UserModel model = new UserBUS().GetUserByID(id);
-            model.birthDayString = model.birthDay != null ? ((DateTime)model.birthDay).ToString("dd/MM/yyyy") : null;
+            UserUpdateModel model = new UserBUS().GetUpdateUserInfo(id);
             return Json(model);
         }
         //Partial View List Group Name
@@ -44,22 +43,37 @@ namespace StudentManage.Controllers
         #region Modify user data
         //Add user
         [HttpPost]
-        public ActionResult Insert(UserModel model)
+        public ActionResult Insert(UserInsertModel model)
         {
-            int result = new UserBUS().Insert(model);
-            if(result == 1)
+            model.classID = 1; //Hardcoded class to 18DTHD1
+            //model.facultyID = 1;
+            //Check position and assign suitable group
+            model.groupID = model.positionID;
+            //switch (model.positionID)
+            //{
+            //    case 1:
+            //        model.groupID = 1;
+            //}
+            if (ModelState.IsValid)
             {
-                TempData["SUCCESS"] = "Thêm người dùng thành công";
+                int result = new UserBUS().InsertUser(model);
+                if (result != -1)
+                {
+                    TempData["SUCCESS"] = "Thêm người dùng thành công";
+                    return RedirectToAction("Index");
+                }
+                TempData["ERROR"] = "Đã có lỗi xảy ra. Vui lòng thử lại";
                 return RedirectToAction("Index");
             }
-            TempData["ERROR"] = "Đã có lỗi xảy ra. Vui lòng thử lại";
+            TempData["ERROR"] = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại";
             return RedirectToAction("Index");
         }
         //Update user
         [HttpPost]
-        public ActionResult Update(UserModel model)
+        public ActionResult Update(UserUpdateModel model)
         {
-            int result = new UserBUS().Update(model);
+            model.groupID = model.positionID;
+            int result = new UserBUS().UpdateUser(model);
             if (result == 1)
             {
                 TempData["SUCCESS"] = "Cập nhật người dùng thành công";
@@ -72,14 +86,18 @@ namespace StudentManage.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            UserModel user = new UserBUS().GetUserByID(id);
-            if (user == null)
+            int result = new UserBUS().DeleteUser(id);
+            if (result == 0)
             {
                 TempData["ERROR"] = "Không tìm thấy người dùng này";
                 return RedirectToAction("Index");
             }
-            //Set status here >>>
-            TempData["MESSAGE"] = "Not inplement yet";
+            else if (result == -1)
+            {
+                TempData["ERROR"] = "Lỗi hệ thống";
+                return RedirectToAction("Index");
+            }
+            TempData["SUCCESS"] = "Xóa thành công";
             return RedirectToAction("Index");
         }
         #endregion

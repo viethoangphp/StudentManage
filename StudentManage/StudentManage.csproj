@@ -208,7 +208,9 @@
     <!--/Hoang-->
     <Compile Include="Models\UnionModel.cs" />
     <Compile Include="Models\UserExcelModel.cs" />
+    <Compile Include="Models\UserInsertModel.cs" />
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\UserUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
