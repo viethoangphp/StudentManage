@@ -31,15 +31,15 @@ namespace StudentManage.BUS
                 user.positionID = model.PositionID;
                 user.email = model.Email;
                 user.phone = model.Phone;
-                user.gender = (model.Gender != null) ? (int)model.Gender: 1;
+                user.gender = (model.Gender != null) ? (int)model.Gender : 1;
                 user.studentCode = model.StudentCode.Trim();
                 user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
                 user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
-                user.cityID =(model.CityID != null)? (int)model.CityID:0;
-                user.districtID = (model.DistrictID != null) ? (int)model.DistrictID:0;
-                user.wardID = (model.WardID != null) ? (int)model.WardID:0;
+                user.cityID = (model.CityID != null) ? (int)model.CityID : 0;
+                user.districtID = (model.DistrictID != null) ? (int)model.DistrictID : 0;
+                user.wardID = (model.WardID != null) ? (int)model.WardID : 0;
                 user.templateId = model.GroupUser.TemplateID;
                 return user;
             }
@@ -69,14 +69,14 @@ namespace StudentManage.BUS
             user.Avatar = model.avatar;
             return dao.Insert(user);
         }
-        public bool ChangePassword(int userID ,string password,string passwordNew)
+        public bool ChangePassword(int userID, string password, string passwordNew)
         {
-            return dao.ChangePassword(userID, password,passwordNew);
+            return dao.ChangePassword(userID, password, passwordNew);
         }
         public bool UpdateProfile(UserModel model)
         {
             var user = dao.GetUserByID(model.userID);
-            if(user != null)
+            if (user != null)
             {
                 user.Birthday = model.birthDay;
                 user.Gender = model.gender;
@@ -89,7 +89,7 @@ namespace StudentManage.BUS
                 return dao.UpdateProfile(user);
             }
             return false;
-            
+
         }
 
         public int InsertFromExcel(UserExcelModel model)
@@ -118,7 +118,7 @@ namespace StudentManage.BUS
                 classModel.className = model.className.ToUpper();
                 var facultyBUS = new FacultyBUS();
                 var facultyName = facultyBUS.ConvertFacultyName(model.facultyName);
-                if(facultyName != "")
+                if (facultyName != "")
                 {
                     var faculty = facultyBUS.GetFacultyByName(facultyName);
                     if (faculty != null)
@@ -135,17 +135,17 @@ namespace StudentManage.BUS
                         user.Status = 1;
                         return dao.Insert(user);
                     }
-                }    
-               
+                }
+
             }
             return -1;
-            
+
         }
-        public List<ClassModel> GetListClassByCondition(int facultyId,int year)
+        public List<ClassModel> GetListClassByCondition(int facultyId, int year)
         {
             var result = dao.GetListClassByCondition(facultyId, year);
             var listClass = new List<ClassModel>();
-            foreach(var item in result)
+            foreach (var item in result)
             {
                 ClassModel model = new ClassModel();
                 model.classID = item.ClassID;
@@ -157,7 +157,7 @@ namespace StudentManage.BUS
         public static string toCapitalize(string fullName)
         {
             fullName = Regex.Replace(fullName, "\\s+", " ").Trim();
-            return  Regex.Replace(fullName.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+            return Regex.Replace(fullName.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
         }
         public int Update(UserModel user)
         {
@@ -180,7 +180,7 @@ namespace StudentManage.BUS
         }
         public List<UserModel> GetListUserByClass(int id)
         {
-            List<User> listUser = new UserDAO().GetListUser().Where(m=>m.ClassID == id).ToList();
+            List<User> listUser = new UserDAO().GetListUser().Where(m => m.ClassID == id).ToList();
             List<UserModel> list = new List<UserModel>();
             foreach (var item in listUser)
             {
@@ -215,24 +215,27 @@ namespace StudentManage.BUS
             List<UserModel> list = new List<UserModel>();
             foreach (var item in listUser)
             {
-                UserModel model = new UserModel()
+                if (item.Status == 1)
                 {
-                    userID = item.UserID,
-                    className = item.Class.Name,
-                    positionName = item.Position.Name,
-                    facultyName = item.Class.Faculty.Name,
-                    fullname = item.FullName,
-                    studentCode = item.StudentCode,
-                    email = item.Email,
-                    phone = item.Phone,
-                    address = item.Address,
-                    birthDayString = item.Birthday != null ? ((DateTime)item.Birthday).ToString("dd/MM/yyyy") : null,
-                    cityID = item.CityID != null ? (int)item.CityID : 0,
-                    districtID = item.DistrictID != null ? (int)item.DistrictID : 0,
-                    wardID = item.WardID != null ? (int)item.WardID : 0,
-                    gender = item.Gender != null ? (int)item.Gender : 1
-                };
-                list.Add(model);
+                    UserModel model = new UserModel()
+                    {
+                        userID = item.UserID,
+                        className = item.Class.Name,
+                        positionName = item.Position.Name,
+                        facultyName = item.Class.Faculty.Name,
+                        fullname = item.FullName,
+                        studentCode = item.StudentCode,
+                        email = item.Email,
+                        phone = item.Phone,
+                        address = item.Address,
+                        birthDayString = item.Birthday != null ? ((DateTime)item.Birthday).ToString("dd/MM/yyyy") : null,
+                        cityID = item.CityID != null ? (int)item.CityID : 0,
+                        districtID = item.DistrictID != null ? (int)item.DistrictID : 0,
+                        wardID = item.WardID != null ? (int)item.WardID : 0,
+                        gender = item.Gender != null ? (int)item.Gender : 1
+                    };
+                    list.Add(model);
+                }
             }
             return list;
         }
@@ -267,6 +270,83 @@ namespace StudentManage.BUS
                 list.Add(model);
             }
             return list;
+        }
+        #endregion
+
+        #region User Insert
+        public int InsertUser(UserInsertModel model)
+        {
+            var user = new User
+            {
+                GroupId = model.groupID,
+                PositionID = model.positionID,
+                ClassID = model.classID,
+                FullName = toCapitalize(model.fullname),
+                Email = model.email,
+                Phone = model.phone,
+                Birthday = model.birthDay,
+                JoinDate = DateTime.ParseExact(model.joinDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                Password = HashPassword.HashSHA256(model.password, new SHA256CryptoServiceProvider()),
+                Status = 1,
+                Gender = model.gender
+            };
+            return dao.Insert(user);
+        }
+        #endregion
+
+        #region User Update
+        public int UpdateUser(UserUpdateModel model)
+        {
+            var item = new User
+            {
+                UserID = model.userID,
+                FullName = model.fullname,
+                Phone = model.phone,
+                Email = model.email,
+                Gender = model.gender,
+                //ClassID = model.classID,
+                Birthday = DateTime.ParseExact(model.birthday, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                JoinDate = DateTime.ParseExact(model.joinDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                //CityID = model.cityID,
+                //DistrictID = model.districtID,
+                //WardID = model.wardID,
+                Address = model.address,
+                PositionID = model.positionID,
+#warning Change user group base on position
+                GroupId = model.positionID,
+                Status = 1
+            };
+            return new UserDAO().UpdateUser(item);
+        }
+        //Get user info
+        public UserUpdateModel GetUpdateUserInfo(int id)
+        {
+            User user = new UserDAO().GetUserByID(id);
+            if (user == null) return null;
+            UserUpdateModel model = new UserUpdateModel()
+            {
+                address = user.Address == null ? "" : user.Address,
+                birthday = user.Birthday == null ? "" : ((DateTime)user.Birthday).ToString("dd/MM/yyyy"),
+                cityID = user.CityID == null ? 0 : (int)user.CityID,
+                districtID = user.DistrictID == null ? 0 : (int)user.DistrictID,
+                email = user.Email == null ? "" : user.Email,
+                fullname = user.FullName == null ? "" : user.FullName,
+                gender = user.Gender == null ? 0 : (int)user.Gender,
+                groupID = user.GroupId,
+                joinDate = user.JoinDate == null ? "" : ((DateTime)user.JoinDate).ToString("dd/MM/yyyy"),
+                phone = user.Phone == null ? "" : user.Phone.Trim(),
+                positionID = user.PositionID,
+                userID = user.UserID,
+                wardID = user.WardID == null ? 0 : (int)user.WardID
+            };
+            return model;
+        }
+        #endregion
+
+        #region User Delete
+        public int DeleteUser(int id)
+        {
+            return new UserDAO().DeleteUser(id);
         }
         #endregion
     }

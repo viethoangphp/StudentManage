@@ -20,11 +20,11 @@ namespace StudentManage.Models
         [Required]
         public string phone { set; get; }
         [Required]
-        
         public string studentCode { set; get; }
         public DateTime? date_end { set; get;}
         public DateTime? date_start { set; get;}
         public string password { set; get;}
+        public string confirmPassword { set; get;}
         public int gender { set; get; }
         public DateTime? birthDay { set; get; }
         [Required]
