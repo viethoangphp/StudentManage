@@ -182,7 +182,7 @@ namespace Models.DAO
 #warning Change group base on position
                 changeUser.GroupId = user.PositionID;
                 //THIS DOESN'T RELATE BUT HAVE TO SET IT TO AVOID PROBLEM
-                changeUser.StudentCode = changeUser.StudentCode.Trim();
+                changeUser.StudentCode = changeUser.StudentCode == null ? "" : changeUser.StudentCode.Trim();
                 db.SaveChanges();
                 return 1;
             }
