@@ -29,9 +29,13 @@ namespace StudentManage.Controllers
         }
         //Get user by id
         public JsonResult GetUserByID(int id)
-        {
-            UserUpdateModel model = new UserBUS().GetUpdateUserInfo(id);
-            return Json(model);
+        {   
+            //UserUpdateModel model = new UserBUS().GetUpdateUserInfo(id);
+            //return Json(model);
+
+            //test show modal
+            UserModel model = new UserBUS().GetUserByID(id);
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
         //Partial View List Group Name
         public ActionResult GetListGroup()

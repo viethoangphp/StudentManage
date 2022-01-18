@@ -34,6 +34,7 @@ namespace StudentManage.BUS
                 user.gender = (model.Gender != null) ? (int)model.Gender : 1;
                 user.studentCode = model.StudentCode.Trim();
                 user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
+                user.facultyID = model.Class.FacutyID;
                 user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;

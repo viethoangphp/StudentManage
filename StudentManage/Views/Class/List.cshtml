@@ -117,7 +117,7 @@
                                     Họ và tên
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="fullname">
+                                <input id="fullname" class="form-control"  type="text" name="fullname" value="">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -126,7 +126,7 @@
                                     Mã Số Sinh Viên
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="studentCode">
+                                <input id="studentCode" class="form-control" type="text" name="studentCode" value="">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -135,7 +135,7 @@
                                     Số Điện Thoại
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="phone">
+                                <input id="phone" class="form-control" type="text" name="phone">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -144,7 +144,7 @@
                                     Email
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="email">
+                                <input id="email" class="form-control" type="text" name="email">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -154,7 +154,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="cal-icon">
-                                    <input class="form-control datetimepicker"
+                                    <input id="birthDayString" class="form-control datetimepicker"
                                            type="text" name="birthDayString">
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                                     Giới Tính
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select class="select" name="gender">
+                                <select id="gender" class="select" name="gender">
                                     <option value="1">Nam</option>
                                     <option value="0">Nữ</option>
                                 </select>
@@ -177,7 +177,7 @@
                                     Lớp
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="className" style="text-transform:uppercase;">
+                                <input id="className" class="form-control" type="text" name="className" style="text-transform:uppercase;">
                             </div>
                         </div>
                         @Html.Action("ListFacuty", "Union")
@@ -220,7 +220,7 @@
                                     Địa Chỉ Chi Tiết
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text" name="address">
+                                <input id="address" class="form-control" type="text" name="address">
                             </div>
                         </div>
                     </div>

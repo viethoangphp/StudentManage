@@ -1,6 +1,9 @@
-﻿$(document).ready(function () {
+﻿//const { success } = require("toastr");
+
+$(document).ready(function () {
     var arr = (window.location.pathname).split("/");
     var val = (arr[arr.length - 1]);
+
 
     var table = $("#myTable").DataTable({
         searching: false,
@@ -35,9 +38,47 @@
             url: "/Class/List/" + val,
             method: "POST"
         }
-    })
+    });
+
     //Notify that feature not available yet
-    $(document).on("click", ".editing-btn", function () {
-        toastr.error("Tính năng chưa hoàn thiện. Vui lòng thử lại sau", "Lỗi");
+    $(document).on("click", ".editing-btn", function (e) {
+        //toastr.error("Tính năng chưa hoàn thiện. Vui lòng thử lại sau", "Lỗi");
+        let id = $(this).data('id');
+
+        $.ajax({
+            url: '/User/GetUserByID/' + id,
+            method: 'GET',
+            success: function (rs) {
+                $('#fullname').val(rs.fullname);
+                $('#studentCode').val(rs.studentCode);
+                $('#phone').val(rs.phone);
+                $('#email').val(rs.email);
+
+                $('#gender').val(rs.gender).change();
+                $('#className').val(rs.className);
+                $('#facultyID').val(rs.facultyID).trigger("change");
+                //alert(rs.facultyName);
+                //$('#cityID').val("");
+                //$('#districtID').val("");
+                //$('#wardID').val("");
+                $('#address').val(rs.address);
+
+                var strDate = rs.birthDay; // /Date(974480400000)/
+                var num = parseInt(strDate.replace(/[^0-9]/g, ""));
+                var date = new Date(num);
+                var dmy = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+                $('#birthDayString').val(dmy);
+            },
+            error: function () {
+                toastr.error("Vui lòng thử lại sau", "Lỗi");
+            }
+        });
+
     })
+
+
+
+
+
+
 })
