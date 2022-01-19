@@ -274,7 +274,7 @@ namespace StudentManage.BUS
         #endregion
 
         #region User Insert
-        public int InsertUser(UserInsertModel model)
+        public int InsertUserByClass(UserInsertModel model)
         {
             var user = new User
             {
@@ -293,6 +293,30 @@ namespace StudentManage.BUS
             return dao.Insert(user);
         }
         #endregion
+        //#region User Insert
+        //public int InsertUserByClass(UserInsertByClassModel model)
+        //{
+        //    var user = new User
+        //    {
+        //        GroupId = model.groupID,
+        //        PositionID = model.positionID,
+        //        ClassID = model.classID,
+        //        FullName = toCapitalize(model.fullname),
+        //        Email = model.email,
+        //        Phone = model.phone,
+        //        Birthday = DateTime.ParseExact(model.birthDay, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+        //        JoinDate = DateTime.ParseExact(model.joinDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+        //        Password = HashPassword.HashSHA256(model.password, new SHA256CryptoServiceProvider()),
+        //        Status = 1,
+        //        Gender = model.gender,
+        //        StudentCode = model.studentCode,
+        //        Address = model.address,  
+                
+        //    };
+        //    return dao.Insert(user);
+        //}
+        #endregion
+
 
         #region User Update
         public int UpdateUser(UserUpdateModel model)

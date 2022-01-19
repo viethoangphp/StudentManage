@@ -56,7 +56,7 @@ namespace StudentManage.Controllers
             //}
             if (ModelState.IsValid)
             {
-                int result = new UserBUS().InsertUser(model);
+                int result = new UserBUS().InsertUserByClass(model);
                 if (result != -1)
                 {
                     TempData["SUCCESS"] = "Thêm người dùng thành công";

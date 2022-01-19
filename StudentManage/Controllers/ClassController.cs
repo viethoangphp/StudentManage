@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using StudentManage.BUS;
+using StudentManage.Library;
 using StudentManage.Models;
 
 namespace StudentManage.Controllers
@@ -130,5 +132,84 @@ namespace StudentManage.Controllers
                 data = list
             }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetListPosition()
+        {
+            return PartialView(new UserBUS().GetListPosition());
+        }
+
+        //Add user
+        //[HttpPost]
+        //public ActionResult InsertStudentByClass(UserInsertByClassModel model)
+        //{
+        //    model.classID = 1; //Hardcoded class to 18DTHD1
+        //    //model.facultyID = 1;
+        //    //Check position and assign suitable group
+        //    model.groupID = model.positionID;
+           
+        //    if (ModelState.IsValid)
+        //    {
+        //        int result = new UserBUS().InsertUserByClass(model);
+        //        if (result != -1)
+        //        {
+        //            TempData["SUCCESS"] = "Thêm người dùng thành công";
+        //            return RedirectToAction("Index");
+        //        }
+        //        TempData["ERROR"] = "Đã có lỗi xảy ra. Vui lòng thử lại";
+        //        return RedirectToAction("Index");
+        //    }
+        //    TempData["ERROR"] = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại";
+        //    return RedirectToAction("Index");
+        //}
+        public JsonResult Insert2(UserModel model)
+        {
+            ModelState.Remove("birthDay");
+            if(ModelState.IsValid)
+            {
+              
+               if(model.studentCode.Length <= 15)
+               {
+                    EmailService checkMail = new EmailService();
+                    if(checkMail.IsValid(model.email))
+                    {
+                        model.password = model.studentCode;
+                        model.groupID = 2;
+                        model.positionID = 2;
+                        model.birthDay = DateTime.ParseExact(model.birthDayString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        var classModel = new FacultyBUS().GetClassModelByName(model.className);
+                        if (classModel == null)
+                        {
+                            ClassModel classItem = new ClassModel()
+                            {
+                                className = model.className,
+                                facultyID = model.facultyID,
+                                status = 1
+                            };
+                            var classId = new FacultyBUS().InsertClass(classItem);
+                            model.classID = classId;
+                        }
+                        else
+                        {
+                            model.classID = classModel.classID;
+                        }
+                        var result = new UserBUS().Insert(model);
+
+                        return Json("dup", JsonRequestBehavior.AllowGet);
+
+                    }
+                    else
+                    {
+                        return Json("errorEmail", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json("errorStudentCode", JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json("false",JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

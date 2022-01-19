@@ -264,5 +264,7 @@ namespace StudentManage.BUS
             }
             return new Tuple<int, List<ClassModel>>(result.TotalRecords, listCls);
         }
+
+
     }
 }
