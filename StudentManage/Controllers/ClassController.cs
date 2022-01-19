@@ -138,30 +138,7 @@ namespace StudentManage.Controllers
             return PartialView(new UserBUS().GetListPosition());
         }
 
-        //Add user
-        //[HttpPost]
-        //public ActionResult InsertStudentByClass(UserInsertByClassModel model)
-        //{
-        //    model.classID = 1; //Hardcoded class to 18DTHD1
-        //    //model.facultyID = 1;
-        //    //Check position and assign suitable group
-        //    model.groupID = model.positionID;
-           
-        //    if (ModelState.IsValid)
-        //    {
-        //        int result = new UserBUS().InsertUserByClass(model);
-        //        if (result != -1)
-        //        {
-        //            TempData["SUCCESS"] = "Thêm người dùng thành công";
-        //            return RedirectToAction("Index");
-        //        }
-        //        TempData["ERROR"] = "Đã có lỗi xảy ra. Vui lòng thử lại";
-        //        return RedirectToAction("Index");
-        //    }
-        //    TempData["ERROR"] = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại";
-        //    return RedirectToAction("Index");
-        //}
-        public JsonResult Insert2(UserModel model)
+        public JsonResult InsertUserByClass(UserModel model)
         {
             ModelState.Remove("birthDay");
             if(ModelState.IsValid)
