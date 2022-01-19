@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="~/Assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="~/Assets/css/style.css"/>
+    <link rel="stylesheet" href="~/Assets/css/style.css" />
 
 
 </head>
@@ -241,9 +241,47 @@
                                 <li>
                                     <a href="/UnionEvaluation/Union">Thực Hiện Đánh Giá</a>
                                 </li>
-                               
                             </ul>
                         </li>
+                        @if (user.PositionID == 4)
+                        {
+                            <li class="submenu">
+                                <a href="#">
+                                    <i class="la la-users"></i><span>Quản lý điểm lớp</span><span class="menu-arrow"></span>
+                                </a>
+                                <ul style="display: none;">
+                                    <li>
+                                        <a href="~/UnionEvaluation/ClassEvaluation/?ClassId=@user.ClassID">Đánh giá lớp</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (user.PositionID == 5)
+                        {
+                            <li class="submenu">
+                                <a href="#">
+                                    <i class="la la-users"></i><span>Quản lý điểm khoa</span><span class="menu-arrow"></span>
+                                </a>
+                                <ul style="display: none;">
+                                    <li>
+                                        <a href="~/UnionEvaluation/FacultyEvaluation/?FacultyId=@user.Class.FacutyID">Đánh giá khoa</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (user.PositionID == 6)
+                        {
+                            <li class="submenu">
+                                <a href="#">
+                                    <i class="la la-users"></i><span>Quản lý điểm trường</span><span class="menu-arrow"></span>
+                                </a>
+                                <ul style="display: none;">
+                                    <li>
+                                        <a href="~/UnionEvaluation/SchoolEvaluation">Đánh giá toàn trường</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -301,7 +339,7 @@
     <script src="~/Assets/js/lib/Notification.js"></script>
     <script src="~/Assets/js/fileinput.js"></script>
     <script src="~/Assets/js/fileinput2.js"></script>
-  
+
     @RenderSection("js", false)
 </body>
 

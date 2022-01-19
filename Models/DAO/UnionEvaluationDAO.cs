@@ -51,7 +51,7 @@ namespace Models.DAO
         // Get all detail By FormID
         public List<DetailEvalution> GetDetailEvalutionsByFormId(int formId)
         {
-            return db.DetailEvalutions.Where(x => x.FormId == formId).OrderBy(x=>x.Level).ToList();
+            return db.DetailEvalutions.Where(x => x.FormId == formId && x.Type == 2).OrderBy(x=>x.Level).ToList();
         }
         // Get all passed semesters
         public List<Semester> GetAllSemesters()
@@ -62,7 +62,7 @@ namespace Models.DAO
         // Get list semesters till now - include present semester
         public List<Semester> GetSemesterById(int userId)
         {
-            var result = db.DetailEvalutions.Where(x => x.UserID == userId).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
+            var result = db.DetailEvalutions.Where(x => x.UserID == userId && x.Type == 2).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
             var firstform = result.FirstOrDefault();
             if(firstform != null)
             {

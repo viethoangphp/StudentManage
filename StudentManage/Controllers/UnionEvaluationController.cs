@@ -166,10 +166,12 @@ namespace StudentManage.Controllers
                 model.formId = (int)formId;
             }    
             // Check User Group Profile
+            // Người đánh giá
             model.Assessor = modelBUS.GetGroupInfoByUserId(userSession.userID);
+            // Người được đánh giá
             model.Assessee = modelBUS.GetGroupInfoByUserId(user.userID);
+            //===============================================================================
             ViewBag.user = user;
-
             return View(model);
         }
         

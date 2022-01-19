@@ -162,7 +162,7 @@
                                                 </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
-                                                        @if (Model.IsInTime == 1)
+                                                        @if (Model.IsInTime == 1 && Model.Assessor == 1)
                                                         {
                                                             // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score1" class="juged-input" required min="0" max="@criteria.score"
@@ -179,7 +179,7 @@
                                                     <!-- #endregion -->
                                                     <!-- #region Level 2 - Bí thư chi đoàn -->
                                                     <td class="text-center" name="ClassScore-@(count-2)">
-                                                        @if (Model.IsInTime == 2)
+                                                        @if (Model.IsInTime == 2 && Model.Assessor == 2)
                                                         {
                                                             // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score2" class="juged-input" required min="0" max="@criteria.score"
@@ -196,7 +196,7 @@
                                                     <!-- #endregion -->
                                                     <!-- #region Level 3 - Bí thư Đoàn khoa -->
                                                     <td class="text-center" name="FacultyScore-@(count-2)">
-                                                        @if (Model.IsInTime == 3)
+                                                        @if (Model.IsInTime == 3 && Model.Assessor == 3)
                                                         {
                                                             // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score3" class="juged-input" required min="0" max="@criteria.score"
@@ -210,10 +210,10 @@
                                                             @((criteria.score3 == null) ? Html.Raw("-") : Html.Raw(criteria.score3));
                                                         }
                                                     </td>
-                                                    <!-- #endregion -->
+                                                    <!-- #endregion -->s
                                                     <!-- #region Level 4 - Bí thư Đoàn trường -->
                                                     <td class="text-center" name="SchoolScore-@(count-2)">
-                                                        @if (Model.IsInTime == 4)
+                                                        @if (Model.IsInTime == 4 && Model.Assessor == 4)
                                                         {
                                                             // Input Score
                                                             <input type="number" name="@("listmodel[" + (count - 2) + "].score")" value="@criteria.score4" class="juged-input" required min="0" max="@criteria.score"

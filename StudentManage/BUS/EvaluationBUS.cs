@@ -443,8 +443,10 @@ namespace StudentManage.BUS
         {
             var groupUser = GetGroupUserById(groupId);
             var timeEvaluation = dao.GetTimeEvaluationByTimeId(groupUser.timeId);
-            if (DateTime.Compare(DateTime.Now, (DateTime)timeEvaluation.Date_Start) > 0 &&
-               DateTime.Compare((DateTime)timeEvaluation.Date_End, DateTime.Now) > 0)
+
+            //if (DateTime.Compare(DateTime.Now, (DateTime)timeEvaluation.Date_Start) > 0 &&
+            //   DateTime.Compare((DateTime)timeEvaluation.Date_End, DateTime.Now) > 0)
+            if(timeEvaluation.Status == 1)
             {
                 return 0;
             }
@@ -615,7 +617,11 @@ namespace StudentManage.BUS
                 listSemesters[0].inProcess = true;
                 int inTime = IsInTime();
                 // Kiểm tra thời gian chấm có đang trong hk hiện tại
-                listSemesters[0].Available = true;
+                if(inTime == 1)
+                {
+                    listSemesters[0].Available = true;
+                }    
+                
                 return listSemesters;
             }
             else
