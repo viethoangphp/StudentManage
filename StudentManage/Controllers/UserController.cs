@@ -13,14 +13,17 @@ namespace StudentManage.Controllers
     {
         #region Get user data
         // Main view
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            ViewData["CurrentPage"] = page;
+            int count = new UserBUS().GetUserCount();
+            ViewData["TotalPage"] = Math.Ceiling((decimal)count / 12);
             return View();
         }
         //Partial View List User
-        public ActionResult ShowUserList()
+        public ActionResult ShowUserList(int? pagenum)
         {
-            return PartialView(new UserBUS().GetListUser());
+            return PartialView(new UserBUS().GetListUserByPage(pagenum)); 
         }
         //Partial View List Position
         public ActionResult GetListPosition()

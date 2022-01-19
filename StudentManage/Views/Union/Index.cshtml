@@ -66,7 +66,7 @@
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
             <div class="form-group form-focus">
                 <input type="text" class="form-control floating" id="unionid">
-                <label class="focus-label">Mã sổ đoàn</label>
+                <label class="focus-label">Tìm kiếm</label>
             </div>
         </div>
         <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
@@ -193,7 +193,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="cal-icon">
-                                    <input class="form-control datetimepicker"
+                                    <input class="form-control datetimepicker" value="30/09/2025"
                                            type="text" name="returnDate">
                                 </div>
                             </div>
@@ -205,7 +205,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="cal-icon">
-                                    <input class="form-control datetimepicker"
+                                    <input class="form-control datetimepicker" value="01/01/2018"
                                            type="text" name="joinDate">
                                 </div>
                             </div>
@@ -281,7 +281,7 @@
                                     Mã Sổ Đoàn
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text"  name="unionId" readonly>
+                                <input class="form-control" type="text" name="unionId" readonly>
                                 <input type="hidden" name="userID">
                             </div>
                         </div>
@@ -292,6 +292,17 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input class="form-control" type="text" name="isEmail" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Ngày Rút Sổ
+                                </label>
+                                <div class="cal-icon">
+                                    <input class="form-control" readonly
+                                           type="text" name="UpdateAt">
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -549,6 +560,7 @@
                 form.getElementsByTagName("input").birthDayString.value = responsive.birthDay;
                 form.getElementsByTagName("input").className.value = responsive.className;
                 form.getElementsByTagName("input").returnDate.value = responsive.ReturnDate;
+                form.getElementsByTagName("input").UpdateAt.value = (responsive.UpdateAt) ? responsive.UpdateAt : "Chưa rút";
                 form.getElementsByTagName("input").joinDate.value = responsive.JoinDate;
                 form.getElementsByTagName("input").address.value = responsive.address;
                 $('#edit_union-notebook select[name="gender"]').val(responsive.gender);

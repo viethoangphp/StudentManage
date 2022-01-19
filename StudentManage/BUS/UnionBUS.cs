@@ -67,6 +67,7 @@ namespace StudentManage.BUS
                 union.birthDay = String.Format("{0:dd/MM/yyyy}", item.User1.Birthday);
                 union.update_At = item.Update_At;
                 union.ReturnDate = String.Format("{0:dd/MM/yyyy}", item.ReturnDate);
+                union.UpdateAt = String.Format("{0:dd/MM/yyyy}", item.Update_At);
                 union.isEmail = Convert.ToInt32(item.isEmail);
                 union.JoinDate = String.Format("{0:dd/MM/yyyy}", item.User1.JoinDate);
                 union.address = item.User1.Address;

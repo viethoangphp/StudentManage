@@ -32,7 +32,7 @@ namespace StudentManage.BUS
                 user.email = model.Email;
                 user.phone = model.Phone;
                 user.gender = (model.Gender != null) ? (int)model.Gender : 1;
-                user.studentCode = model.StudentCode.Trim();
+                user.studentCode = model.StudentCode == null ? "" : model.StudentCode.Trim();
                 user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
                 user.className = model.Class.Name;
                 user.address = model.Address;
@@ -208,10 +208,10 @@ namespace StudentManage.BUS
         }
 
         #region Get list user
-        //Get list user
-        public List<UserModel> GetListUser()
+        //Get list user (for scoring)
+        public List<UserModel> GetListUserByPage(int? pageNum)
         {
-            List<User> listUser = new UserDAO().GetListUser();
+            List<User> listUser = new UserDAO().GetListUserByPage(pageNum);
             List<UserModel> list = new List<UserModel>();
             foreach (var item in listUser)
             {
@@ -278,7 +278,7 @@ namespace StudentManage.BUS
         {
             var user = new User
             {
-                GroupId = model.groupID,
+                GroupId = 9 - model.positionID,
                 PositionID = model.positionID,
                 ClassID = model.classID,
                 FullName = toCapitalize(model.fullname),
@@ -312,8 +312,6 @@ namespace StudentManage.BUS
                 //WardID = model.wardID,
                 Address = model.address,
                 PositionID = model.positionID,
-#warning Change user group base on position
-                GroupId = model.positionID,
                 Status = 1
             };
             return new UserDAO().UpdateUser(item);
@@ -347,6 +345,13 @@ namespace StudentManage.BUS
         public int DeleteUser(int id)
         {
             return new UserDAO().DeleteUser(id);
+        }
+        #endregion
+
+        #region User Count
+        public int GetUserCount()
+        {
+            return new UserDAO().GetUserCount();
         }
         #endregion
     }

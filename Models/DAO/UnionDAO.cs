@@ -60,7 +60,8 @@ namespace Models.DAO
             int numID = -1;
             int.TryParse(string.IsNullOrEmpty(unionId) ? "" : unionId.Substring(3), out numID);
             var listResult = db.UnionBooks.Where(m => string.IsNullOrEmpty(unionId) ||
-            (m.User1.StudentCode.StartsWith(unionId.Substring(0, 2)) && m.NumID == numID));
+            (m.User1.StudentCode.StartsWith(unionId.Substring(0, 2)) && m.NumID == numID 
+            || m.User1.StudentCode.Contains(unionId) || m.User1.FullName.Contains(unionId) ));
             listResult = listResult.Where(m => semester == 0 || m.User1.Class.Name.StartsWith(semester.ToString()));
             listResult = listResult.Where(m => facutyId == 0 || m.User1.Class.FacutyID == facutyId);
             listResult = listResult.Where(m => classId == 0 || m.User1.ClassID == classId);

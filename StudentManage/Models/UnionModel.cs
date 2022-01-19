@@ -29,6 +29,7 @@ namespace StudentManage.Models
         public DateTime? update_At { set; get; }
         public DateTime? returnDate { set; get;}
         public string ReturnDate { set; get; }
+        public string UpdateAt { set; get; }
         public int create_by { set; get; }
         public int userID { set; get;}
         public int status { set; get;}

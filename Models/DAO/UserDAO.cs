@@ -147,10 +147,21 @@ namespace Models.DAO
             }
            
         }
-        //Get user list
+        //Get user list (for scoring)
         public List<User> GetListUser()
         {
-            return db.Users.ToList();
+            return db.Users.Where(m => m.Status == 1).ToList();
+        }
+        //Get user list by page
+        public List<User> GetListUserByPage(int? pageNum)
+        {
+            int page = pageNum == null ? 1 : (int)pageNum;
+            return db.Users.Where(m=>m.Status == 1 && m.GroupId != 2).OrderBy(m=>m.UserID).Skip((page - 1) * 12).Take(12).ToList();
+        }
+        //Get user list by page
+        public int GetUserCount()
+        {
+            return db.Users.Where(m=>m.Status == 1 && m.GroupId != 2).Count();
         }
         //Get position list
         public List<Position> GetListPosition()
@@ -179,8 +190,7 @@ namespace Models.DAO
                 changeUser.Address = user.Address;
                 changeUser.JoinDate = user.JoinDate;
                 changeUser.PositionID = user.PositionID;
-#warning Change group base on position
-                changeUser.GroupId = user.PositionID;
+                changeUser.GroupId = 9 - user.PositionID; //HARDCODED BASE ON POSITION ID
                 //THIS DOESN'T RELATE BUT HAVE TO SET IT TO AVOID PROBLEM
                 changeUser.StudentCode = changeUser.StudentCode == null ? "" : changeUser.StudentCode.Trim();
                 db.SaveChanges();
