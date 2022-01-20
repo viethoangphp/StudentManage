@@ -158,4 +158,6 @@
         var className = $("#className").val();
         table.ajax.url("/Class/Search?&facultyID=" + facultyID + "&className=" + className).load();
     })
+
+  
 })

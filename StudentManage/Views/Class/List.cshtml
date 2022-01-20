@@ -40,7 +40,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="union_add" action="/Class/InsertUserByClass" method="post">
+                    <form id="user_add" method="post" >
                         <div class="row">
 
 
@@ -54,6 +54,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">
+                                        Họ tên <span class="text-danger">*</span>
+                                    </label>
+                                    <input name="fullname" class="form-control" type="text" required
+                                           oninvalid="this.setCustomValidity('Vui lòng nhập họ tên')"
+                                           oninput="this.setCustomValidity('')">
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>
@@ -64,7 +75,20 @@
                                 </div>
                             </div>
 
+
+
                             @Html.Action("ListFacuty", "Union")
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">
+                                        Điện thoại <span class="text-danger">*</span>
+                                    </label>
+                                    <input name="phone" class="form-control" type="text" required
+                                           oninvalid="this.setCustomValidity('Vui lòng nhập SĐT')"
+                                           oninput="this.setCustomValidity('')">
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -89,44 +113,8 @@
                                            oninput="this.setCustomValidity('')">
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">
-                                        Họ tên <span class="text-danger">*</span>
-                                    </label>
-                                    <input name="fullname" class="form-control" type="text" required
-                                           oninvalid="this.setCustomValidity('Vui lòng nhập họ tên')"
-                                           oninput="this.setCustomValidity('')">
-                                </div>
-                            </div>
 
 
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">
-                                        Ngày vào làm <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="cal-icon">
-                                        <input name="joinDate" class="form-control datetimepicker"
-                                               type="text" required
-                                               oninvalid="this.setCustomValidity('Vui lòng nhập ngày vào làm')"
-                                               oninput="this.setCustomValidity('')">
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">
-                                        Điện thoại <span class="text-danger">*</span>
-                                    </label>
-                                    <input name="phone" class="form-control" type="text" required
-                                           oninvalid="this.setCustomValidity('Vui lòng nhập SĐT')"
-                                           oninput="this.setCustomValidity('')">
-                                </div>
-                            </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label">Giới tính</label>
@@ -137,16 +125,7 @@
                                 </div>
                             </div>
 
-                     
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Chức vụ</label>
-                                    <select name="positionID" class="select">
-                                        @Html.Action("GetListPosition")
-                                    </select>
-                                </div>
-                            </div>
 
                             @*<div class="col-md-6">
             <div class="form-group">
@@ -191,11 +170,11 @@
                                 </div>
                             </div>
 
-                            @*<input name="className" value="18DTHD1" readonly hidden />*@
+
                         </div>
 
                         <div class="submit-section">
-                            <button type="submit" class="btn btn-primary submit-btn">Lưu</button>
+                            <button class="btn btn-primary submit-btn">Thêm</button>
                         </div>
                     </form>
                 </div>
@@ -418,7 +397,7 @@
     <script src="~/Assets/js/lib/sound.js"></script>
    
     
-    @if (TempData["SUCCESS"] != null)
+    @*@if (TempData["SUCCESS"] != null)
     {
         <script>
             toastr.success("@TempData["SUCCESS"]", "Thành công");
@@ -429,5 +408,5 @@
         <script>
             toastr.error("@TempData["ERROR"]", "Lỗi");
         </script>
-    }
+    }*@
 }

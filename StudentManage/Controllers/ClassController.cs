@@ -138,21 +138,27 @@ namespace StudentManage.Controllers
             return PartialView(new UserBUS().GetListPosition());
         }
 
+      
+        [HttpPost]
         public JsonResult InsertUserByClass(UserModel model)
         {
             ModelState.Remove("birthDay");
-            if(ModelState.IsValid)
+            ModelState.Remove("positionID");
+            ModelState.Remove("joinDate");
+
+            if (ModelState.IsValid)
             {
-              
-               if(model.studentCode.Length <= 15)
-               {
+               
+                if (model.studentCode.Length <= 15)
+                {
                     EmailService checkMail = new EmailService();
-                    if(checkMail.IsValid(model.email))
+                    if (checkMail.IsValid(model.email))
                     {
                         model.password = model.studentCode;
                         model.groupID = 2;
                         model.positionID = 2;
                         model.birthDay = DateTime.ParseExact(model.birthDayString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        model.joinDate = DateTime.Now.ToString("dd/MM/yyyy");
                         var classModel = new FacultyBUS().GetClassModelByName(model.className);
                         if (classModel == null)
                         {
@@ -169,10 +175,18 @@ namespace StudentManage.Controllers
                         {
                             model.classID = classModel.classID;
                         }
-                        var result = new UserBUS().Insert(model);
-
-                        return Json("dup", JsonRequestBehavior.AllowGet);
-
+                        var userID = new UserBUS().Insert(model);
+                        var reID = Convert.ToInt32(userID);
+                        if (userID > 0)
+                        {
+                           
+                            // Return data
+                            return Json(reID, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json("dup", JsonRequestBehavior.AllowGet);
+                        }
                     }
                     else
                     {
@@ -185,7 +199,7 @@ namespace StudentManage.Controllers
                 }
             }
 
-            return Json("false",JsonRequestBehavior.AllowGet);
+            return Json("false", JsonRequestBehavior.AllowGet);
         }
 
     }
