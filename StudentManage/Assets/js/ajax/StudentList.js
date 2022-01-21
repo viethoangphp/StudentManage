@@ -1,9 +1,59 @@
 ﻿//const { success } = require("toastr");
 
 $(document).ready(function () {
+    //Update student 
+    $("#student_update").on("submit", function () {
+        var formData = new FormData(this);
+        UpdateStudent(formData).then(function (data) {
+            loaderFade();
+            setTimeout(function () {
+                if (data > 0) {
+                    sound("/Assets/mp3/smallbox.mp3");
+                    toastr.success("Cập Nhật Thành Công !", "Thành Công!");
+                    $("#edit_student").delay(500).modal("hide");
+                    $("#myTable").DataTable().ajax.reload();
+                } else if (data == "dup") {
+                    sound("/Assets/mp3/error.mp3");
+                    toastr.error("Cập nhật không thành công", "Lỗi!");
+                    document.getElementsByName("studentCode")[0].value = "";
+                } else if (data == "false") {
+                    sound("/Assets/mp3/error.mp3");
+                    toastr.error("Bạn Không Được Để Trống Những Trường Dữ Liệu Có Dấu (*) . Vui lòng kiểm tra và thử lại .Thanks", "Lỗi!");
+                } else if (data == "errorEmail") {
+                    sound("/Assets/mp3/error.mp3");
+                    toastr.error("Email Không Hợp Lệ . Vui lòng kiểm tra và thử lại .Thanks", "Lỗi!");
+                } else {
+                    sound("/Assets/mp3/error.mp3");
+                    toastr.error("Mã Số Sinh Viên Không Hợp Lệ ", "Lỗi!");
+                }
+            }, 1500)
+        });
+        return false;
+    });
+
+    var UpdateStudent = function (formData) {
+        return new Promise(function (resolve) {
+            $('#loader').fadeIn('slow');
+            $('#loader-wrapper').fadeIn('slow');
+            $.ajax({
+                url: "/Student/Update",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    resolve(data);
+                }
+            })
+        })
+    }
+
+
+    //
     var arr = (window.location.pathname).split("/");
     var val = (arr[arr.length - 1]);
-
 
     var table = $("#myTable").DataTable({
         searching: false,
@@ -40,45 +90,72 @@ $(document).ready(function () {
         }
     });
 
-    //Notify that feature not available yet
+    //Show 
     $(document).on("click", ".editing-btn", function (e) {
-        //toastr.error("Tính năng chưa hoàn thiện. Vui lòng thử lại sau", "Lỗi");
         let id = $(this).data('id');
+        update_user(id).then(function (data) {
+            console.log(data);
+            rederData(data).then(() => {
+                $('#edit_student select').trigger("change");
+            });
 
-        $.ajax({
-            url: '/User/GetUserByID/' + id,
-            method: 'GET',
-            success: function (rs) {
-                $('#fullname').val(rs.fullname);
-                $('#studentCode').val(rs.studentCode);
-                $('#phone').val(rs.phone);
-                $('#email').val(rs.email);
-
-                $('#gender').val(rs.gender).change();
-                $('#className').val(rs.className);
-                $('#facultyID').val(rs.facultyID).trigger("change");
-                //alert(rs.facultyName);
-                //$('#cityID').val("");
-                //$('#districtID').val("");
-                //$('#wardID').val("");
-                $('#address').val(rs.address);
-
-                var strDate = rs.birthDay; // /Date(974480400000)/
-                var num = parseInt(strDate.replace(/[^0-9]/g, ""));
-                var date = new Date(num);
-                var dmy = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-                $('#birthDayString').val(dmy);
-            },
-            error: function () {
-                toastr.error("Vui lòng thử lại sau", "Lỗi");
-            }
-        });
-
+        })
     })
 
+    const update_user = function (id) {
+        return new Promise(function (resolve) {
+            $.ajax({
+                url: "/User/GetUserByID/",
+                method: "POST",
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    resolve(data);
+                }
+            })
+        })
+    }
 
+    function rederData(responsive) {
+        return new Promise((resolve) => {
+            //$('#edit_student select[name="cityID"]').val(0);
+            const form = document.getElementById("edit_student");
+            form.getElementsByTagName("input").fullname.value = responsive.fullname;
+            form.getElementsByTagName("input").userID.value = responsive.userID;
+            form.getElementsByTagName("input").joinDate.value = responsive.joinDate;
+            form.getElementsByTagName("input").studentCode.value = responsive.studentCode;
+            form.getElementsByTagName("input").phone.value = responsive.phone;
+            form.getElementsByTagName("input").email.value = responsive.email;
 
+            //var strDate = responsive.birthDay; // /Date(974480400000)/
+            //var num = parseInt(strDate.replace(/[^0-9]/g, ""));
+            //var date = new Date(num);
+            //var dmy = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+            var dmy = convertTimeStampToD(responsive.birthDay);
+            form.getElementsByTagName("input").birthDayString.value = dmy;
 
+            form.getElementsByTagName("input").className.value = responsive.className;
+            form.getElementsByTagName("input").address.value = responsive.address;
 
+            $('#edit_student select[name="gender"]').val(responsive.gender);
+            $('#edit_student select[name="facultyID"]').val(responsive.facultyID);
+            $('#edit_student select').trigger("change");
+        })
+    }
 
+    function convertTimeStampToD(strDate) { ///Date(974480400000)/
+        var num = parseInt(strDate.replace(/[^0-9]/g, ""));
+        var date = new Date(num);
+        return dmy = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+    }
+
+    $("#close-btn").on("click", function () {
+        ClearData();
+    })
+
+    function ClearData() {
+        $("#student_update input").val("")
+        $("#student_update select").val("0").change()
+    }
 })
+

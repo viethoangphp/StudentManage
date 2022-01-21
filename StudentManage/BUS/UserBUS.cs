@@ -30,7 +30,7 @@ namespace StudentManage.BUS
                 }
                 user.positionID = model.PositionID;
                 user.email = model.Email;
-                user.phone = model.Phone;
+                user.phone = model.Phone.Trim();
                 user.gender = (model.Gender != null) ? (int)model.Gender : 1;
                 user.studentCode = model.StudentCode.Trim();
                 user.facultyName = (model.Class.Faculty.Name != null) ? model.Class.Faculty.Name : "";
@@ -38,6 +38,7 @@ namespace StudentManage.BUS
                 user.className = model.Class.Name;
                 user.address = model.Address;
                 user.birthDay = model.Birthday;
+                user.joinDate = model.JoinDate == null ? "" : ((DateTime)model.JoinDate).ToString("dd/MM/yyyy");
                 user.cityID = (model.CityID != null) ? (int)model.CityID : 0;
                 user.districtID = (model.DistrictID != null) ? (int)model.DistrictID : 0;
                 user.wardID = (model.WardID != null) ? (int)model.WardID : 0;
@@ -160,6 +161,7 @@ namespace StudentManage.BUS
             fullName = Regex.Replace(fullName, "\\s+", " ").Trim();
             return Regex.Replace(fullName.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
         }
+
         public int Update(UserModel user)
         {
             var item = new User();
