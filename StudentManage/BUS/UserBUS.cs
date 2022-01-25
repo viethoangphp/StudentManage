@@ -51,7 +51,7 @@ namespace StudentManage.BUS
             user.GroupId = model.groupID;
             user.PositionID = model.positionID;
             user.ClassID = model.classID;
-            user.FullName = toCapitalize(model.fullname);
+            user.FullName = FormatName(model.fullname);
             user.StudentCode = model.studentCode;
             user.Email = model.email;
             user.Phone = model.phone;
@@ -158,6 +158,30 @@ namespace StudentManage.BUS
         {
             fullName = Regex.Replace(fullName, "\\s+", " ").Trim();
             return Regex.Replace(fullName.ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+        }
+        private string FormatName(string name)
+        {
+            name = name.Trim();
+            name = name.ToLower();
+            while (name.IndexOf("  ") != -1)
+            {
+
+                name = name.Remove(name.IndexOf("  "), 1);
+            }
+
+            string[] s = name.Split(' ');
+            string afterFormat = "";
+            for (int i = 0; i < s.Length; ++i)
+            {
+                string first = s[i].Substring(0, 1);
+                string another = s[i].Substring(1, s[i].Length - 1);
+
+                afterFormat += first.ToUpper() + another + " ";
+            }
+            afterFormat = afterFormat.Remove(afterFormat.LastIndexOf(' '), 1);
+
+            return afterFormat;
+
         }
         public int Update(UserModel user)
         {

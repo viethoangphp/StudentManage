@@ -50,6 +50,10 @@ var addUserAjax = function (formData) {
         })
     })
 }
+function ClearData() {
+    $("#user_add input").val("")
+    $("#user_add select").val("0").change()
+}
 $(document).ready(function () {
     var arr = (window.location.pathname).split("/");
     var val = (arr[arr.length - 1]);
@@ -76,6 +80,36 @@ $(document).ready(function () {
             { "data": "email", "class": "text-center" },
             { "data": "phone", "class": "text-center" },
             {
+                "data": "status",
+                "class": "text-center",
+                "render": function (data, type, row, meta) {
+                    if (data == 1) {
+                        return "<div class='dropdown action-label'>" +
+                            "<a class='btn btn-white btn-sm btn-rounded dropdown-toggle' href='#' " +
+                            "data-toggle='dropdown' aria-expanded='false'>" +
+                            "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã nộp" +
+                            "</a>" +
+                            "<div class='dropdown-menu dropdown-menu-right'>" +
+                            "<a class='dropdown-item selectItem' href='#' data-id=" + row.id + ">" +
+                            "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã rút" +
+                            "</a>" +
+                            "</div>" +
+                            "</div>";
+                    }
+                    return "<div class='dropdown action-label'>" +
+                        "<a class='btn btn-white btn-sm btn-rounded dropdown-toggle' href='#' " +
+                        "data-toggle='dropdown' aria-expanded='false'>" +
+                        "<i class='fa fa-dot-circle-o text-danger m-r-5'></i>Đã rút" +
+                        "</a>" +
+                        "<div class='dropdown-menu dropdown-menu-right'>" +
+                        "<a class='dropdown-item selectItem' href='#' data-id=" + row.id + ">" +
+                        "<i class='fa fa-dot-circle-o text-success m-r-5'></i>Đã nộp" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>";
+                }
+            },
+            {
                 "data": "userID",
                 "class": "text-right",
                 "render": function (data) {
@@ -87,6 +121,30 @@ $(document).ready(function () {
             url: "/Class/List/" + val,
             method: "POST"
         }
+    })
+    loadIndex();
+    $(document).on("click", ".selectItem", function () {
+        var id = $(this).data("id")
+
+        var item = this.parentNode.parentNode.querySelector("a").innerHTML;
+        console.log(item);
+        this.parentNode.parentNode.querySelector("a").innerHTML = this.innerHTML;
+        this.innerHTML = item;
+        $.ajax({
+            url: "/Union/ChangeStatus",
+            method: "POST",
+            data: { id: id },
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    sound("/Assets/mp3/smallbox.mp3");
+                    toastr.success("Cập Nhật Thành Công", "Thành Công!");
+                } else {
+                    sound("/Assets/mp3/error.mp3");
+                    toastr.error("Lỗi Hệ Thống", "Lỗi!");
+                }
+            }
+        })
     })
     //Notify that feature not available yet
     $(document).on("click", ".editing-btn", function () {
