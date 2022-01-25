@@ -476,38 +476,76 @@
         const city = document.getElementById("city")
         const district = document.getElementById("district")
         const ward = document.getElementById("ward")
-        var api = "https://provinces.open-api.vn/api/?depth=3";
-        fetch(api, {
-            method: "GET",
-            ContentType: "application/json"
-        })
-            .then(response => response.json())
-            .then(function (data) {
-                let count = 0;
-                data.forEach(item => {
-                    city.options[city.options.length] = new Option(item.name, item.code)
-                });
-                city.onchange = function () {
-                    district.length = 1
-                    ward.length = 1
-                    if (this.value != 0) {
-                        var listDistrict = data.filter(m => m.code == this.value)
-                        listDistrict[0].districts.forEach(item => {
-                            district.options[district.options.length] = new Option(item.name, item.code)
-                        })
-                        district.onchange = function () {
-                            ward.length = 1
-                            if (this.value != 0) {
-                                var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
-                                listWard[0].wards.forEach(item => {
-                                    ward.options[ward.options.length] = new Option(item.name, item.code)
-                                })
-                            }
-                        }
+        // #region JS Promises region Provinces - Viet Nam <3
+        const getAllCities = function () {
+            return new Promise(function (resolve) {
+                $.ajax({
+                    url: "/Union/GetAllCities",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        resolve(data);
                     }
-                }
+                })
             })
-            .catch(err => console.log("Lỗi"))
+        }
+        const getDistrictsByCityID = (cityID) => {
+            return new Promise(function (resolve) {
+                $.ajax({
+                    url: "/Union/GetDistrictsByCityID/",
+                    method: "GET",
+                    dataType: "json",
+                    data: { cityID: cityID },
+                    success: function (listDistrict) {
+                        resolve(listDistrict);
+                    }
+                })
+            })
+        }
+        const getWardsByDistrictID = (districtID) => {
+            return new Promise(function (resolve) {
+                $.ajax({
+                    url: "/Union/GetWardsByDistrictID/",
+                    method: "GET",
+                    dataType: "json",
+                    data: { districtID: districtID },
+                    success: function (listWard) {
+                        resolve(listWard);
+                    }
+                })
+            })
+        }
+        // #endregion
+
+        // #region JS select region loading Provinces - Viet Nam <3
+        getAllCities().then(function (data) {
+            data.forEach(item => {
+                city.options[city.options.length] = new Option(item.Name, item.Code)
+            });
+            $('#edit_union-notebook select').trigger("change");
+            city.onchange = function () {
+                district.length = 1
+                ward.length = 1
+                if (this.value != 0) {
+                    getDistrictsByCityID(this.value).then(listDistrict => {
+                        listDistrict.forEach(item => {
+                            district.options[district.options.length] = new Option(item.Name, item.Code)
+                        })
+                    })
+                }
+            }
+            district.onchange = function () {
+                ward.length = 1
+                if (this.value != 0) {
+                    getWardsByDistrictID(this.value).then(listWard => {
+                        listWard.forEach(item => {
+                            ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                        })
+                    })
+                }
+            }
+        })
+        // #endregion
 
     </script>
     <script src="~/Assets/js/ajax/Union.js"></script>
@@ -535,6 +573,8 @@
                 })
             })
         }
+
+
         function rederData(responsive) {
             return new Promise((resolve) => {
                 $('#edit_union-notebook select[name="cityID"]').val(0);
@@ -561,77 +601,83 @@
                 const city = document.getElementById("city_update")
                 const district = document.getElementById("district_update")
                 const ward = document.getElementById("ward_update")
-                var api = "https://provinces.open-api.vn/api/?depth=3";
-                fetch(api, {
-                    method: "GET",
-                    ContentType: "application/json"
-                })
-                    .then(response => response.json())
-                    .then(function (data) {
-                        let count = 0;
-                        data.forEach(item => {
-                            city.options[city.options.length] = new Option(item.name, item.code)
-                            if (cityID != 0) {
-                                if (cityID == city.options[count].value) {
-                                    city.options[count].selected = true
+
+                // #region JS region select loading Provinces - Viet Nam <3
+                getAllCities().then(function (data) {
+                    let count = 0;
+                    data.forEach(item => {
+                        city.options[city.options.length] = new Option(item.Name, item.Code)
+                        if (cityID != 0) {
+                            if (cityID == city.options[count].value) {
+                                city.options[count].selected = true
+                                getDistrictsByCityID(cityID).then(function (listDistrict) {
+                                    count = 0;
+                                    listDistrict.forEach(item => {
+                                        district.options[district.options.length] = new Option(item.Name, item.Code)
+                                        if (districtID != 0) {
+                                            if (districtID == district.options[count].value) {
+                                                district.options[count].selected = true;
+                                            }
+                                            count++;
+                                        }
+                                    });
+                                })
+                            }
+                            count++;
+                        }
+
+                    });
+                    $('#edit_union-notebook select').trigger("change");
+                    getDistrictsByCityID(cityID).then(function (listDistrict) {
+                        count = 0;
+                        listDistrict.forEach(item => {
+                            district.options[district.options.length] = new Option(item.Name, item.Code)
+                            if (districtID != 0) {
+                                if (districtID == district.options[count].value) {
+                                    district.options[count].selected = true;
                                 }
                                 count++;
                             }
-
                         });
-                        $('#edit_union-notebook select').trigger("change");
-                        if (cityID != 0) {
-                            count = 0;
-                            var listDistrict = data.filter(m => m.code == cityID)
-                            listDistrict[0].districts.forEach(item => {
-                                district.options[district.options.length] = new Option(item.name, item.code)
-                                if (districtID != 0) {
-                                    if (districtID == district.options[count].value) {
-                                        district.options[count].selected = true
-                                    }
-                                    count++;
-                                }
-                            })
-                        }
-
-                        if (districtID != 0) {
-                            count = 0;
-                            var listWard = listDistrict[0].districts.filter(m => m.code == districtID)
-                            listWard[0].wards.forEach(item => {
-                                ward.options[ward.options.length] = new Option(item.name, item.code)
-                                if (wardID != 0) {
-                                    if (wardID == ward.options[count].value) {
-                                        ward.options[count].selected = true
-                                    }
-                                    count++;
-                                }
-                            })
-                        }
-                        var listDistrict;
-                        var listWard;
-                        city.onchange = function () {
-                            district.length = 1
-                            ward.length = 1
-                            if (this.value != 0) {
-                                listDistrict = data.filter(m => m.code == this.value)
-                                listDistrict[0].districts.forEach(item => {
-                                    district.options[district.options.length] = new Option(item.name, item.code)
-                                })
-
-                            }
-                        }
-                        district.onchange = function () {
-                            ward.length = 1
-                            if (this.value != 0) {
-                                var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
-                                listWard[0].wards.forEach(item => {
-                                    ward.options[ward.options.length] = new Option(item.name, item.code)
-                                })
-                            }
-                        }
                     })
-                    .catch(err => console.log("Lỗi"))
-            })
+                    getWardsByDistrictID(districtID).then(function (listWard) {
+                        count = 0;
+                        listWard.forEach(item => {
+                            ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                            if (wardID != 0) {
+                                if (wardID == ward.options[count].value) {
+                                    ward.options[count].selected = true;
+                                }
+                                count++;
+                            }
+                        })
+                    })
+                    
+                    city.onchange = function () {
+                        district.length = 1
+                        ward.length = 1
+                        if (this.value != 0) {
+                            getDistrictsByCityID(this.value).then(listDistrict => {
+                                listDistrict.forEach(item => {
+                                    district.options[district.options.length] = new Option(item.Name, item.Code)
+                                })
+                            })
+                        }
+                    }
+                    district.onchange = function () {
+                        ward.length = 1
+                        if (this.value != 0) {
+                            getWardsByDistrictID(this.value).then(listWard => {
+                                listWard.forEach(item => {
+                                    ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                                })
+                            })
+                        }
+                    }
+                    
+                })
+                // #endregion
+            });
         }
 
     </script>

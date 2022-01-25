@@ -21,6 +21,7 @@ namespace Models.EntityModel
         public virtual DbSet<Faculty> Faculties { get; set; }
         public virtual DbSet<GroupUser> GroupUsers { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
+        public virtual DbSet<Province> Provinces { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TemplateForm> TemplateForms { get; set; }
@@ -37,7 +38,6 @@ namespace Models.EntityModel
 
             modelBuilder.Entity<DetailEvalution>()
                 .Property(e => e.Image_proof)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<EvaluativeCriteria>()

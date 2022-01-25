@@ -190,6 +190,7 @@
     <!--QuangMinh-->
     <Compile Include="Models\GroupUserModel.cs" />
     <Compile Include="Models\PersonalFormModel.cs" />
+    <Compile Include="Models\ProvinceModel.cs" />
     <Compile Include="Models\SchoolEvaluationModel.cs" />
     <Compile Include="Models\TimeEvaluationModel.cs" />
     <Compile Include="Models\UnionFormModel.cs" />

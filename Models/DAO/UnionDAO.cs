@@ -132,6 +132,34 @@ namespace Models.DAO
             db.SaveChanges();
             return 1;
         }
-       
+        #region VietNam Provinces API - DB Provinces
+        public List<Province> GetAllCities()
+        {
+            var result = db.Provinces.ToList();
+            if(result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+        public List<Province> GetDistrictsByCityID(int CityID)
+        {
+            var result = db.Provinces.Where(x=>x.CityID == CityID).ToList();
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+        public List<Province> GetWardsByDistrictID(int DistrictID)
+        {
+            var result = db.Provinces.Where(x => x.DistrictID == DistrictID).ToList();
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+        #endregion
     }
 }

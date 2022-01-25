@@ -72,6 +72,7 @@
     <Compile Include="EntityModel\Faculty.cs" />
     <Compile Include="EntityModel\GroupUser.cs" />
     <Compile Include="EntityModel\Position.cs" />
+    <Compile Include="EntityModel\Province.cs" />
     <Compile Include="EntityModel\Semester.cs" />
     <Compile Include="EntityModel\sysdiagram.cs" />
     <Compile Include="EntityModel\TemplateForm.cs" />

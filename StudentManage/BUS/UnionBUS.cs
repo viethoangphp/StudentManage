@@ -179,5 +179,64 @@ namespace StudentManage.BUS
             item.NumID = Convert.ToInt32(book.unionID);
             return dao.Update(item);
         }
+        #region VietNam Provinces API - DB Provinces
+        public List<ProvinceModel> GetAllCities()
+        {
+            var provinces = dao.GetAllCities().Select(x => new { x.CityName, x.CityID }).Distinct();
+            if(provinces != null)
+            {
+                List<ProvinceModel> listResult = new List<ProvinceModel>();
+                foreach(var city in provinces)
+                {
+                    var model = new ProvinceModel()
+                    {
+                        Code = city.CityID,
+                        Name = city.CityName
+                    };
+                    listResult.Add(model);
+                }
+                return listResult;
+            }
+            return null;
+        }
+        public List<ProvinceModel> GetDistrictsByCityID(int cityID)
+        {
+            var districts = dao.GetDistrictsByCityID(cityID).Select(x => new { x.DistrictID, x.DistrictName }).Distinct();
+            if(districts !=null)
+            {
+                List<ProvinceModel> listResult = new List<ProvinceModel>();
+                foreach (var district in districts)
+                {
+                    var model = new ProvinceModel()
+                    {
+                        Code = district.DistrictID,
+                        Name = district.DistrictName
+                    };
+                    listResult.Add(model);
+                }
+                return listResult;
+            }
+            return null;
+        }
+        public List<ProvinceModel> GetWardsByDistrictID(int districtID)
+        {
+            var wards = dao.GetWardsByDistrictID(districtID).Select(x => new { x.WardID, x.WardName }).Distinct();
+            if (wards != null)
+            {
+                List<ProvinceModel> listResult = new List<ProvinceModel>();
+                foreach (var ward in wards)
+                {
+                    var model = new ProvinceModel()
+                    {
+                        Code = ward.WardID,
+                        Name = ward.WardName
+                    };
+                    listResult.Add(model);
+                }
+                return listResult;
+            }
+            return null;
+        }
+        #endregion
     }
 }

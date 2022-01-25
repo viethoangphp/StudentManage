@@ -17,7 +17,7 @@ using System.Threading;
 namespace StudentManage.Controllers
 {
     [UserAuthorze]
-    public class UnionController :Controller
+    public class UnionController : Controller
     {
         // GET: Union
         public ActionResult Index()
@@ -38,13 +38,13 @@ namespace StudentManage.Controllers
         public JsonResult Insert(UserModel model)
         {
             ModelState.Remove("birthDay");
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 // tạo 1 user bên bảng user
-               if(model.studentCode.Length <= 15)
-               {
+                if (model.studentCode.Length <= 15)
+                {
                     EmailService checkMail = new EmailService();
-                    if(checkMail.IsValid(model.email))
+                    if (checkMail.IsValid(model.email))
                     {
                         model.password = model.studentCode;
                         model.groupID = 2;
@@ -75,7 +75,7 @@ namespace StudentManage.Controllers
                             unionBook.create_by = (int)Session["USER_ID"];
                             unionBook.userID = userID;
                             unionBook.status = 1;
-                           
+
                             var returnDate = Request.Form["returnDate"];
                             unionBook.returnDate = DateTime.ParseExact(returnDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             var unionBUS = new UnionBUS().Insert(unionBook);
@@ -93,7 +93,7 @@ namespace StudentManage.Controllers
                                 catch
                                 {
                                     UnionBUS isSendMail = new UnionBUS();
-                                    isSendMail.UpdateIsEmail(unionID,4);
+                                    isSendMail.UpdateIsEmail(unionID, 4);
                                 }
                             });
                             sendMail.IsBackground = true;
@@ -117,12 +117,12 @@ namespace StudentManage.Controllers
                 }
             }
 
-            return Json("false",JsonRequestBehavior.AllowGet);
+            return Json("false", JsonRequestBehavior.AllowGet);
         }
         public JsonResult View(int id)
         {
             var item = new UnionBUS().GetUnionById(id);
-            if(item != null)
+            if (item != null)
             {
                 return Json(item, JsonRequestBehavior.AllowGet);
             }
@@ -131,12 +131,12 @@ namespace StudentManage.Controllers
         [HttpPost]
         public JsonResult GetData(DataTableModel model)
         {
-            var list = new UnionBUS().GetListAll(model.start,model.length);
+            var list = new UnionBUS().GetListAll(model.start, model.length);
             var total = new UnionBUS().getTotalRecord();
             return Json(new
             {
                 draw = model.draw,
-                recordsTotal =total,
+                recordsTotal = total,
                 recordsFiltered = total,
                 data = list
             }, JsonRequestBehavior.AllowGet);
@@ -144,8 +144,8 @@ namespace StudentManage.Controllers
         public JsonResult ChangeStatus(int id)
         {
             var isChange = new UnionBUS().ChangeStatus(id);
-            if(isChange) 
-                return Json(true,JsonRequestBehavior.AllowGet);
+            if (isChange)
+                return Json(true, JsonRequestBehavior.AllowGet);
             return Json(false, JsonRequestBehavior.AllowGet);
         }
         public JsonResult InsertExcel(List<UserExcelModel> list)
@@ -159,7 +159,7 @@ namespace StudentManage.Controllers
             {
                 EmailService emailService = new EmailService();
                 // Check validate data
-                if (string.IsNullOrEmpty(item.fullname)  || string.IsNullOrEmpty(item.studentCode) ||
+                if (string.IsNullOrEmpty(item.fullname) || string.IsNullOrEmpty(item.studentCode) ||
                     string.IsNullOrEmpty(item.facultyName) || string.IsNullOrEmpty(item.className))
                 {
                     item.ErrorMsg = "Thiếu thông tin";
@@ -167,14 +167,14 @@ namespace StudentManage.Controllers
                     error++;
                     continue;
                 }
-                if(string.IsNullOrEmpty(item.email))
+                if (string.IsNullOrEmpty(item.email))
                 {
                     item.email = "abc@gmail.com";
-                }    
-                if(!emailService.IsValid(item.email))
+                }
+                if (!emailService.IsValid(item.email))
                 {
                     item.email = "abc@gmail.com";
-                }    
+                }
                 // Check union number id
                 int num = -1;
                 if (!int.TryParse(item.unionID, out num))
@@ -222,16 +222,16 @@ namespace StudentManage.Controllers
                 success = total - error
             }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetClassData(DataTableModel model,int facultyId,int year)
+        public JsonResult GetClassData(DataTableModel model, int facultyId, int year)
         {
             var list = new UserBUS().GetListClassByCondition(facultyId, year);
             if (list != null)
                 return Json(list, JsonRequestBehavior.AllowGet);
             return Json(false, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Search(DataTableModel model,int classId = 0,int status = 0,string unionId = "",int semester = 0,int facultyId = 0)
+        public JsonResult Search(DataTableModel model, int classId = 0, int status = 0, string unionId = "", int semester = 0, int facultyId = 0)
         {
-            var result = new UnionBUS().GetUnionBookByCondition(model.start,model.length,classId,unionId,status,facultyId,semester);
+            var result = new UnionBUS().GetUnionBookByCondition(model.start, model.length, classId, unionId, status, facultyId, semester);
             var list = result.Item2;
             var total = result.Item1;
             if (list != null)
@@ -255,18 +255,18 @@ namespace StudentManage.Controllers
             try
             {
                 unionBUS.SendReturnEmail(id);
-                unionBUS.UpdateIsEmail(id,3);
+                unionBUS.UpdateIsEmail(id, 3);
                 return Json("true", JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                unionBUS.UpdateIsEmail(id,4);
+                unionBUS.UpdateIsEmail(id, 4);
                 return Json("true", JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult ReturnSendMain(List<int> list)
         {
-            if(list != null)
+            if (list != null)
             {
                 var unionBUS = new UnionBUS();
                 foreach (var item in list)
@@ -282,7 +282,7 @@ namespace StudentManage.Controllers
                     }
                 }
                 return Json("true", JsonRequestBehavior.AllowGet);
-            }    
+            }
             return Json("false", JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListFacuty()
@@ -320,7 +320,7 @@ namespace StudentManage.Controllers
             //Add sorting to column name
             ExcelRange colTitleRow = sheet.Cells[2, 1, 2, listColName.Length];
             colTitleRow.AutoFilter = true;
-            
+
             //Column data
             List<UnionModel> listUnion = new UnionBUS().GetUnionBookByCondition(classId, unionId, status, facultyId, semester);
             posRow++; // Set to 3 (next row)
@@ -346,7 +346,7 @@ namespace StudentManage.Controllers
                         }
                         if (propertyInfo.Name.Contains("status"))
                         {
-                            if(value == "1") { value = "Đã nộp"; } else { value = "Đã rút"; }
+                            if (value == "1") { value = "Đã nộp"; } else { value = "Đã rút"; }
                         }
                         //Bind it to excel cell
                         cellData.Value = value;
@@ -368,12 +368,12 @@ namespace StudentManage.Controllers
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= HIGHLIGHT ERROR EXCEL =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
         public ActionResult DownloadErrorHighlight()
         {
-            if (Session["ERROR_LIST"] == null) return RedirectToAction("Index","Union");
+            if (Session["ERROR_LIST"] == null) return RedirectToAction("Index", "Union");
             List<UserExcelModel> listError = (List<UserExcelModel>)Session["ERROR_LIST"];
             //---=== Init ===---
             ExcelPackage pkg = new ExcelPackage();
             ExcelWorksheet sheet = pkg.Workbook.Worksheets.Add("Đoàn viên");
-            string[] listColName = new string[] {"Mã sổ đoàn", "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp", "Khoa", "Mô tả lỗi" };
+            string[] listColName = new string[] { "Mã sổ đoàn", "Họ Tên", "MSSV", "Số điện thoại", "Email", "Lớp", "Khoa", "Mô tả lỗi" };
             //---=== Configure ===---
             //Column name
             int posRow = 1; //Start position of row
@@ -396,7 +396,7 @@ namespace StudentManage.Controllers
                 {
                     ExcelRange cellData = sheet.Cells[posRow, posCol];
                     cellData.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    if (propertyInfo.GetValue(item) == null) 
+                    if (propertyInfo.GetValue(item) == null)
                     {
                         cellData.Value = null;
                     }
@@ -423,13 +423,13 @@ namespace StudentManage.Controllers
         }
         public JsonResult Update(UserModel model)
         {
-           ModelState.Remove("birthDay");
-            if(ModelState.IsValid)
+            ModelState.Remove("birthDay");
+            if (ModelState.IsValid)
             {
-               if(model.studentCode.Trim().Length <= 10)
-               {
+                if (model.studentCode.Trim().Length <= 10)
+                {
                     EmailService checkMail = new EmailService();
-                    if(checkMail.IsValid(model.email.Trim()))
+                    if (checkMail.IsValid(model.email.Trim()))
                     {
                         model.groupID = 2;
                         model.positionID = 2;
@@ -455,7 +455,7 @@ namespace StudentManage.Controllers
                         {
                             returnDate = DateTime.ParseExact(Request.Form["returnDate"], "dd/MM/yyyy", CultureInfo.InvariantCulture),
                             unionID = Request.Form["unionId"].Substring(3)
-                        }) ;
+                        });
                         if (userID > 0)
                         {
                             return Json(userID, JsonRequestBehavior.AllowGet);
@@ -475,7 +475,24 @@ namespace StudentManage.Controllers
                     return Json("errorStudentCode", JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json("false",JsonRequestBehavior.AllowGet);
+            return Json("false", JsonRequestBehavior.AllowGet);
+        }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // VietNam Provinces - DB Provinces (from API)
+        public JsonResult GetAllCities()
+        {
+            var cities = new UnionBUS().GetAllCities();
+            return Json(cities, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetDistrictsByCityID(int cityID)
+        {
+            var districts = new UnionBUS().GetDistrictsByCityID(cityID);
+            return Json(districts, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetWardsByDistrictID(int districtID)
+        {
+            var wards = new UnionBUS().GetWardsByDistrictID(districtID);
+            return Json(wards, JsonRequestBehavior.AllowGet);
         }
     }
 }
