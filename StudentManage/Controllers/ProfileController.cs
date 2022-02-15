@@ -52,7 +52,7 @@ namespace StudentManage.Controllers
             if(ModelState.IsValid)
             {
                 EmailService email = new EmailService();
-                if (email.IsValid(user.email))
+                if (email.IsValid(user.email.Trim()))
                 {
                     user.birthDay = DateTime.ParseExact(user.birthDayString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     user.userID = (int)Session["USER_ID"];
@@ -68,6 +68,23 @@ namespace StudentManage.Controllers
             }
             return Json("false", JsonRequestBehavior.AllowGet);
 
+        }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // VietNam Provinces - DB Provinces (from API)
+        public JsonResult GetAllCities()
+        {
+            var cities = new UnionBUS().GetAllCities();
+            return Json(cities, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetDistrictsByCityID(int cityID)
+        {
+            var districts = new UnionBUS().GetDistrictsByCityID(cityID);
+            return Json(districts, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetWardsByDistrictID(int districtID)
+        {
+            var wards = new UnionBUS().GetWardsByDistrictID(districtID);
+            return Json(wards, JsonRequestBehavior.AllowGet);
         }
     }
 }

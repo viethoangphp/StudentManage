@@ -472,92 +472,21 @@
     <script src="~/Assets/js/jquery.dataTables.min.js"></script>
     <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
+    <!-- Viet Name Provinces -->
+    <script src="~/Assets/js/ajax/VietNamProvince.js"></script>
     <script>
         const city = document.getElementById("city")
         const district = document.getElementById("district")
         const ward = document.getElementById("ward")
-        // #region JS Promises region Provinces - Viet Nam <3
-        const getAllCities = function () {
-            return new Promise(function (resolve) {
-                $.ajax({
-                    url: "/Union/GetAllCities",
-                    method: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        resolve(data);
-                    }
-                })
-            })
-        }
-        const getDistrictsByCityID = (cityID) => {
-            return new Promise(function (resolve) {
-                $.ajax({
-                    url: "/Union/GetDistrictsByCityID/",
-                    method: "GET",
-                    dataType: "json",
-                    data: { cityID: cityID },
-                    success: function (listDistrict) {
-                        resolve(listDistrict);
-                    }
-                })
-            })
-        }
-        const getWardsByDistrictID = (districtID) => {
-            return new Promise(function (resolve) {
-                $.ajax({
-                    url: "/Union/GetWardsByDistrictID/",
-                    method: "GET",
-                    dataType: "json",
-                    data: { districtID: districtID },
-                    success: function (listWard) {
-                        resolve(listWard);
-                    }
-                })
-            })
-        }
-        // #endregion
-
-        // #region JS select region loading Provinces - Viet Nam <3
-        getAllCities().then(function (data) {
-            data.forEach(item => {
-                city.options[city.options.length] = new Option(item.Name, item.Code)
-            });
-            $('#edit_union-notebook select').trigger("change");
-            city.onchange = function () {
-                district.length = 1
-                ward.length = 1
-                if (this.value != 0) {
-                    getDistrictsByCityID(this.value).then(listDistrict => {
-                        listDistrict.forEach(item => {
-                            district.options[district.options.length] = new Option(item.Name, item.Code)
-                        })
-                    })
-                }
-            }
-            district.onchange = function () {
-                ward.length = 1
-                if (this.value != 0) {
-                    getWardsByDistrictID(this.value).then(listWard => {
-                        listWard.forEach(item => {
-                            ward.options[ward.options.length] = new Option(item.Name, item.Code)
-                        })
-                    })
-                }
-            }
-        })
-        // #endregion
-
     </script>
     <script src="~/Assets/js/ajax/Union.js"></script>
+
     <script>
         $(document).on("click", ".btn-update", function () {
             var id = $(this).data("id");
             update_union(id).then(function (data) {
-                console.log(data);
                 rederData(data).then(() => {
-                    $('#edit_union-notebook select').trigger("change");
                 });
-
             })
         })
         const update_union = function (id) {
@@ -573,8 +502,6 @@
                 })
             })
         }
-
-
         function rederData(responsive) {
             return new Promise((resolve) => {
                 $('#edit_union-notebook select[name="cityID"]').val(0);
@@ -593,7 +520,7 @@
                 form.getElementsByTagName("input").address.value = responsive.address;
                 $('#edit_union-notebook select[name="gender"]').val(responsive.gender);
                 $('#edit_union-notebook select[name="facultyID"]').val(responsive.facultyId);
-                $('#edit_union-notebook select').trigger("change");
+
                 var cityID = responsive.cityId;
                 var districtID = responsive.districtId;
                 var wardID = responsive.wardId;
@@ -601,33 +528,23 @@
                 const city = document.getElementById("city_update")
                 const district = document.getElementById("district_update")
                 const ward = document.getElementById("ward_update")
+                // #region JS region select loading Viet Nam Provinces - Have CityID, DistrictID, WardID
 
-                // #region JS region select loading Provinces - Viet Nam <3
                 getAllCities().then(function (data) {
                     let count = 0;
                     data.forEach(item => {
                         city.options[city.options.length] = new Option(item.Name, item.Code)
                         if (cityID != 0) {
                             if (cityID == city.options[count].value) {
-                                city.options[count].selected = true
-                                getDistrictsByCityID(cityID).then(function (listDistrict) {
-                                    count = 0;
-                                    listDistrict.forEach(item => {
-                                        district.options[district.options.length] = new Option(item.Name, item.Code)
-                                        if (districtID != 0) {
-                                            if (districtID == district.options[count].value) {
-                                                district.options[count].selected = true;
-                                            }
-                                            count++;
-                                        }
-                                    });
-                                })
+                                city.options[count].selected = true;
                             }
                             count++;
                         }
-
-                    });
-                    $('#edit_union-notebook select').trigger("change");
+                    })
+                    // #endregion
+                    return cityID;
+                }).then((cityID) => {
+                    console.log(cityID);
                     getDistrictsByCityID(cityID).then(function (listDistrict) {
                         count = 0;
                         listDistrict.forEach(item => {
@@ -640,6 +557,8 @@
                             }
                         });
                     })
+                    return districtID;
+                }).then((districtID) => {
                     getWardsByDistrictID(districtID).then(function (listWard) {
                         count = 0;
                         listWard.forEach(item => {
@@ -652,33 +571,36 @@
                             }
                         })
                     })
-                    
-                    city.onchange = function () {
-                        district.length = 1
-                        ward.length = 1
-                        if (this.value != 0) {
-                            getDistrictsByCityID(this.value).then(listDistrict => {
-                                listDistrict.forEach(item => {
-                                    district.options[district.options.length] = new Option(item.Name, item.Code)
-                                })
-                            })
-                        }
-                    }
-                    district.onchange = function () {
-                        ward.length = 1
-                        if (this.value != 0) {
-                            getWardsByDistrictID(this.value).then(listWard => {
-                                listWard.forEach(item => {
-                                    ward.options[ward.options.length] = new Option(item.Name, item.Code)
-                                })
-                            })
-                        }
-                    }
-                    
+                }).finally(() => {
+                    $('#edit_union-notebook .select').trigger("change");
                 })
-                // #endregion
-            });
+                city.onchange = function () {
+                    district.length = 1
+                    ward.length = 1
+                    if (this.value != 0) {
+                        getDistrictsByCityID(this.value).then(listDistrict => {
+                            listDistrict.forEach(item => {
+                                district.options[district.options.length] = new Option(item.Name, item.Code)
+                            })
+                        })
+                      
+                    }
+                }
+                district.onchange = function () {
+                    ward.length = 1
+                    if (this.value != 0) {
+                        getWardsByDistrictID(this.value).then(listWard => {
+                            listWard.forEach(item => {
+                                ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                            })
+                        })
+                    }
+                }
+            })
         }
+
+    </script>
+    <script>
 
     </script>
 }

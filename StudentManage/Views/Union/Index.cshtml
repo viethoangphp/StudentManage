@@ -281,7 +281,7 @@
                                     Mã Sổ Đoàn
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input class="form-control" type="text"  name="unionId" readonly>
+                                <input class="form-control" type="text" name="unionId" readonly>
                                 <input type="hidden" name="userID">
                             </div>
                         </div>
@@ -472,43 +472,12 @@
     <script src="~/Assets/js/jquery.dataTables.min.js"></script>
     <script src="~/Assets/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
+    <!-- Viet Name Provinces -->
+    <script src="~/Assets/js/ajax/VietNamProvince.js"></script>
     <script>
         const city = document.getElementById("city")
         const district = document.getElementById("district")
         const ward = document.getElementById("ward")
-        var api = "https://provinces.open-api.vn/api/?depth=3";
-        fetch(api, {
-            method: "GET",
-            ContentType: "application/json"
-        })
-            .then(response => response.json())
-            .then(function (data) {
-                let count = 0;
-                data.forEach(item => {
-                    city.options[city.options.length] = new Option(item.name, item.code)
-                });
-                city.onchange = function () {
-                    district.length = 1
-                    ward.length = 1
-                    if (this.value != 0) {
-                        var listDistrict = data.filter(m => m.code == this.value)
-                        listDistrict[0].districts.forEach(item => {
-                            district.options[district.options.length] = new Option(item.name, item.code)
-                        })
-                        district.onchange = function () {
-                            ward.length = 1
-                            if (this.value != 0) {
-                                var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
-                                listWard[0].wards.forEach(item => {
-                                    ward.options[ward.options.length] = new Option(item.name, item.code)
-                                })
-                            }
-                        }
-                    }
-                }
-            })
-            .catch(err => console.log("Lỗi"))
-
     </script>
     <script src="~/Assets/js/ajax/Union.js"></script>
     <script>
@@ -561,78 +530,82 @@
                 const city = document.getElementById("city_update")
                 const district = document.getElementById("district_update")
                 const ward = document.getElementById("ward_update")
-                var api = "https://provinces.open-api.vn/api/?depth=3";
-                fetch(api,{
-                    method: "GET",
-                    ContentType: "application/json"
-                })
-                .then(response => response.json())
-                .then(function(data){
+
+                // #region JS region select loading Viet Nam Provinces - Have CityID, DistrictID, WardID
+                getAllCities().then(function (data) {
                     let count = 0;
                     data.forEach(item => {
-                        city.options[city.options.length] = new Option(item.name, item.code)
+                        city.options[city.options.length] = new Option(item.Name, item.Code)
                         if (cityID != 0) {
                             if (cityID == city.options[count].value) {
                                 city.options[count].selected = true
+                                getDistrictsByCityID(cityID).then(function (listDistrict) {
+                                    count = 0;
+                                    listDistrict.forEach(item => {
+                                        district.options[district.options.length] = new Option(item.Name, item.Code)
+                                        if (districtID != 0) {
+                                            if (districtID == district.options[count].value) {
+                                                district.options[count].selected = true;
+                                            }
+                                            count++;
+                                        }
+                                    });
+                                })
                             }
                             count++;
                         }
 
                     });
                     $('#edit_union-notebook select').trigger("change");
-                    if (cityID != 0) {
+                    getDistrictsByCityID(cityID).then(function (listDistrict) {
                         count = 0;
-                        var listDistrict = data.filter(m => m.code == cityID)
-                        listDistrict[0].districts.forEach(item => {
-                            district.options[district.options.length] = new Option(item.name, item.code)
+                        listDistrict.forEach(item => {
+                            district.options[district.options.length] = new Option(item.Name, item.Code)
                             if (districtID != 0) {
                                 if (districtID == district.options[count].value) {
-                                    district.options[count].selected = true
+                                    district.options[count].selected = true;
                                 }
                                 count++;
                             }
-                        })
-                    }
-
-                    if (districtID != 0) {
+                        });
+                    })
+                    getWardsByDistrictID(districtID).then(function (listWard) {
                         count = 0;
-                        var listWard = listDistrict[0].districts.filter(m => m.code == districtID)
-                        listWard[0].wards.forEach(item => {
-                            ward.options[ward.options.length] = new Option(item.name, item.code)
+                        listWard.forEach(item => {
+                            ward.options[ward.options.length] = new Option(item.Name, item.Code)
                             if (wardID != 0) {
                                 if (wardID == ward.options[count].value) {
-                                    ward.options[count].selected = true
+                                    ward.options[count].selected = true;
                                 }
                                 count++;
                             }
                         })
-                    }
-                    var listDistrict;
-                    var listWard;
-                    city.onchange = function()
-                    {
+                    })
+
+                    city.onchange = function () {
                         district.length = 1
                         ward.length = 1
-                        if(this.value != 0)
-                        {
-                            listDistrict = data.filter(m=>m.code == this.value)
-                            listDistrict[0].districts.forEach(item=>{
-                                district.options[district.options.length] = new Option(item.name,item.code)
+                        if (this.value != 0) {
+                            getDistrictsByCityID(this.value).then(listDistrict => {
+                                listDistrict.forEach(item => {
+                                    district.options[district.options.length] = new Option(item.Name, item.Code)
+                                })
                             })
-
                         }
                     }
                     district.onchange = function () {
                         ward.length = 1
                         if (this.value != 0) {
-                            var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
-                            listWard[0].wards.forEach(item => {
-                                ward.options[ward.options.length] = new Option(item.name, item.code)
+                            getWardsByDistrictID(this.value).then(listWard => {
+                                listWard.forEach(item => {
+                                    ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                                })
                             })
                         }
                     }
+
                 })
-                .catch(err => console.log("Lỗi"))
+                // #endregion
             })
         }
 
