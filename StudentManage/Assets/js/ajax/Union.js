@@ -291,9 +291,8 @@ $(document).ready(function () {
                 method: "POST",
                 data: { id: id },
                 dataType: "json",
-                success: function (data) {
-                    resolve(data)
-                }
+            }).done((data) => {
+                resolve(data)
             })
         })
     }

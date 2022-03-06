@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -12,6 +13,7 @@ namespace StudentManage.Models
         public string criteriaRequirement { get; set; }
         public int? score {  get; set; }
         public int mainId {  get; set; }
+        public int? IsImageProof { get; set; }
 
         // Added Fields=================
         // Đoàn viên

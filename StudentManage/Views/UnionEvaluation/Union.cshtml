@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Union";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
-    var semesters = (List<StudentManage.Models.SemesterModel>)ViewBag.semesters;
+    var semesters = (List<StudentManage.Models.SemesterFormModel>)ViewBag.semesters;
 }
 
 <!-- Page Content -->
@@ -50,73 +50,91 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in semesters)
+                                @if (semesters != null)
                                 {
-                                    <tr>
-                                        <td>1</td>
-                                        <td>@item.name</td>
-                                        <td>@item.year</td>
-                                        @*In điểm*@
-                                        <td>@((item.score1 == null) ?  Html.Raw("-") : Html.Raw(item.score1))</td>
-                                        <td>@((item.score2 == null) ?  Html.Raw("-") : Html.Raw(item.score2))</td>
-                                        <td>@((item.score3 == null) ?  Html.Raw("-") : Html.Raw(item.score3))</td>
-                                        <td>@((item.score4 == null) ?  Html.Raw("-") : Html.Raw(item.score4))</td>
-                                        @*Xét Xếp loại*@
-                                        @if (item.score4 > 90)
-                                        {
-                                            <td>Xuất sắc</td>
-                                        }
-                                        else if (item.score4 > 70)
-                                        {
-                                            <td>Khá</td>
-                                        }
-                                        else if (item.score4 >= 50)
-                                        {
-                                            <td>Trung Bình</td>
-                                        }
-                                        else if (item.score4 != null)
-                                        {
-                                            <td>Yếu</td>
-                                        }
-                                        else
-                                        {
-                                            <td>-</td>
-                                        }
-                                        @*Xét Trạng thái*@
-                                        @if (item.score1 == null)
-                                        {
-                                            <td>
-                                                <span class="badge bg-inverse-warning text-sm">Chờ Chấm</span>
-                                            </td>
-                                        }
-                                        else if (item.score2 == null)
-                                        {
-                                            <td>
-                                                <span class="badge bg-inverse-warning text-sm">Chờ Lớp</span>
-                                            </td>
-                                        }
-                                        else if (item.score3 == null)
-                                        {
-                                            <td>
-                                                <span class="badge bg-inverse-warning text-sm">Chờ Khoa</span>
-                                            </td>
-                                        }
-                                        else if (item.score4 == null)
-                                        {
-                                            <td>
-                                                <span class="badge bg-inverse-warning text-sm">Chờ Duyệt</span>
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <span class="badge bg-inverse-success text-sm">Hoàn Thành</span>
-                                            </td>
-                                        }
-                                        @*Tác vụ*@
-                                        @if (item.inProcess == true)
-                                        {
-                                            if (item.Available == true)
+                                    foreach (var item in semesters)
+                                    {
+                                        <tr>
+                                            <td>1</td>
+                                            <td>@item.name</td>
+                                            <td>@item.year</td>
+                                            @*In điểm*@
+                                            <td>@((item.score1 == null) ?  Html.Raw("-") : Html.Raw(item.score1))</td>
+                                            <td>@((item.score2 == null) ?  Html.Raw("-") : Html.Raw(item.score2))</td>
+                                            <td>@((item.score3 == null) ?  Html.Raw("-") : Html.Raw(item.score3))</td>
+                                            <td>@((item.score4 == null) ?  Html.Raw("-") : Html.Raw(item.score4))</td>
+                                            @*Xét Xếp loại*@
+                                            @if (item.score4 > 90)
+                                            {
+                                                <td>Xuất sắc</td>
+                                            }
+                                            else if (item.score4 > 70)
+                                            {
+                                                <td>Khá</td>
+                                            }
+                                            else if (item.score4 >= 50)
+                                            {
+                                                <td>Trung Bình</td>
+                                            }
+                                            else if (item.score4 != null)
+                                            {
+                                                <td>Yếu</td>
+                                            }
+                                            else
+                                            {
+                                                <td>-</td>
+                                            }
+                                            @*Xét Trạng thái*@
+                                            @if (item.score1 == null)
+                                            {
+                                                <td>
+                                                    <span class="badge bg-inverse-warning text-sm">Chờ Chấm</span>
+                                                </td>
+                                            }
+                                            else if (item.score2 == null)
+                                            {
+                                                <td>
+                                                    <span class="badge bg-inverse-warning text-sm">Chờ Lớp</span>
+                                                </td>
+                                            }
+                                            else if (item.score3 == null)
+                                            {
+                                                <td>
+                                                    <span class="badge bg-inverse-warning text-sm">Chờ Khoa</span>
+                                                </td>
+                                            }
+                                            else if (item.score4 == null)
+                                            {
+                                                <td>
+                                                    <span class="badge bg-inverse-warning text-sm">Chờ Duyệt</span>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <span class="badge bg-inverse-success text-sm">Hoàn Thành</span>
+                                                </td>
+                                            }
+                                            @*Tác vụ*@
+                                            @if (item.inProcess == true)
+                                            {
+                                                if (item.Available == true)
+                                                {
+                                                    <td>
+                                                        <a href="~/UnionEvaluation/FormDetail/@item.FormId">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <i class="fa fa-eye-slash"></i>
+                                                    </td>
+                                                }
+
+                                            }
+                                            else
                                             {
                                                 <td>
                                                     <a href="~/UnionEvaluation/FormDetail/@item.FormId">
@@ -124,42 +142,17 @@
                                                     </a>
                                                 </td>
                                             }
-                                            else
-                                            {
-                                                <td>
-                                                    <i class="fa fa-eye-slash"></i>
-                                                </td>
-                                            }
-
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <a href="~/UnionEvaluation/FormDetail/@item.FormId">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </td>
-                                        }
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10">
+                                            Bạn chưa có phiếu đánh giá!
+                                        </td>
                                     </tr>
                                 }
-                                @*<tr>
-                                        <td>2</td>
-                                        <td>1</td>
-                                        <td>2020 - 2021</td>
-                                        <td>87</td>
-                                        <td>87</td>
-                                        <td>87</td>
-                                        <td>87</td>
-                                        <td>Xuất sắc</td>
-                                        <td>
-                                            <span class="badge bg-inverse-success text-sm">Hoàn thành</span>
-                                        </td>
-                                        <td>
-                                            <a href="#" data-toggle="modal" data-target="#vỉewdetail_modal">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>*@
                             </tbody>
                         </table>
                     </div>

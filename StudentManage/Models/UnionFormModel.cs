@@ -16,5 +16,6 @@ namespace StudentManage.Models
         public int semesterId { get; set; }
         public int Assessor { get; set; }
         public int Assessee { get; set; }
+        public bool HasCreatedForm { get; set; }
     }
 }

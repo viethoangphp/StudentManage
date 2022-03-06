@@ -38,6 +38,7 @@ const getWardsByDistrictID = (districtID) => {
     })
 }
 // #endregion
+
 // #region JS select region loading Viet Nam Provinces
 getAllCities().then(function (data) {
     data.forEach(item => {

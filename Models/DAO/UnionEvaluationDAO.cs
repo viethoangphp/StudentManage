@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Models.DAO
 {
-    
+
     public class UnionEvaluationDAO
     {
         private DBContext db = new DBContext();
@@ -21,7 +21,7 @@ namespace Models.DAO
         public List<EvaluativeMain> GetAllMainByTemplateId(int templateId)
         {
             var temID = db.TemplateForms.Where(x => x.TemplateID == templateId).FirstOrDefault().TemplateID;
-            return db.EvaluativeMains.Where(x=>x.TemplateID == temID).ToList();
+            return db.EvaluativeMains.Where(x => x.TemplateID == temID).ToList();
         }
         // Get all criteria evaluation by template
         public List<EvaluativeCriteria> GetAllCriteriaByTemplateId(int templateId)
@@ -31,7 +31,7 @@ namespace Models.DAO
         // Get all passed Form evalution by userid
         public List<EvalutionForm> GetPassedEvalutionFormsById(int userId)
         {
-            var result = db.EvalutionForms.Where(x=>x.Create_by == userId).ToList();
+            var result = db.EvalutionForms.Where(x => x.Create_by == userId).ToList();
             return result;
         }
         #endregion
@@ -42,7 +42,7 @@ namespace Models.DAO
         public Semester GetSemesterBySemesterId(int semesterId)
         {
             return db.Semesters.Where(x => x.SemesterID == semesterId).FirstOrDefault();
-        }    
+        }
         // Get all detailForm by userId
         public List<DetailEvalution> GetDetailFormsById(int userId)
         {
@@ -51,31 +51,39 @@ namespace Models.DAO
         // Get all detail By FormID
         public List<DetailEvalution> GetDetailEvalutionsByFormId(int formId)
         {
-            return db.DetailEvalutions.Where(x => x.FormId == formId && x.Type == 2).OrderBy(x=>x.Level).ToList();
+            return db.DetailEvalutions.Where(x => x.FormId == formId && x.Type == 2).OrderBy(x => x.Level).ToList();
         }
         // Get all passed semesters
         public List<Semester> GetAllSemesters()
         {
-            return db.Semesters.OrderByDescending(x=>x.Day_Start).ToList();
+            return db.Semesters.OrderByDescending(x => x.Day_Start).ToList();
         }
 
         // Get list semesters till now - include present semester
         public List<Semester> GetSemesterById(int userId)
         {
-            var result = db.DetailEvalutions.Where(x => x.UserID == userId && x.Type == 2).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
-            var firstform = result.FirstOrDefault();
-            if(firstform != null)
+            //var result = db.DetailEvalutions.Where(x => x.UserID == userId && x.Type == 2).Select(x => x.EvalutionForm).Distinct().OrderBy(x => x.Create_At).ToList();
+            //var firstform = result.FirstOrDefault();
+            //if (firstform != null)
+            //{
+            //    var listSemeter = db.Semesters.Where(x => DateTime.Compare((DateTime)x.Day_Start, (DateTime)firstform.Semester.Day_Start) >= 0).OrderByDescending(x => x.Day_Start).ToList();
+            //    return listSemeter;
+            //}
+            //return null;
+            var result = new List<Semester>();
+            var listForms = db.EvalutionForms.Where(x => x.Create_by == userId).OrderByDescending(x => x.Create_At).ToList();
+            foreach (var form in listForms)
             {
-                var listSemeter = db.Semesters.Where(x => DateTime.Compare((DateTime)x.Day_Start, (DateTime)firstform.Semester.Day_Start) >= 0).OrderByDescending(x => x.Day_Start).ToList();
-                return listSemeter;
+                var semester = listForms.Where(x => x.FormId == form.FormId).FirstOrDefault().Semester;
+                result.Add(semester);
             }
-            return null;
+            return result;
         }
         // Get present semester
         public Semester GetPresentSemester()
         {
             DateTime now = DateTime.Now;
-            return db.Semesters.Where(x =>x.Status == 1).FirstOrDefault();
+            return db.Semesters.Where(x => x.Status == 1).FirstOrDefault();
         }
         // Get Evaluation Form by Form id 
         public EvalutionForm GetEvaluationFormById(int formId)
@@ -100,14 +108,19 @@ namespace Models.DAO
             catch (Exception)
             {
                 return 0;
-            } 
+            }
         }
         // Insert or Update DetailEvaluation
         public int InsertDetailEvaluation(DetailEvalution detail)
         {
             try
             {
+
                 db.DetailEvalutions.AddOrUpdate(detail);
+                if (detail.Image_proof == null)
+                {
+                    db.Entry(detail).Property(x => x.Image_proof).IsModified = false;
+                }
                 db.SaveChanges();
                 return 1;
             }
@@ -119,7 +132,7 @@ namespace Models.DAO
         // Find Position Id by Name
         public int FindPositionByName(string name)
         {
-            return db.Positions.Where(x=>x.Name==name && x.Status == 1).FirstOrDefault().PositionID;
+            return db.Positions.Where(x => x.Name == name && x.Status == 1).FirstOrDefault().PositionID;
         }
         // Find Group ID by Name
         public int FindGroupIdByName(string name)
@@ -159,6 +172,36 @@ namespace Models.DAO
                 }
             }
             return false;
+        }
+        // Get all TimeEvaluation
+        public List<TimeEvalution> GetAllTimeEvaluation()
+        {
+            var result = db.TimeEvalutions.ToList();
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+        // Delete Image Proof
+        public int deleteImageProof(int formId, int critetiaId)
+        {
+            var details = GetDetailEvalutionsByFormId(formId);
+            if (details.Any())
+            {
+                try
+                {
+                    var detail = details.Where(x => x.CriteriaID == critetiaId && x.Level == 1).FirstOrDefault();
+                    detail.Image_proof = null;
+                    db.SaveChanges();
+                    return 1;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+            return -1;
         }
     }
 }

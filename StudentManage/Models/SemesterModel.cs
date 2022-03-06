@@ -5,7 +5,7 @@ using System.Web;
 
 namespace StudentManage.Models
 {
-    public class SemesterModel
+    public class SemesterFormModel
     {
         public int semesterId { set; get; }
 

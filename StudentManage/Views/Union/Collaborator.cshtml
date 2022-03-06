@@ -474,6 +474,7 @@
     <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
     <!-- Viet Name Provinces -->
     <script src="~/Assets/js/ajax/VietNamProvince.js"></script>
+
     <script>
         const city = document.getElementById("city")
         const district = document.getElementById("district")
@@ -528,6 +529,7 @@
                 const city = document.getElementById("city_update")
                 const district = document.getElementById("district_update")
                 const ward = document.getElementById("ward_update")
+
                 // #region JS region select loading Viet Nam Provinces - Have CityID, DistrictID, WardID
 
                 getAllCities().then(function (data) {
@@ -541,7 +543,6 @@
                             count++;
                         }
                     })
-                    // #endregion
                     return cityID;
                 }).then((cityID) => {
                     console.log(cityID);
@@ -597,6 +598,7 @@
                     }
                 }
             })
+             // #endregion
         }
 
     </script>

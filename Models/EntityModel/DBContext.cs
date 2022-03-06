@@ -20,8 +20,10 @@ namespace Models.EntityModel
         public virtual DbSet<EvalutionForm> EvalutionForms { get; set; }
         public virtual DbSet<Faculty> Faculties { get; set; }
         public virtual DbSet<GroupUser> GroupUsers { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TemplateForm> TemplateForms { get; set; }
@@ -70,9 +72,23 @@ namespace Models.EntityModel
                 .WithRequired(e => e.GroupUser)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Permission>()
+                .Property(e => e.Status)
+                .IsFixedLength();
+
+            modelBuilder.Entity<Position>()
+                .HasMany(e => e.Permissions)
+                .WithRequired(e => e.Position)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Position>()
                 .HasMany(e => e.Users)
                 .WithRequired(e => e.Position)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(e => e.Permissions)
+                .WithRequired(e => e.Role)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Semester>()
@@ -88,11 +104,6 @@ namespace Models.EntityModel
             modelBuilder.Entity<TemplateForm>()
                 .HasMany(e => e.GroupUsers)
                 .WithRequired(e => e.TemplateForm)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<TimeEvalution>()
-                .HasMany(e => e.GroupUsers)
-                .WithRequired(e => e.TimeEvalution)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<User>()

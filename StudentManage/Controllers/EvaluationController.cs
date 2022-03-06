@@ -35,7 +35,6 @@ namespace StudentManage.Controllers
         [HttpPost]
         public JsonResult Detail(FormCollection formCollection)
         {
-            
             var userId = (int)Session["USER_ID"];
             // Get TemplateId to User Login 
             var templateId = new UserBUS().GetUserByID(userId).templateId;

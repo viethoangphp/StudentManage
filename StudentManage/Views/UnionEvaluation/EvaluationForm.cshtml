@@ -84,7 +84,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form action="~/UnionEvaluation/Evaluation" method="get">
+                    <form action="~/UnionEvaluation/Evaluation" method="post" enctype="multipart/form-data">
                         @*<form action="" method="get">*@
                         <div class="table-responsive" style="white-space:unset">
                             <table class="table table-bordered table-hover mb-0 juged-table">
@@ -112,6 +112,7 @@
                                 <tbody>
                                     @{
                                         int count = 1;
+                                        int countProof = 0;
                                         int turn = (Model.Turn == null) ? 0 : (int)Model.Turn;
                                     }
                                     @foreach (var item in Model.ListMain)
@@ -130,36 +131,80 @@
                                                 <tr>
                                                     <td class="text-center">@count</td>
                                                     @{count++; }
-                                                <td>
-                                                    @criteria.criteriaContent
-                                                    <b>(0–@criteria.score điểm).</b>
-                                                    <!--Image proof-->
-                                                    @if (criteria.criteriaRequirement == "1")
-                                                    {
-                                                        if (Model.IsInTime == 1)
+                                                    <td>
+                                                        @criteria.criteriaContent
+                                                        <b>(0–@criteria.score điểm).</b>
+                                                        <!--Image proof-->
+                                                        @if (criteria.IsImageProof == 1)
                                                         {
-                                                            <br />
-                                                            <a data-target="#viewpic_modal"
-                                                               data-toggle="modal"
-                                                               class="badge bg-inverse-primary"
-                                                               style="cursor: pointer">Thêm minh chứng</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <div class="dropdown dropdown-action d-inline-block">
-                                                                <a data-target="#viewpic_modal" data-toggle="modal"
-                                                                   class="badge bg-inverse-success"
-                                                                   style="cursor:pointer;">
-                                                                    Xem
-                                                                    minh chứng
-                                                                </a>
+                                                            countProof++;
+                                                            if (Model.IsInTime == 1 && criteria.ImageProof == null)
+                                                            {
+                                                                <br />
+                                                                <a data-target="#viewpic_modal_@criteria.criteriaId"
+                                                                   data-toggle="modal"
+                                                                   class="badge bg-inverse-primary"
+                                                                   style="cursor: pointer">Thêm minh chứng</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="dropdown dropdown-action d-inline-block">
+                                                                    <a data-target="#viewpic_modal_@criteria.criteriaId" data-toggle="modal"
+                                                                       class="badge bg-inverse-success"
+                                                                       style="cursor:pointer;">
+                                                                        Xem
+                                                                        minh chứng
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                            <!-- Proof Modal -->
+                                                            <div id="viewpic_modal_@criteria.criteriaId"
+                                                                 data-formid="@Model.formId"
+                                                                 data-criteriaid="@criteria.criteriaId"
+                                                                 class="modal custom-modal fade"
+                                                                 data-backdrop="static"
+                                                                 role="dialog"
+                                                                 data-keyboard="true">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title text-bold">Ảnh minh chứng</h5>
+                                                                            <button type="button"
+                                                                                    class="close"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <div class="upload-pic_container">
+                                                                                        <div class="file-loading">
+                                                                                            <input id="input-@countProof" src="" name="@("listmodel[" + (count - 2) + "].imageProof")" type="file" />
+                                                                                            @if (criteria.ImageProof != null)
+                                                                                            {
+                                                                                                <img class="evident_img-src d-none" src="~/Assets/img/Images_Proof_02/@criteria.ImageProof" alt="">
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <img class="evident_img-src d-none" src="" alt="">
+
+                                                                                            }
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            <!-- /Proof Modal -->
                                                         }
+                                                        <!--/Image proof-->
 
-                                                    }
-                                                    <!--/Image proof-->
-
-                                                </td>
+                                                    </td>
                                                     <!-- #region Level 1 - Đoàn Viên -->
                                                     <td class="text-center">
                                                         @if (Model.IsInTime == 1 && Model.Assessor == 1)
@@ -210,7 +255,7 @@
                                                             @((criteria.score3 == null) ? Html.Raw("-") : Html.Raw(criteria.score3));
                                                         }
                                                     </td>
-                                                    <!-- #endregion -->s
+                                                    <!-- #endregion -->
                                                     <!-- #region Level 4 - Bí thư Đoàn trường -->
                                                     <td class="text-center" name="SchoolScore-@(count-2)">
                                                         @if (Model.IsInTime == 4 && Model.Assessor == 4)
@@ -257,7 +302,6 @@
                                             Quay lại
                                         </div>
                                     </a>
-
                                 }
                                 <div class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_warning">
                                     Xóa tất cả
@@ -291,7 +335,7 @@
                 <div class="modal-btn delete-action">
                     <div class="row">
                         <div class="col-6">
-                            <a href="#" onclick="deleteAllInput()" class="btn continue-btn">Xóa</a>
+                            <a href="#" onclick="deleteAllInput();" class="btn continue-btn">Xóa</a>
                         </div>
                         <div class="col-6">
                             <a id="btn-cancel-modal" href="javascript:void(0);" data-dismiss="modal"
@@ -304,37 +348,6 @@
     </div>
 </div>
 <!-- Delete Evaluation Input Warning Modal -->
-<!-- Add Proof Modal -->
-<div id="viewpic_modal"
-     class="modal custom-modal fade"
-     data-backdrop="static"
-     role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-bold">Ảnh minh chứng</h5>
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="upload-pic_container">
-                            <div class="file-loading">
-                                <input id="input-1" type="file" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Proof Modal -->
 
 @section js
 {
@@ -361,12 +374,12 @@
                     // Clear Error Input
                     @: $('input[name="listmodel[@item.Order].score"]').val("");
                     // Change Input Border Color - Red
-                    @: $('input[name="listmodel[@item.Order].score"]')[0].style.border = "1px solid #eb4034";
+                    @: $('input[name="listmodel[@item.Order].score"]')[0].style.border = "2px solid #eb4034";
                 }
                 //Scroll to first Error Input
                 $("html, body").animate({
                     scrollTop: $('input[name="listmodel[@(list[0].Order)].score').offset().top - $(window).height()/2
-                },4000)
+                },2000)
             })
         </script>
     }
@@ -412,17 +425,63 @@
             input.setCustomValidity("");
         }
 
-        $(document).ready(function () {
-            // For Bootstrap 5.x
-            $("#input-1,#input-2,#input-3").fileinput({
-                browseClass: "btn btn-primary",
-                mainClass: "d-grid",
-                showCaption: false,
-                showRemove: false,
-                showUpload: false,
-                indicatorNew: false,
-            });
-        });
+
     </script>
+    <script>
+        let myString = ''
+        const evidentImgs = document.querySelectorAll('.evident_img-src')
+        evidentImgs.forEach(function (evidentImg) {
+            let imgSrc = evidentImg.getAttribute('src')
+            imgSrc = (imgSrc != '') ? "initialPreview: ['" + imgSrc + "']," : "";
+            const boxWp = evidentImg.closest('.file-loading')
+            const inputEvidentImg = boxWp.querySelector('input').getAttribute('id')
+            myString += `
+                $("#${inputEvidentImg}").fileinput({
+                    ${imgSrc}
+                    initialPreviewAsData: true,
+                    browseClass: "btn btn-primary",
+                    mainClass: "d-grid",
+                    showCaption: false,
+                    showRemove: false,
+                    showUpload: false,
+                    indicatorNew: false,
+                    dropZoneTitle: "Ảnh minh chứng <br> <h5>Kéo & thả</h5>",
+                    allowedFileExtensions: ["jpg", "png", "gif"],
+                    msgInvalidFileExtension: 'File ảnh không hợp lệ. Chỉ hỗ trợ đuôi "{extensions}".',
+                    removeIcon: '<i class="bi-trash"></i>',
+                });
+                `
+        })
+        const myScript = document.createElement('script')
+        const exString = `$(document).ready(function () {${myString}})`
+        myScript.append(exString)
+        document.body.appendChild(myScript)
+
+
+        $(document).ready(function () {
+            // Remove Img proof
+            const ProofModals = document.querySelectorAll(".modal.custom-modal[data-formid]");
+            ProofModals.forEach(function (ProofModal) {
+                const removeBtn = ProofModal.querySelector('.close.fileinput-remove');
+                removeBtn.addEventListener('click', (e) => {
+                    $.ajax({
+                        url: "/UnionEvaluation/deleteImageProof/",
+                        method: "POST",
+                        data: {
+                            formId: ProofModal.getAttribute('data-formid'),
+                            criteriaId: ProofModal.getAttribute('data-criteriaid')
+                        },
+                        dataType: "json",
+                    }).done((data) => {
+                    })
+
+                })
+            })
+        })
+
+
+
+    </script>
+
 }
 

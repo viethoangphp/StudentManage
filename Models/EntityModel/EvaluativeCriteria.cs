@@ -28,6 +28,8 @@ namespace Models.EntityModel
 
         public int MainID { get; set; }
 
+        public int? IsImageProof { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DetailEvalution> DetailEvalutions { get; set; }
 

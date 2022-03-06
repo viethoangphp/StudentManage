@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using Models.DAO;
@@ -47,11 +48,120 @@ namespace StudentManage.BUS
                     criteriaContent = item.CriteriaContent,
                     criteriaRequirement = item.CriteriaRequirement,
                     score = item.Score,
-                    mainId = item.MainID
+                    mainId = item.MainID,
+                    IsImageProof = item.IsImageProof
                 };
                 listModel.Add(model);
             }
             return listModel;
+        }
+        public UnionFormModel RenderEvaluationForm(int? formId, int userId)
+        {
+            UnionFormModel model = new UnionFormModel();
+            var userSession = new UserBUS().GetUserByID(userId);
+
+
+            // Render Form
+            var templateId = userSession.templateId;
+            var listMain = GetAllMainByTemplateId(templateId);
+            var listCriteria = GetAllCriteriaByTemplateId(templateId);
+
+            // Tổng điểm
+            int[] listTotal = { 0, 0, 0, 0 };
+
+            int? turn = 0;
+            //Kiểm tra formID
+            if (formId != null)
+            {
+                model.HasCreatedForm = true;
+                model.formId = (int)formId;
+                // Form Evaluation
+                var form = dao.GetEvaluationFormById((int)formId);
+                // Người được đánh giá
+                model.Assessee = new UserBUS().GetUserByID((int)form.Create_by).userID;
+                // Detail Evaluation
+                var listDetail = dao.GetDetailEvalutionsByFormId((int)formId);
+                //Lấy Detail theo level để tìm ra lượt chấm hiện tại 
+                if (listDetail.Any())
+                {
+                    turn = (int)listDetail.Select(x => x.Level).Distinct().Max();
+                }
+                turn = (turn == null) ? 0 : turn;
+                model.Turn = turn;
+
+                listTotal[0] = (int)listDetail.Where(x => x.Level == 1).Sum(x => x.Score);
+                listTotal[1] = (int)listDetail.Where(x => x.Level == 2).Sum(x => x.Score);
+                listTotal[2] = (int)listDetail.Where(x => x.Level == 3).Sum(x => x.Score);
+                listTotal[3] = (int)listDetail.Where(x => x.Level == 4).Sum(x => x.Score);
+                foreach (var criteria in listCriteria)
+                {
+                    criteria.score1 = listDetail.Where(x => x.CriteriaID == criteria.criteriaId && x.Level == 1).Select(x => x.Score).FirstOrDefault();
+                    criteria.score2 = listDetail.Where(x => x.CriteriaID == criteria.criteriaId && x.Level == 2).Select(x => x.Score).FirstOrDefault();
+                    criteria.score3 = listDetail.Where(x => x.CriteriaID == criteria.criteriaId && x.Level == 3).Select(x => x.Score).FirstOrDefault();
+                    criteria.score4 = listDetail.Where(x => x.CriteriaID == criteria.criteriaId && x.Level == 4).Select(x => x.Score).FirstOrDefault();
+                    if(criteria.IsImageProof == 1)
+                    {
+                        var imgUrl = listDetail.Where(x => x.CriteriaID == criteria.criteriaId && x.Level == 1).Select(x => x.Image_proof).FirstOrDefault();
+
+                        criteria.ImageProof = imgUrl;
+                    }    
+                  
+                }
+                model.semesterId = form.SemesterID;
+            }
+            else
+            {
+                // KT tạo phiếu
+                var CurrentForm = GetPresentSemesterDetailByUserId(userSession.userID);
+                if (CurrentForm.FormId == null)
+                {
+                    model.Assessee = userId;
+                    if (IsInTime() == 1)
+                    {
+                        var preSemes = GetPresentSemesterDetailByUserId(userId);
+                        EvalutionFormModel form = new EvalutionFormModel()
+                        {
+                            semesterId = preSemes.semesterId,
+                            status = 1,
+                            createAt = DateTime.Now,
+                            createBy = userId,
+                        };
+                        // Insert Form
+                        formId = InsertEvaluationForm(form);
+                        model.formId = (int)formId;
+                    }
+                }
+                else
+                {
+                    model.HasCreatedForm = true;
+                }
+
+            }
+            #region Render hiển thị Input và Button chấm
+            // Render Input và Button chấm
+            int groupId = GetGroupInfoByUserId(userSession.userID);
+            if ((turn == 0 || turn == 1) && IsInTime() == 1)
+            {
+                model.IsInTime = 1;
+            }
+            if ((turn == 0 || turn == 1 || turn == 2) && IsInTime() == 2 && groupId == 2)
+            {
+                model.IsInTime = 2;
+            }
+            if ((turn == 2 || turn == 3) && IsInTime() == 3 && groupId == 3)
+            {
+                model.IsInTime = 3;
+            }
+            if ((turn == 3 || turn == 4) && IsInTime() == 4 && groupId == 4)
+            {
+                model.IsInTime = 4;
+            }
+            #endregion
+            //============================
+            model.ListMain = listMain;
+            model.ListCriteria = listCriteria;
+            model.Total = listTotal;
+            return model;
         }
         #endregion
         //==============================================================================
@@ -70,19 +180,19 @@ namespace StudentManage.BUS
             int btcd = dao.FindGroupIdByName("Bí Thư Chi Đoàn");
             int btdk = dao.FindGroupIdByName("Bí Thư Đoàn Khoa");
             int btdt = dao.FindGroupIdByName("Bí Thư Đoàn Trường");
-            if(groupId == dv)
+            if (groupId == dv)
             {
                 return 1;
-            }    
-            else if(groupId == btcd)
+            }
+            else if (groupId == btcd)
             {
                 return 2;
-            }    
-            else if(groupId == btdk)
+            }
+            else if (groupId == btdk)
             {
                 return 3;
-            }    
-            else if(groupId == btdt)
+            }
+            else if (groupId == btdt)
             {
                 return 4;
             }
@@ -95,12 +205,12 @@ namespace StudentManage.BUS
          * Phần Chấm điểm đoàn viên
          */
         // Lấy Học kỳ bởi ID Học Kỳ
-        public SemesterModel GetSemesterBySemesterId(int semesterId)
+        public SemesterFormModel GetSemesterBySemesterId(int semesterId)
         {
             var result = dao.GetSemesterBySemesterId(semesterId);
             if (result != null)
             {
-                SemesterModel model = new SemesterModel()
+                SemesterFormModel model = new SemesterFormModel()
                 {
                     semesterId = semesterId,
                     dayStart = result.Day_Start,
@@ -197,15 +307,15 @@ namespace StudentManage.BUS
             return listModel;
         }
         // Lấy tất cả học kỳ 
-        public List<SemesterModel> GetAllSemesters()
+        public List<SemesterFormModel> GetAllSemesters()
         {
             var result = dao.GetAllSemesters();
-            List<SemesterModel> list = new List<SemesterModel>();
-            if(result != null)
+            List<SemesterFormModel> list = new List<SemesterFormModel>();
+            if (result != null)
             {
                 foreach (var semester in result)
                 {
-                    var model = new SemesterModel();
+                    var model = new SemesterFormModel();
                     model.semesterId = semester.SemesterID;
                     model.name = semester.Name;
                     model.year = semester.Year;
@@ -214,7 +324,7 @@ namespace StudentManage.BUS
                     model.status = semester.Status;
                     model.displayName = "Đánh giá rèn luyện học kỳ " + semester.Name + " năm học " + semester.Year;
                     list.Add(model);
-                    
+
                 }
                 return list;
             }
@@ -222,16 +332,16 @@ namespace StudentManage.BUS
         }
 
         // Lấy tất cả các học kì từ HK đầu tiên đến NAY của User đang xét
-        public List<SemesterModel> GetSemesterById(int userId)
+        public List<SemesterFormModel> GetSemesterFormById(int userId)
         {
             var result = dao.GetSemesterById(userId);
             if (result != null)
             {
-                List<SemesterModel> listSemesters = new List<SemesterModel>();
+                List<SemesterFormModel> listSemesters = new List<SemesterFormModel>();
                 foreach (var item in result)
                 {
                     var test = item.EvalutionForms.Where(x => x.Create_by == userId).FirstOrDefault();
-                    SemesterModel model = new SemesterModel();
+                    SemesterFormModel model = new SemesterFormModel();
 
                     model.semesterId = item.SemesterID;
                     model.name = item.Name;
@@ -276,11 +386,11 @@ namespace StudentManage.BUS
         }
 
         // Lấy chi tiết HK hiện tại của User
-        public SemesterModel GetPresentSemesterDetailByUserId(int userid)
+        public SemesterFormModel GetPresentSemesterDetailByUserId(int userid)
         {
             var result = dao.GetPresentSemester();
             var hasForm = result.EvalutionForms.Where(x => x.Create_by == userid).FirstOrDefault();
-            SemesterModel model = new SemesterModel();
+            SemesterFormModel model = new SemesterFormModel();
             model.semesterId = result.SemesterID;
             model.dayEnd = result.Day_End;
             model.dayStart = result.Day_Start;
@@ -299,18 +409,19 @@ namespace StudentManage.BUS
         }
 
         // Lấy HK hiện tại của toàn trường
-        public SemesterModel GetPresentSemester()
+        public SemesterFormModel GetPresentSemester()
         {
             var result = dao.GetPresentSemester();
             if (result != null)
             {
-                var model = new SemesterModel();
+                var model = new SemesterFormModel();
                 model.semesterId = result.SemesterID;
                 model.status = result.Status;
                 model.year = result.Year;
                 model.name = result.Name;
                 model.dayEnd = result.Day_End;
                 model.dayStart = result.Day_Start;
+                model.inProcess = true;
                 return model;
             }
             return null;
@@ -410,7 +521,7 @@ namespace StudentManage.BUS
                     Level = positionTurn,
                     Score = item.score,
                     Note = item.note,
-                    Image_proof = item.imageProof,
+                    Image_proof = item.ImageURL,
                     Type = 2
                 };
                 dao.InsertDetailEvaluation(model);
@@ -422,6 +533,7 @@ namespace StudentManage.BUS
         public GroupUserModel GetGroupUserById(int groupId)
         {
             var result = dao.GetGroupUserById(groupId);
+
             if (result != null)
             {
                 GroupUserModel model = new GroupUserModel()
@@ -430,7 +542,7 @@ namespace StudentManage.BUS
                     name = result.Name,
                     status = (int)result.Status,
                     templateId = result.TemplateID,
-                    timeId = result.TimeID
+                    timeId = (int)result.TimeID
                 };
                 return model;
             }
@@ -446,7 +558,7 @@ namespace StudentManage.BUS
 
             //if (DateTime.Compare(DateTime.Now, (DateTime)timeEvaluation.Date_Start) > 0 &&
             //   DateTime.Compare((DateTime)timeEvaluation.Date_End, DateTime.Now) > 0)
-            if(timeEvaluation.Status == 1)
+            if (timeEvaluation.Status == 1)
             {
                 return 0;
             }
@@ -462,7 +574,7 @@ namespace StudentManage.BUS
             */
         public int IsInTime()
         {
-            int dv =   dao.FindGroupIdByName("ĐOÀN VIÊN");
+            int dv = dao.FindGroupIdByName("ĐOÀN VIÊN");
             int btcd = dao.FindGroupIdByName("Bí Thư Chi Đoàn");
             int btdk = dao.FindGroupIdByName("Bí Thư Đoàn Khoa");
             int btdt = dao.FindGroupIdByName("Bí Thư Đoàn Trường");
@@ -489,7 +601,7 @@ namespace StudentManage.BUS
         }
 
         // Tính điểm Form 1 Học kỳ của User
-        public SemesterModel CalcSingleSemesterScore(int userId, int semesterId)
+        public SemesterFormModel CalcSingleSemesterScore(int userId, int semesterId)
         {
             var semester = GetSemesterBySemesterId(semesterId);
             var form = GetPassedEvalutionFormsById(userId).Where(x => x.semesterId == semesterId).FirstOrDefault();
@@ -554,18 +666,29 @@ namespace StudentManage.BUS
             return null;
         }
         // Tính điểm Form tất cả học kỳ của User
-        public List<SemesterModel> CalcScoreByUserId(int userId)
+        public List<SemesterFormModel> CalcSemesterScoreByUserId(int userId)
         {
             var detailforms = GetDetailFormsById(userId);
             var listEvaluationForms = dao.GetAllEvaluationFormsByUserId(userId);
 
 
-            // Trường hợp đã có Form đã chấm
-            var listSemesters = GetSemesterById(userId);
-            if (listSemesters != null)
+
+            var listFormSemesters = GetSemesterFormById(userId);
+
+            var nowSemes = GetPresentSemester();
+            if (nowSemes != null)
+            {
+                var isEvaluated = listEvaluationForms.Where(x => x.SemesterID == nowSemes.semesterId).FirstOrDefault();
+                if (isEvaluated == null)
+                {
+                    listFormSemesters.Insert(0, nowSemes);
+                }
+            }
+            // TH đã từng chấm điểm
+            if (listFormSemesters.Count != 0)
             {
                 //// Tính điểm
-                foreach (var semester in listSemesters)
+                foreach (var semester in listFormSemesters)
                 {
                     // Xét theo từng semester
                     if (semester.FormId != null)
@@ -614,32 +737,16 @@ namespace StudentManage.BUS
                         }
                     }
                 }
-                listSemesters[0].inProcess = true;
-                int inTime = IsInTime();
+
+
                 // Kiểm tra thời gian chấm có đang trong hk hiện tại
-                if(inTime == 1)
+                int inTime = IsInTime();
+                if (inTime != 0)
                 {
-                    listSemesters[0].Available = true;
-                }    
-                
-                return listSemesters;
-            }
-            else
-            {
-                if (listEvaluationForms.Count != 0)
-                {
-                    var presentForm = listEvaluationForms.OrderByDescending(x => x.Create_At).FirstOrDefault();
-                    // Trường hợp Tạo Form nhưng chưa chấm
-                    if (presentForm.SemesterID == GetPresentSemester().semesterId)
-                    {
-                        listSemesters = new List<SemesterModel>();
-                        SemesterModel nowSemester = new SemesterModel();
-                        nowSemester = GetPresentSemester();
-                        nowSemester.FormId = presentForm.FormId;
-                        listSemesters.Add(nowSemester);
-                        return listSemesters;
-                    }
+                    listFormSemesters[0].inProcess = true;
+                    listFormSemesters[0].Available = true;
                 }
+                return listFormSemesters;
             }
             return null;
         }
@@ -665,10 +772,10 @@ namespace StudentManage.BUS
                 if (model != null) // Nếu có Form thì Add
                 {
                     var detailSemester = CalcSingleSemesterScore((int)model.createBy, semesterId);
-                    if(detailSemester == null)
+                    if (detailSemester == null)
                     {
                         int totalCriteria = GetAllCriteriaByTemplateId(4).Count;// Phiếu chấm điểm đoàn viên (4)
-                        if(IsInTime()==1)
+                        if (IsInTime() == 1)
                         {
                             //Tạo phiếu điểm khi sinh viên chưa chấm => Mặc định Điểm các tiếu chí bằng 0
                             foreach (var criteria in listCriteria)
@@ -691,7 +798,7 @@ namespace StudentManage.BUS
                 else // Không có thì tiến hành Thêm Evalution Form Nếu trong thời gian chấm 2 
                 {
                     var test = GetPresentSemester().semesterId;
-                    if (semesterId == GetPresentSemester().semesterId && IsInTime()==2)
+                    if (semesterId == GetPresentSemester().semesterId && IsInTime() == 2)
                     {
                         EvalutionFormModel form = new EvalutionFormModel()
                         {
@@ -807,7 +914,7 @@ namespace StudentManage.BUS
                 {
                     model.Score1 = 0;
                 }
-            
+
                 // Xếp loại
                 if (model.Score4 > 90)
                 {
@@ -845,7 +952,7 @@ namespace StudentManage.BUS
 
 
                 #endregion
-              
+
                 list.Add(model);
 
                 #region this region for testing purpose
@@ -901,7 +1008,7 @@ namespace StudentManage.BUS
                 FacultyEvaluationModel model = new FacultyEvaluationModel();
                 model.ClassName = item.className;
                 model.ClassId = item.classID;
-                model.Total = listUser.Where(x=>x.ClassID==item.classID).Count();
+                model.Total = listUser.Where(x => x.ClassID == item.classID).Count();
                 var listPresonalForms = GetClassFormByClassIdAndSemesterId(item.classID, presentSemes.semesterId);
                 int classDone = 0, facultyDone = 0, schoolDone = 0;
                 foreach (var form in listPresonalForms)
@@ -914,18 +1021,18 @@ namespace StudentManage.BUS
                     {
                         facultyDone++;
                     }
-                    if(form.Score4 !=null)
+                    if (form.Score4 != null)
                     {
                         schoolDone++;
-                    }    
+                    }
                 };
                 model.ClassDone = classDone;
                 model.FacultyDone = facultyDone;
                 model.ClassNotDone = model.Total - classDone;
                 model.FacultyNotDone = model.Total - facultyDone;
                 model.SchoolDone = schoolDone;
-                model.ClassSituation = (classDone == model.Total) ? 1 : 0; 
-                model.FacultySituation = (facultyDone == model.Total) ? 1 : 0; 
+                model.ClassSituation = (classDone == model.Total) ? 1 : 0;
+                model.FacultySituation = (facultyDone == model.Total) ? 1 : 0;
                 list.Add(model);
             }
             return list;
@@ -935,7 +1042,7 @@ namespace StudentManage.BUS
             // Lấy danh sách khoa
             var listFaculty = new FacultyBUS().GetListFaculty();
             var list = new List<SchoolEvaluationModel>();
-            foreach(var item in listFaculty)
+            foreach (var item in listFaculty)
             {
                 var model = new SchoolEvaluationModel();
                 var listClassModel = GetListClassByFaculty(item.facultyID);
@@ -944,7 +1051,7 @@ namespace StudentManage.BUS
                 model.FacultyName = item.facultyName;
                 model.Phone = item.phone;
                 int FacultyDone = 0, SchoolDone = 0, Total = 0;
-                foreach(var classEva in listClassModel)
+                foreach (var classEva in listClassModel)
                 {
                     FacultyDone += (int)classEva.FacultyDone;
                     SchoolDone += (int)classEva.SchoolDone;
@@ -959,6 +1066,10 @@ namespace StudentManage.BUS
                 list.Add(model);
             }
             return list;
+        }
+        public int deleteImageProof(int formId, int critetiaId)
+        {
+            return dao.deleteImageProof(formId, critetiaId);
         }
     }
 

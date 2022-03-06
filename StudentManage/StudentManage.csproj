@@ -446,6 +446,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\img\Images_Proof\" />
+    <Folder Include="Assets\img\Images_Proof_02\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
