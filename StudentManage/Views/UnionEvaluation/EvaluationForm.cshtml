@@ -140,22 +140,29 @@
                                                             countProof++;
                                                             if (Model.IsInTime == 1 && criteria.ImageProof == null)
                                                             {
-                                                                <br />
-                                                                <a data-target="#viewpic_modal_@criteria.criteriaId"
-                                                                   data-toggle="modal"
-                                                                   class="badge bg-inverse-primary"
-                                                                   style="cursor: pointer">Thêm minh chứng</a>
+                                                                <div class="dropdown dropdown-action d-inline-block">
+                                                                    <a data-target="#viewpic_modal_@criteria.criteriaId"
+                                                                       data-toggle="modal"
+                                                                       class="badge bg-inverse-primary"
+                                                                       style="cursor: pointer">Thêm minh chứng</a>
+                                                                </div>
                                                             }
                                                             else
                                                             {
-                                                                <div class="dropdown dropdown-action d-inline-block">
-                                                                    <a data-target="#viewpic_modal_@criteria.criteriaId" data-toggle="modal"
-                                                                       class="badge bg-inverse-success"
-                                                                       style="cursor:pointer;">
-                                                                        Xem
-                                                                        minh chứng
-                                                                    </a>
-                                                                </div>
+                                                                if (criteria.ImageProof != null)
+                                                                {
+                                                                    <div class="dropdown dropdown-action d-inline-block">
+                                                                        <a data-target="#viewpic_modal_@criteria.criteriaId" data-toggle="modal"
+                                                                           class="badge bg-inverse-success"
+                                                                           style="cursor:pointer;"
+                                                                           data-able="@Model.IsInTime"
+                                                                           >
+                                                                            Xem
+                                                                            minh chứng
+                                                                        </a>
+                                                                    </div>
+                                                                }
+
                                                             }
                                                             <!-- Proof Modal -->
                                                             <div id="viewpic_modal_@criteria.criteriaId"
@@ -181,7 +188,7 @@
                                                                                 <div class="col-sm-12">
                                                                                     <div class="upload-pic_container">
                                                                                         <div class="file-loading">
-                                                                                            <input id="input-@countProof" src="" name="@("listmodel[" + (count - 2) + "].imageProof")" type="file" />
+                                                                                            <input id="input-@criteria.criteriaId" src="" name="@("listmodel[" + (count - 2) + "].imageProof")" type="file" data-id="@criteria.criteriaId"/>
                                                                                             @if (criteria.ImageProof != null)
                                                                                             {
                                                                                                 <img class="evident_img-src d-none" src="~/Assets/img/Images_Proof_02/@criteria.ImageProof" alt="">
@@ -435,35 +442,51 @@
             imgSrc = (imgSrc != '') ? "initialPreview: ['" + imgSrc + "']," : "";
             const boxWp = evidentImg.closest('.file-loading')
             const inputEvidentImg = boxWp.querySelector('input').getAttribute('id')
+            const criId = boxWp.querySelector('input').getAttribute('data-id');
+            const enableUpload = ($("a[data-target='#viewpic_modal_" + criId + "']").attr('data-able') == '1') ? "true" : "false";
             myString += `
-                $("#${inputEvidentImg}").fileinput({
-                    ${imgSrc}
-                    initialPreviewAsData: true,
-                    browseClass: "btn btn-primary",
-                    mainClass: "d-grid",
-                    showCaption: false,
-                    showRemove: false,
-                    showUpload: false,
-                    indicatorNew: false,
-                    dropZoneTitle: "Ảnh minh chứng <br> <h5>Kéo & thả</h5>",
-                    allowedFileExtensions: ["jpg", "png", "gif"],
-                    msgInvalidFileExtension: 'File ảnh không hợp lệ. Chỉ hỗ trợ đuôi "{extensions}".',
-                    removeIcon: '<i class="bi-trash"></i>',
-                });
-                `
+                        $("#${inputEvidentImg}").fileinput({
+                            ${imgSrc}
+                            initialPreviewAsData: true,
+                            browseClass: "btn btn-primary",
+                            mainClass: "d-grid",
+                            showCaption: false,
+                            showRemove: false,
+                            showUpload: false,
+                            indicatorNew: false,
+                            showClose:${enableUpload},
+                            showBrowse:${enableUpload},
+                            initialPreviewShowDelete:false,
+                            dropZoneTitle: "Ảnh minh chứng <br> <h5>Kéo & thả</h5>",
+                            allowedFileExtensions: ["jpg", "png", "gif"],
+                            msgInvalidFileExtension: 'File ảnh không hợp lệ. Chỉ hỗ trợ đuôi "{extensions}".',
+                            
+                        });
+                        $("#${inputEvidentImg}").on('fileloaded', function(){
+                            let badge = $("a[data-target='#viewpic_modal_${criId}']")
+                            badge.attr('class','badge bg-inverse-success')
+                            badge.text("Xem inh chứng");
+                        })
+                        $('#${inputEvidentImg}').on('fileclear', function(event) {
+                            let badge = $("a[data-target='#viewpic_modal_${criId}']")
+                            badge.attr('class','badge bg-inverse-primary')
+                            badge.text("Thêm minh chứng");
+                        });
+                        `
         })
+
         const myScript = document.createElement('script')
         const exString = `$(document).ready(function () {${myString}})`
         myScript.append(exString)
         document.body.appendChild(myScript)
-
-
         $(document).ready(function () {
             // Remove Img proof
             const ProofModals = document.querySelectorAll(".modal.custom-modal[data-formid]");
+
             ProofModals.forEach(function (ProofModal) {
                 const removeBtn = ProofModal.querySelector('.close.fileinput-remove');
-                removeBtn.addEventListener('click', (e) => {
+                if (removeBtn != null) {
+                    removeBtn.addEventListener('click', (e) => {
                     $.ajax({
                         url: "/UnionEvaluation/deleteImageProof/",
                         method: "POST",
@@ -476,11 +499,9 @@
                     })
 
                 })
+                }
             })
         })
-
-
-
     </script>
 
 }
