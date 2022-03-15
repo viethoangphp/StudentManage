@@ -322,7 +322,7 @@
                 var formId = $(this).data('id');
                 var updateNote = $('#form-textarea' + formId).val();
                 UpdateNote(formId, updateNote).then(function (data) {
-                    if (data)
+                    if (data == "success")
                     {
                         toastr.success("Cập nhật ghi chú thành công!", "Thành công");
                         sound("/Assets/mp3/smallbox.mp3");
@@ -331,8 +331,15 @@
                     }
                     else
                     {
-                        toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Thất bại");
-                        sound("/Assets/mp3/error.mp3");
+                        if (data == "dup") {
+                            toastr.warning("Bạn chưa cập nhật ghi chú. Vui lòng thử lại", "Chưa có thay đổi");
+                            sound("/Assets/mp3/error.mp3");
+                        }
+                        else {
+                            toastr.error("Đã có lỗi xảy ra. Vui lòng thử lại", "Thất bại");
+                            sound("/Assets/mp3/error.mp3");
+                        }
+                        
                     }
                 })
                 return false;
@@ -340,7 +347,7 @@
             $(document).on('click', '#btn-delete-modal', function (e) {
                 var formId = $('#btn-delete-modal').closest('form').data('id');
                 UpdateNote(formId, null).then(function (data) {
-                    if (data) {
+                    if (data == "success") {
                         toastr.success("Xóa ghi chú thành công!", "Thành công");
                         sound("/Assets/mp3/smallbox.mp3");
                         table.ajax.reload();

@@ -144,7 +144,11 @@
                                                                     <a data-target="#viewpic_modal_@criteria.criteriaId"
                                                                        data-toggle="modal"
                                                                        class="badge bg-inverse-primary"
-                                                                       style="cursor: pointer">Thêm minh chứng</a>
+                                                                       style="cursor: pointer"
+                                                                       data-able="@Model.IsInTime"
+                                                                       >
+                                                                        Thêm minh chứng
+                                                                    </a>
                                                                 </div>
                                                             }
                                                             else
@@ -155,8 +159,7 @@
                                                                         <a data-target="#viewpic_modal_@criteria.criteriaId" data-toggle="modal"
                                                                            class="badge bg-inverse-success"
                                                                            style="cursor:pointer;"
-                                                                           data-able="@Model.IsInTime"
-                                                                           >
+                                                                           data-able="@Model.IsInTime">
                                                                             Xem
                                                                             minh chứng
                                                                         </a>
@@ -188,7 +191,7 @@
                                                                                 <div class="col-sm-12">
                                                                                     <div class="upload-pic_container">
                                                                                         <div class="file-loading">
-                                                                                            <input id="input-@criteria.criteriaId" src="" name="@("listmodel[" + (count - 2) + "].imageProof")" type="file" data-id="@criteria.criteriaId"/>
+                                                                                            <input id="input-@criteria.criteriaId" src="" name="@("listmodel[" + (count - 2) + "].imageProof")" type="file" data-id="@criteria.criteriaId" />
                                                                                             @if (criteria.ImageProof != null)
                                                                                             {
                                                                                                 <img class="evident_img-src d-none" src="~/Assets/img/Images_Proof_02/@criteria.ImageProof" alt="">
@@ -355,6 +358,32 @@
     </div>
 </div>
 <!-- Delete Evaluation Input Warning Modal -->
+<!-- OnbeforeUnload Evaluation Warning Modal -->
+<button hidden id="redirect_btn" data-toggle="modal" data-target="#redirect_warning"></button>
+<div class="modal custom-modal fade" id="redirect_warning" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Bạn đã đang trong quá trình chấm điểm. Đảm bảo đã nộp phiếu.</h3>
+                    <p>Bạn có muốn chuyển trang?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="#" id="#redirect_confirm" class="btn continue-btn">Có</a>
+                        </div>
+                        <div class="col-6">
+                            <a id="btn-cancel-modal" href="javascript:void(0);" data-dismiss="modal"
+                               class="btn cancel-btn">Không</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Evaluation Input Warning Modal -->
 
 @section js
 {
@@ -460,12 +489,12 @@
                             dropZoneTitle: "Ảnh minh chứng <br> <h5>Kéo & thả</h5>",
                             allowedFileExtensions: ["jpg", "png", "gif"],
                             msgInvalidFileExtension: 'File ảnh không hợp lệ. Chỉ hỗ trợ đuôi "{extensions}".',
-                            
+
                         });
                         $("#${inputEvidentImg}").on('fileloaded', function(){
                             let badge = $("a[data-target='#viewpic_modal_${criId}']")
                             badge.attr('class','badge bg-inverse-success')
-                            badge.text("Xem inh chứng");
+                            badge.text("Xem minh chứng");
                         })
                         $('#${inputEvidentImg}').on('fileclear', function(event) {
                             let badge = $("a[data-target='#viewpic_modal_${criId}']")
@@ -487,18 +516,18 @@
                 const removeBtn = ProofModal.querySelector('.close.fileinput-remove');
                 if (removeBtn != null) {
                     removeBtn.addEventListener('click', (e) => {
-                    $.ajax({
-                        url: "/UnionEvaluation/deleteImageProof/",
-                        method: "POST",
-                        data: {
-                            formId: ProofModal.getAttribute('data-formid'),
-                            criteriaId: ProofModal.getAttribute('data-criteriaid')
-                        },
-                        dataType: "json",
-                    }).done((data) => {
-                    })
+                        $.ajax({
+                            url: "/UnionEvaluation/deleteImageProof/",
+                            method: "POST",
+                            data: {
+                                formId: ProofModal.getAttribute('data-formid'),
+                                criteriaId: ProofModal.getAttribute('data-criteriaid')
+                            },
+                            dataType: "json",
+                        }).done((data) => {
+                        })
 
-                })
+                    })
                 }
             })
         })

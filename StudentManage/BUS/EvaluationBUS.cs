@@ -476,7 +476,7 @@ namespace StudentManage.BUS
             {
                 if (position == btcd)
                 {
-                    if (IsInTimeEvaluationByGroupId(2) == 0)
+                    if (IsInTimeEvaluationByGroupId(dao.FindGroupIdByName("ĐOÀN VIÊN")) == 0)
                     {
                         positionTurn = 1;
                     }
@@ -489,13 +489,13 @@ namespace StudentManage.BUS
                 {
                     if (position == btdk)
                     {
-                        if (IsInTimeEvaluationByGroupId(2) == 0)
+                        if (IsInTimeEvaluationByGroupId(dao.FindGroupIdByName("ĐOÀN VIÊN")) == 0)
                         {
                             positionTurn = 1;
                         }
                         else
                         {
-                            if (IsInTimeEvaluationByGroupId(3) == 0)
+                            if (IsInTimeEvaluationByGroupId(dao.FindGroupIdByName("Bí Thư Chi Đoàn")) == 0)
                             {
                                 positionTurn = 2;
                             }
@@ -987,9 +987,13 @@ namespace StudentManage.BUS
             return list;
         }
         // Update Evaluation Form Note
-        public bool UpdateEvaluationFormNote(int formId, string updateNote)
+        public string UpdateEvaluationFormNote(int formId, string updateNote)
         {
-            return dao.UpdateEvaluationFormNote(formId, updateNote);
+            var inTime = IsInTime();
+            if(inTime == 0)
+                return "fail";
+            else
+                return dao.UpdateEvaluationFormNote(formId, updateNote);
         }
 
         public List<FacultyEvaluationModel> GetListClassByFaculty(int id)

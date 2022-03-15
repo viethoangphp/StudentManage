@@ -152,26 +152,31 @@ namespace Models.DAO
         // Get UserGroup By ID
         public GroupUser GetGroupUserById(int groupId)
         {
+            var user = db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
             return db.GroupUsers.FirstOrDefault(x => x.GroupId == groupId);
         }
         // Update Evaluation Form Note
-        public bool UpdateEvaluationFormNote(int formId, string updateNote)
+        public string UpdateEvaluationFormNote(int formId, string updateNote)
         {
             var evaluationForm = db.EvalutionForms.Where(x => x.FormId == formId).FirstOrDefault();
             if (evaluationForm != null)
             {
+                if(String.Equals(evaluationForm.Note,updateNote))
+                {
+                    return "dup";
+                }
                 try
                 {
                     evaluationForm.Note = updateNote;
                     db.SaveChanges();
-                    return true;
+                    return "success";
                 }
                 catch
                 {
-                    return false;
+                    return "fail";
                 }
             }
-            return false;
+            return "fail";
         }
         // Get all TimeEvaluation
         public List<TimeEvalution> GetAllTimeEvaluation()

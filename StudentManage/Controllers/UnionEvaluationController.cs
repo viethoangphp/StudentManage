@@ -181,7 +181,7 @@ namespace StudentManage.Controllers
         public JsonResult AddOrUpdateEvaluationFormNote(int formId, string updateNote)
         {
             string text = String.IsNullOrEmpty(updateNote) ? null : updateNote;
-            bool result = modelBUS.UpdateEvaluationFormNote(formId, text);
+            string result = modelBUS.UpdateEvaluationFormNote(formId, text);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         #endregion
