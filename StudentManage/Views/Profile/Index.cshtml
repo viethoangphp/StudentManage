@@ -285,136 +285,71 @@
         var districtID = @Model.districtID;
         var wardID = @Model.wardID;
         console.log(cityID + "-" + districtID + '-' + wardID)
-    @*var api = "https://provinces.open-api.vn/api/?depth=3";
-    fetch(api,{
-        method: "GET",
-        ContentType: "application/json"
-    })
-    .then(response => response.json())
-    .then(function(data){
-        var cityID = @Model.cityID;
-        var districtID = @Model.districtID;
-        var wardID = @Model.wardID;
-        let count = 0;
-        data.forEach(item => {
-            city.options[city.options.length] = new Option(item.name, item.code)
-            if (cityID != 0) {
-                if (cityID == city.options[count].value) {
-                    city.options[count].selected = true
-                }
-                count++;
-            }
-
-        });
-        if (cityID != 0) {
-            count = 0;
-            var listDistrict = data.filter(m => m.code == cityID)
-            listDistrict[0].districts.forEach(item => {
-                district.options[district.options.length] = new Option(item.name, item.code)
-                if (districtID != 0) {
-                    if (districtID == district.options[count].value) {
-                        district.options[count].selected = true
-                    }
-                    count++;
-                }
-            })
-        }
-
-        if (districtID != 0) {
-            count = 0;
-            var listWard = listDistrict[0].districts.filter(m => m.code == districtID)
-            listWard[0].wards.forEach(item => {
-                ward.options[ward.options.length] = new Option(item.name, item.code)
-                if (wardID != 0) {
-                    if (wardID == ward.options[count].value) {
-                        ward.options[count].selected = true
-                    }
-                    count++;
-                }
-            })
-        }
-
-
-        const cityName = city.options[city.selectedIndex].innerText;
-        const districtName = district.options[district.selectedIndex].innerText;
-        const wardName = ward.options[ward.selectedIndex].innerText;
-        console.log(cityName + " " + districtName + " " + wardName + " " + address.innerText);
-        address.innerText = address.innerText + ", " + wardName + ", " + districtName + ", " + cityName;
-        var listDistrict;
-        var listWard;
-        city.onchange = function()
-        {
-            district.length = 1
-            ward.length = 1
-            if(this.value != 0)
-            {
-                listDistrict = data.filter(m=>m.code == this.value)
-                listDistrict[0].districts.forEach(item=>{
-                    district.options[district.options.length] = new Option(item.name,item.code)
-                })
-
-            }
-        }
-        district.onchange = function () {
-            ward.length = 1
-            if (this.value != 0) {
-                var listWard = listDistrict[0].districts.filter(m => m.code == this.value)
-                listWard[0].wards.forEach(item => {
-                    ward.options[ward.options.length] = new Option(item.name, item.code)
-                })
-            }
-        }
-    })
-    .catch(err => console.log("Lỗi"))*@
-
-    // #region JS region select loading Viet Nam Provinces - Have CityID, DistrictID, WardID
+        const birthDay = document.getElementById("birthDay")
+        birthDay.value = "@String.Format("{0:dd/MM/yyyy}", Model.birthDay)";
+        console.log("@String.Format("{0:dd/MM/yyyy}", Model.birthDay)");
+        // #region JS region select loading Viet Nam Provinces - Have CityID, DistrictID, WardID
         getAllCities().then(function (data) {
             let count = 0;
             data.forEach(item => {
                 city.options[city.options.length] = new Option(item.Name, item.Code)
                 if (cityID != 0) {
                     if (cityID == city.options[count].value) {
-                        city.options[count].selected = true
+                        city.options[count].selected = true;
+                        getDistrictsByCityID(cityID).then(function (listDistrict) {
+                            count = 0;
+                            listDistrict.forEach(item => {
+                                district.options[district.options.length] = new Option(item.Name, item.Code)
+                                if (districtID != 0) {
+                                    if (districtID == district.options[count].value) {
+                                        district.options[count].selected = true;
+                                    }
+                                    count++;
+                                }
+                            });
+                        })
                     }
                     count++;
                 }
 
             });
             $('#edit_union-notebook select').trigger("change");
-            if (cityID != 0) {
-                getDistrictsByCityID(cityID).then(function (listDistrict) {
-                    count = 0;
-                    listDistrict.forEach(item => {
-                        district.options[district.options.length] = new Option(item.Name, item.Code)
-                        if (districtID != 0) {
-                            if (districtID == district.options[count].value) {
-                                district.options[count].selected = true;
-
-                            }
-                            count++;
+            getDistrictsByCityID(cityID).then(function (listDistrict) {
+                count = 0;
+                listDistrict.forEach(item => {
+                    district.options[district.options.length] = new Option(item.Name, item.Code)
+                    if (districtID != 0) {
+                        if (districtID == district.options[count].value) {
+                            district.options[count].selected = true;
                         }
-                    });
-                })
-            }
-            if (districtID != 0) {
-                getWardsByDistrictID(districtID).then(function (listWard) {
-                    count = 0;
-                    listWard.forEach(item => {
-                        ward.options[ward.options.length] = new Option(item.Name, item.Code)
-                        if (wardID != 0) {
-                            if (wardID == ward.options[count].value) {
-                                ward.options[count].selected = true;
-                            }
-                            count++;
-                            const cityName = city.options[city.selectedIndex].innerText;
-                            const districtName = district.options[district.selectedIndex].innerText;
-                            const wardName = ward.options[ward.selectedIndex].innerText;
-                            console.log(cityName + " " + districtName + " " + wardName + " " + address.innerText);
-                            address.innerText = address.innerText + ", " + wardName + ", " + districtName + ", " + cityName;
+                        count++;
+                    }
+                });
+            })
+            getWardsByDistrictID(districtID).then(function (listWard) {
+                count = 0;
+                listWard.forEach(item => {
+                    ward.options[ward.options.length] = new Option(item.Name, item.Code)
+                    if (wardID != 0) {
+                        if (wardID == ward.options[count].value) {
+                            ward.options[count].selected = true;
                         }
-                    })
+                        count++;
+                    }
                 })
-            }
+            }).then(function () {
+                const cityName = (cityID != 0) ? city.options[city.selectedIndex].innerText : "";
+                const districtName = (districtID != 0)?district.options[district.selectedIndex].innerText:"";
+                const wardName = (wardID!=0)?ward.options[ward.selectedIndex].innerText:"";
+                console.log(cityName + " " + districtName + " " + wardName + " " + address.innerText);
+                address.textContent = (address.textContent.trim() == "Chưa Cập Nhật") ? "" : address.textContent.trim();
+                const nameArr = [];
+                nameArr.push(address.textContent);
+                nameArr.push(wardName);
+                nameArr.push(districtName);
+                nameArr.push(cityName);
+                address.textContent = nameArr.filter(item => item.length > 0).toString();
+            })
             city.onchange = function () {
                 district.length = 1
                 ward.length = 1
@@ -436,13 +371,11 @@
                     })
                 }
             }
-
+            $("#UpdateProfile select").change();
 
         })
-                // #endregion
-    const birthDay = document.getElementById("birthDay")
-    birthDay.value = "@String.Format("{0:dd/MM/yyyy}", Model.birthDay)";
-    console.log("@String.Format("{0:dd/MM/yyyy}", Model.birthDay)");
+        // #endregion
+
     </script>
     <script src="~/Assets/js/ajax/User.js"></script>
 }
