@@ -349,6 +349,9 @@
                 nameArr.push(districtName);
                 nameArr.push(cityName);
                 address.textContent = nameArr.filter(item => item.length > 0).toString();
+                if (nameArr.filter(item => item.length > 0).length == 0) {
+                    address.textContent = "Chưa Cập Nhật"
+                }
             })
             city.onchange = function () {
                 district.length = 1
